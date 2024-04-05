@@ -1,0 +1,39 @@
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+
+	RewriteEngine on
+
+	RewriteRule ^admin/dashboard/?$ admin/dashboard.php [NC,L]
+	RewriteRule ^admin/profile?$ admin/profile.php [NC,L]
+	RewriteRule ^admin/logout?$ admin/logout.php [NC,L]
+	RewriteRule ^admin/login?$ admin/index.php [NC,L]
+	RewriteRule ^admin/advisor/advisor-list?$ admin/advisor/advisor-list.php [NC,L]
+	RewriteRule ^admin/advisor/add-advisor?$ admin/advisor/advisor.php [NC,L]
+
+	RewriteRule ^admin/advisor/edit-advisor?$ admin/advisor/edit_advisor.php [NC,L]
+	RewriteRule ^admin/advisor/edit-advisor/([^/]+)$ admin/advisor/edit-advisor.php?advisor_id=$1 [NC,L]
+	RewriteRule ^admin/advisor/view-advisor/([^/]+)$ admin/advisor/view-advisor.php?advisor_id=$1 [NC,L]
+
+	RewriteRule ^admin/settings/designation-list?$ admin/settings/designation-list.php [NC,L]
+	RewriteRule ^admin/settings/licenses-type-list?$ admin/settings/licenses-type-list.php [NC,L]
+	RewriteRule ^admin/settings/lead-source-list?$ admin/settings/lead-source-list.php [NC,L]
+	RewriteRule ^admin/settings/affiliations-list?$ admin/settings/affiliations-list.php [NC,L]
+	RewriteRule ^admin/settings/carrier-appointed-list?$ admin/settings/carrier-appointed-list.php [NC,L]
+	RewriteRule ^admin/settings/carrier-list?$ admin/settings/carrier-list.php [NC,L]
+	RewriteRule ^admin/settings/premium-volume-list?$ admin/settings/premium-volume-list.php [NC,L]
+	RewriteRule ^admin/settings/production-percentage-list?$ admin/settings/production-percentage-list.php [NC,L]
+	RewriteRule ^admin/settings/market-list?$ admin/settings/market-list.php [NC,L]
+
+	RewriteRule ^admin/business/business-list?$ admin/business/business-list.php [NC,L]
+	RewriteRule ^admin/business/add-business?$ admin/business/business.php [NC,L]
+
+	RewriteRule ^admin/business/edit-business?$ admin/business/edit_business.php [NC,L]
+	RewriteRule ^admin/business/edit-business/([^/]+)$ admin/business/edit-business.php?business_id=$1 [NC,L]
+
+	RewriteRule ^admin/admin_user/list?$ admin/admin_user/list.php [NC,L]
+	RewriteRule ^admin/activity/activity-list/?$ admin/activity/activity-list.php [NC,L]
+	RewriteRule ^admin/activity/view-activity/([^/]+)$ admin/activity/view-activity.php?advisor_id=$1 [NC,L]
+	RewriteRule ^admin/notes/?$ admin/notes.php [NC,L]
+  
+</IfModule>

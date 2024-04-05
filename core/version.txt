@@ -1,0 +1,7 @@
+wordpress version: 5.8.1
+CMS Version: 1.0.0
+
+Changes Inside core files:
+wp-settings.php
+wp-ajax.php
+wp-config.php

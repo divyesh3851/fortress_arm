@@ -1,0 +1,29 @@
+<script>
+    var hostUrl = "<?php echo site_url() ?>/assets/";
+</script>
+<!--begin::Global Javascript Bundle(mandatory for all pages)-->
+<script src="<?php echo site_url(); ?>/assets/plugins/global/plugins.bundle.js"></script>
+<script src="<?php echo site_url(); ?>/assets/js/scripts.bundle.js"></script>
+
+<script>
+    $(".flat_time_pickr").flatpickr({
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+    });
+    $('.flatpickr').flatpickr({
+        enableTime: !1,
+        dateFormat: "d, M Y"
+    });
+
+    function change_ymd_to_dmy_text(date = '') {
+        if (!date) {
+            return false;
+        }
+
+        var dateString = date;
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var parts = dateString.split('-');
+        return formattedDate = parts[2] + ', ' + months[parseInt(parts[1]) - 1] + ' ' + parts[0];
+    }
+</script>

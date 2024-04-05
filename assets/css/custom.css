@@ -1,0 +1,65 @@
+div#kt_app_sidebar {
+    background-color: #010520;
+}
+
+.logo_with_header {
+    background-color: #010520;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item>.menu-link .menu-title {
+    color: #C09446;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item.show>.menu-link .menu-title {
+    color: #C09446;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item .menu-item .menu-link .menu-title {
+    color: #fff;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item>.menu-link .menu-icon i,
+.app-sidebar-menu-primary.menu>.menu-item.show>.menu-link .menu-icon,
+.app-sidebar-menu-primary.menu>.menu-item.show>.menu-link .menu-icon .svg-icon,
+.app-sidebar-menu-primary.menu>.menu-item.show>.menu-link .menu-icon i {
+    color: #C09446;
+}
+
+.view_advisor .ribbon.ribbon-clip.ribbon-end .ribbon-label {
+    right: -5px;
+    top: 15px;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item>.menu-link.active .menu-title {
+    color: #010520;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item>.menu-link.active .menu-icon i {
+    color: #010520;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item.hover:not(.here)>.menu-link:not(.disabled):not(.active):not(.here) .menu-title,
+.app-sidebar-menu-primary.menu>.menu-item:not(.here)>.menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
+    color: #fff;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item:not(.here)>.menu-link:hover:not(.disabled):not(.active):not(.here) .menu-icon {
+    color: #fff;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item:not(.here)>.menu-link:hover:not(.disabled):not(.active):not(.here) .menu-icon i {
+    color: #fff;
+}
+
+.app-sidebar-menu-primary.menu>.menu-item.hover:not(.here)>.menu-link:not(.disabled):not(.active):not(.here),
+.app-sidebar-menu-primary.menu>.menu-item:not(.here)>.menu-link:hover:not(.disabled):not(.active):not(.here) {
+    color: #fff;
+}
+
+.view_advisor .card .card-header {
+    min-height: 50px;
+}
+
+.mw-1300px {
+    max-width: 1300px !important;
+}
