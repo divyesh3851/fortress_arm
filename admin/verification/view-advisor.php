@@ -1,12 +1,12 @@
 <?php require '../../config.php';
-$page_name = 'advisor';
-$sub_page_name = 'advisor-list';
+$page_name = 'verification';
+$sub_page_name = 'verification-list';
 Admin()->check_login();
 
 $selected_advisor_data = Advisor()->get_selected_advisor_data(siget('advisor_id'));
 
 if (!$selected_advisor_data) {
-	wp_redirect(site_url() . '/admin/advisor/advisor-list');
+	wp_redirect(site_url() . '/admin/verification/advisor-list');
 	die();
 }
 
@@ -22,7 +22,7 @@ if (isset($_POST['save_profile'])) {
 		$_SESSION['update_profile_process_fail'] = true;
 	}
 
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
+	wp_redirect(site_url() . '/admin/verification/view-advisor/' . siget('advisor_id'));
 	exit;
 }
 
@@ -42,7 +42,7 @@ if (isset($_POST['save_employment'])) {
 		$_SESSION['process_employment_fail'] = true;
 	}
 
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
+	wp_redirect(site_url() . '/admin/verification/view-advisor/' . siget('advisor_id'));
 	exit;
 }
 
@@ -56,7 +56,7 @@ if (isset($_POST['save_resident_address'])) {
 		$_SESSION['update_address_process_fail'] = true;
 	}
 
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
+	wp_redirect(site_url() . '/admin/verification/view-advisor/' . siget('advisor_id'));
 	exit;
 }
 
@@ -70,7 +70,7 @@ if (isset($_POST['save_business_address'])) {
 		$_SESSION['update_address_process_fail'] = true;
 	}
 
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
+	wp_redirect(site_url() . '/admin/verification/view-advisor/' . siget('advisor_id'));
 	exit;
 }
 
@@ -86,7 +86,7 @@ if (isset($_POST['save_interest']) || isset($_POST['update_interest'])) {
 		$_SESSION['process_interest_fail'] = true;
 	}
 
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
+	wp_redirect(site_url() . '/admin/verification/view-advisor/' . siget('advisor_id'));
 	exit;
 }
 
@@ -102,7 +102,7 @@ if (isset($_POST['save_activity'])) {
 		$_SESSION['process_activity_fail'] = true;
 	}
 
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
+	wp_redirect(site_url() . '/admin/verification/view-advisor/' . siget('advisor_id'));
 	exit;
 }
 

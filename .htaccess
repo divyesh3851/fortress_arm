@@ -36,4 +36,7 @@ Options -MultiViews
 	RewriteRule ^admin/activity/view-activity/([^/]+)$ admin/activity/view-activity.php?advisor_id=$1 [NC,L]
 	RewriteRule ^admin/notes/?$ admin/notes.php [NC,L]
   
+  	RewriteRule ^admin/verification/advisor-list?$ admin/verification/advisor-list.php [NC,L]  
+	RewriteRule ^admin/verification/edit-advisor/([^/]+)$ admin/verification/edit-advisor.php?advisor_id=$1 [NC,L]
+	RewriteRule ^admin/verification/view-advisor/([^/]+)$ admin/verification/view-advisor.php?advisor_id=$1 [NC,L]
 </IfModule>

@@ -160,6 +160,21 @@ class Admin
         return $wpdb->insert('track_log', $log_data);
     }
 
+    public function create_mail_log($user_id, $email, $mail_type = '', $user_type = '')
+    {
+        global $wpdb;
+
+        $mail_log_info = array(
+            "logged_id"     => $_SESSION['fbs_admin_id'],
+            "user_id"       => $user_id,
+            "email"         => $email,
+            "mail_type"     => $mail_type,
+            "user_type"     => $user_type,
+            "created_at"    => current_time('mysql')
+        );
+
+        return $wpdb->insert("mail_log", $mail_log_info);
+    }
 
     // Checked Currenty Admin Login or Not If Not Then Redirect Login page
     public function check_login()

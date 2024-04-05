@@ -1,6 +1,6 @@
 <?php require '../../config.php';
-$page_name = 'advisor';
-$sub_page_name = 'advisor-list';
+$page_name = 'verification';
+$sub_page_name = 'verification-list';
 Admin()->check_login();
 
 if (siget('advisor_id')) {
@@ -8,7 +8,7 @@ if (siget('advisor_id')) {
 }
 
 if (!$selected_advisor_data) {
-    wp_redirect(site_url() . '/admin/advisor/advisor-list');
+    wp_redirect(site_url() . '/admin/verification/advisor-list');
     exit;
 }
 
@@ -28,7 +28,7 @@ if (isset($_POST['save_advisor'])) {
         $_SESSION['process_fail'] = true;
     }
 
-    wp_redirect(site_url() . '/admin/advisor/advisor-list');
+    wp_redirect(site_url() . '/admin/verification/advisor-list');
     exit;
 }
 

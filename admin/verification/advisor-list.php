@@ -1,6 +1,6 @@
 <?php require '../../config.php';
-$page_name = 'advisor';
-$sub_page_name = 'advisor-list';
+$page_name = 'verification';
+$sub_page_name = 'verification-list';
 Admin()->check_login();
 
 if (sipost('first_name') || sipost('last_name') || sipost('email')) {
@@ -15,7 +15,7 @@ if (sipost('first_name') || sipost('last_name') || sipost('email')) {
         $_SESSION['process_fail'] = true;
     }
 
-    wp_redirect(site_url() . '/admin/advisor/advisor-list');
+    wp_redirect(site_url() . '/admin/verification/advisor-list');
     exit;
 }
 
@@ -292,6 +292,59 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
     </div>
     <!--end::Scrolltop-->
 
+    <!--begin::Modal - Send Mail -->
+    <div class="modal fade" id="kt_modal_send_verification_mail_popup" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-600px">
+            <!--begin::Modal content-->
+            <div class="modal-content modal-rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header py-7 d-flex justify-content-between">
+                    <!--begin::Modal title-->
+                    <h2>Verification</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--begin::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body ">
+                    <!--begin::Form-->
+                    <form id="kt_modal_send_verification_mail_form" class="form" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="advisor_id" class="is_empty">
+                        <!--begin::Scroll-->
+                        <div class="row">
+                            <div class="col-md-12 fv-row">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">Enter Email</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <input type="text" name="verification_req_email" id="verification_req_email" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Enter Email" required />
+                                <!--end::Input-->
+                            </div>
+                        </div>
+                        <!--end::Scroll-->
+                        <!--begin::Actions-->
+                        <div class="text-center mt-7">
+                            <button type="button" name="send_mail_btn" id="send_mail_btn" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                <span class="indicator-label">Send</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--begin::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - Advisor -->
+
     <!--begin::Modal - Advisor -->
     <div class="modal fade" id="kt_modal_advisor" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
@@ -463,6 +516,78 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
     <!--end::Vendors Javascript-->
     <!--end::Javascript-->
     <script>
+        $(document).on("click", ".send_verification_mail", function() {
+            $("#advisor_id").val($(this).attr("advisor_id"));
+        });
+
+        $(document).ready(function() {
+
+            $('#send_mail_btn').click(function(event) {
+
+                if (!$("#verification_req_email").val() || !$("#advisor_id").val()) {
+                    return false;
+                }
+
+                $("#send_mail_btn .indicator-label").hide();
+                $("#send_mail_btn .indicator-progress").show();
+
+                // Prevent the default form submission
+                event.preventDefault();
+
+                $.post(ajax_url, {
+                    action: 'send_verification_mail',
+                    email: $("#verification_req_email").val(),
+                    advisor_id: $("#advisor_id").val(),
+                    is_ajax: true,
+                }, function(result) {
+
+                    var results = JSON.parse(result);
+
+                    $("#send_mail_btn .indicator-label").show();
+                    $("#send_mail_btn .indicator-progress").hide();
+
+                    if (results.status) {
+                        $("#send_mail_btn").after('<p class="text-success">' + results.msg + '</p>');
+                    } else {
+                        $("#send_mail_btn").after('<p class="text-danger">' + results.msg + '</p>');
+                    }
+
+                });
+            });
+
+            //$('#kt_modal_advisor_form').submit(function(event) {
+            $('#save_advisor').click(function(event) {
+
+                if (!$("#email").val()) {
+                    return false;
+                }
+
+                // Prevent the default form submission
+                event.preventDefault();
+
+                $.post(ajax_url, {
+                    action: 'check_email_exist',
+                    email: $("#email").val(),
+                    is_ajax: true,
+                }, function(result) {
+
+                    var results = JSON.parse(result);
+
+                    if (results.status) {
+                        $("#email").val('');
+                        $("#save_advisor").after("<p class='email_exist_msg text-danger mt-2'>Email already exist.</p>");
+                        setTimeout(function() {
+                            $('.email_exist_msg').remove();
+                        }, 2000);
+                    } else {
+                        $('#kt_modal_advisor_form').submit();
+                    }
+
+                });
+            });
+        });
+    </script>
+    <script>
         "use strict";
 
         // Class definition
@@ -488,7 +613,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                         className: 'row-selected'
                     },
                     ajax: {
-                        url: "<?php echo site_url(); ?>/admin/advisor/advisor-list-ajax.php",
+                        url: "<?php echo site_url(); ?>/admin/verification/advisor-list-ajax.php",
                     },
                     columns: [{
                             data: 'record_id'
@@ -566,6 +691,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             className: 'text-start',
                             render: function(data, type, row) {
                                 return `<div class="d-flex">  
+                                            <span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Add Advisor">Send Mail</span>
                                             <a href="tel:${data.mobile_no}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">
@@ -580,14 +706,14 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                                                     </div>
                                                 </div> 
                                             </a>
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.record_id}">
+                                            <a href="<?php echo site_url(); ?>/admin/verification/view-advisor/${data.record_id}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">
                                                         <i class="las la-eye fs-2 text-primary"></i>
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}">
+                                            <a href="<?php echo site_url(); ?>/admin/verification/edit-advisor/${data.record_id}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-2 fw-bold text-gray-700">
                                                         <i class="las la-user-edit fs-2 text-primary"></i>
@@ -899,41 +1025,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
             KTDatatablesServerSide.init();
         });
     </script>
-    <script>
-        $(document).ready(function() {
 
-            //$('#kt_modal_advisor_form').submit(function(event) {
-            $('#save_advisor').click(function(event) {
-
-                if (!$("#email").val()) {
-                    return false;
-                }
-
-                // Prevent the default form submission
-                event.preventDefault();
-
-                $.post(ajax_url, {
-                    action: 'check_email_exist',
-                    email: $("#email").val(),
-                    is_ajax: true,
-                }, function(result) {
-
-                    var results = JSON.parse(result);
-
-                    if (results.status) {
-                        $("#email").val('');
-                        $("#save_advisor").after("<p class='email_exist_msg text-danger mt-2'>Email already exist.</p>");
-                        setTimeout(function() {
-                            $('.email_exist_msg').remove();
-                        }, 2000);
-                    } else {
-                        $('#kt_modal_advisor_form').submit();
-                    }
-
-                });
-            });
-        });
-    </script>
 </body>
 <!--end::Body-->
 

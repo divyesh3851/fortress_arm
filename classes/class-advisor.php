@@ -26,6 +26,46 @@ class Advisor
         add_action('wp_ajax_check_email_exist', array($this, 'check_email_exist'));
 
         add_action('wp_ajax_get_selected_note_data', array($this, 'get_selected_note_data'));
+
+        add_action('wp_ajax_send_verification_mail', array($this, 'send_verification_mail'));
+    }
+
+    public function send_verification_mail()
+    {
+        global $wpdb;
+
+        if (!sipost('email') || !sipost('advisor_id')) {
+            echo json_encode(array('status' => false));
+            die();
+        }
+
+        $hash_key = generate_hash();
+
+        $email  = strtolower(sipost('email'));
+
+        $subject = 'Advisor Verification Request';
+
+        $mail_body = 'Please click the link below to fill out the form and complete your profile. <br>';
+
+        $mail_body .= '<a href="' . site_url() . '/advisor-profile/' . $hash_key . '">' . site_url() . '/advisor-profile/' . $hash_key . '</a> <br><br>';
+
+        $mail_body .= 'Regards <br>';
+        $mail_body .= 'Fortress Brokerage Solution';
+
+        $_SESSION['use_smtp'] = true;
+        if (send_mail($email, $subject, $mail_body)) {
+
+            $wpdb->update("advisor", array("hash_key" => $hash_key), array("id" => sipost('advisor_id')));
+
+            Admin()->create_mail_log(sipost("advisor_id"), $email, "advisor_complete_profile", "advisor");
+
+            echo json_encode(array('status' => true, 'msg' => 'Mail sent successfully'));
+            die();
+        }
+        unset($_SESSION['use_smtp']);
+
+        echo json_encode(array('status' => false, 'msg' => 'Mail sent failed.'));
+        die();
     }
 
     public function get_upcoming_birthday_list()
@@ -754,6 +794,8 @@ class Advisor
             "premium_volume"        => sipost("premium_volume"),
             "production_percentages" => $production_percentages,
             "markets"           => $markets,
+            "lead_owner"        => sipost('lead_owner'),
+            "rating"            => sipost('rating'),
             "anniversary_date"  => $anniversary_date,
             "updated_at"        => current_time('mysql')
         );
@@ -921,6 +963,8 @@ class Advisor
             "production_percentages" => $production_percentages,
             "markets"           => $markets,
             "anniversary_date"  => $anniversary_date,
+            "lead_owner"        => sipost('lead_owner'),
+            "rating"            => sipost('rating'),
             "created_at"        => current_time('mysql')
         );
 

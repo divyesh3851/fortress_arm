@@ -300,111 +300,11 @@ function description_excerpt($description, $length)
 function send_mail($to, $subject, $body, $attachments = array(), $mail_from = '')
 {
 
-	$mail_method  = get_option("mail_method");
+	$sender_name  = SITE_TITLE;
+	$sender_email = 'info@fortressbrokeragesolution.com';
+	$return_email = 'info@fortressbrokeragesolution.com';
+	$headers = 'From: ' . $sender_name . ' <' . $sender_email . '>' . "\r\n";
 
-	$sender_name  = get_option('sender_name') ? get_option('sender_name') : 'TribYou';
-
-	if (!empty($mail_from)) {
-
-		$sender_email = $mail_from;
-		$return_email = $mail_from;
-	} else {
-
-		$sender_email = get_option('sender_email') ? get_option('sender_email') : 'info@tribyou.it';
-		$return_email = get_option('sender_email') ? get_option('sender_email') : 'info@tribyou.it';
-	}
-
-	if ($mail_method == 'sendinblue') {
-
-		require_once(SITE_DIR . '/vendor/autoload.php');
-
-		$config = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', get_option("sendinblue_api_key"));
-
-		// For Email 
-		$apiInstance = new SendinBlue\Client\Api\TransactionalEmailsApi(
-			new GuzzleHttp\Client(),
-			$config
-		);
-
-		$sendSmtpEmail = new \SendinBlue\Client\Model\SendSmtpEmail();
-		$sendSmtpEmail['subject'] 	  = $subject;
-		$sendSmtpEmail['htmlContent'] = $body;
-		$sendSmtpEmail['sender'] 	  = array('name' => $sender_name, 'email' => $sender_email);
-
-		$sendSmtpEmail['to'] = array(
-			array('email' => $to, 'name' => $sender_name)
-		);
-
-		$sendSmtpEmail['replyTo'] = array('email' => $return_email, 'name' => $sender_name);
-
-		if ($attachments) {
-
-			$attachment_list = array();
-
-			foreach ($attachments as $attachment) {
-
-				$content 	= chunk_split(base64_encode(file_get_contents($attachment)));
-
-				$attachment_item = array(
-					'name'		=> basename($attachment),
-					'content'	=> $content
-				);
-
-				$attachment_list[] = $attachment_item;
-			}
-
-			$sendSmtpEmail['attachment'] = $attachment_list;
-		}
-
-		try {
-
-			$result = $apiInstance->sendTransacEmail($sendSmtpEmail);
-
-			if ($result->getMessageId()) {
-				return true;
-			}
-		} catch (Exception $e) {
-
-			echo $e->getMessage();
-		}
-	} else {
-
-		$headers  = 'From: ' . $sender_name . ' <' . $sender_email . '>' . "\r\n";
-		$headers .= 'Reply-To: ' . $return_email . '' . "\r\n";
-		$headers .= 'Return-Path: ' . $return_email . "\r\n";
-		$headers .= "MIME-Version: 1.0\r\n";
-		$headers .= "Content-type: text/html; charset: utf8\r\n";
-		$headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
-		$headers .= "X-Priority: 1 (Highest)\n";
-		$headers .= "X-MSMail-Priority: High\n";
-		$headers .= "Importance: High\n";
-
-		if (!empty(get_option('smtp_host')) && !empty(get_option('smtp_user_name')) && !empty(get_option('smtp_password')) && !empty(get_option('sender_email'))) {
-
-			define(USE_SMTP, TRUE);
-			define(SMTP_HOST, get_option('smtp_host'));
-			define(SMTP_AUTH_TYPE, 'ssl');
-			define(SMTP_PORT, get_option('smtp_port'));
-			define(SMTP_USERNAME, get_option('smtp_user_name'));
-			define(SMTP_PASSWORD, get_option('smtp_password'));
-			define(SMTP_FROM_EMAIL, get_option('sender_email'));
-			define(SMTP_DISABLE_AUTOTLS, TRUE);
-			define(SMTP_ALLOW_INSECURE_SSL, TRUE);
-		}
-
-		return wp_mail($to, $subject, $body, $headers, $attachments);
-	}
-}
-
-function send_ticket_mail($to, $subject, $body, $attachments = array())
-{
-
-	// This is headers
-	$sender_name  = get_option('ticket_smtp_sender_name') ? get_option('ticket_smtp_sender_name') : get_option('company_name');
-	$sender_email = get_option('ticket_smtp_sender_email') ? get_option('ticket_smtp_sender_email') : 'info@tribyou.it';
-	$return_email = get_option('ticket_smtp_sender_email') ? get_option('ticket_smtp_sender_email') : 'info@tribyou.it';
-
-	$headers  = 'From: ' . $sender_name . ' <' . $sender_email . '>' . "\r\n";
 	$headers .= 'Reply-To: ' . $return_email . '' . "\r\n";
 	$headers .= 'Return-Path: ' . $return_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
@@ -414,8 +314,17 @@ function send_ticket_mail($to, $subject, $body, $attachments = array())
 	$headers .= "X-MSMail-Priority: High\n";
 	$headers .= "Importance: High\n";
 
-	return wp_mail($to, $subject, $body, $headers, $attachments);
+	if (is_array($to)) {
+		foreach ($to as $recipient) {
+			wp_mail($recipient, $subject, $body, $headers, $attachments);
+		}
+	} else {
+		wp_mail($to, $subject, $body, $headers, $attachments);
+	}
+
+	return true;
 }
+
 
 function localize_scripts($object_name, $l10n)
 {

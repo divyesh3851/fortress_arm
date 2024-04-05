@@ -46,6 +46,13 @@ class Settings
         add_action('wp_ajax_market_delete', array($this, 'market_delete'));
     }
 
+    public function get_lead_owner_list()
+    {
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM lead_owner WHERE status = 0 ORDER BY id DESC");
+    }
+
     public function get_selected_activity_type_name($id)
     {
         $activity_type = array(
