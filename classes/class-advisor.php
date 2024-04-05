@@ -37,7 +37,8 @@ class Advisor
             $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
         }
 
-        return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,birth_date FROM advisor WHERE birth_date BETWEEN CURDATE() AND CURDATE() +  INTERVAL 7 DAY " . $AND . " ORDER BY birth_date ASC");
+        return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,birth_date FROM advisor WHERE DATE_FORMAT(birth_date, '%m-%d') BETWEEN DATE_FORMAT(CURDATE(), '%m-%d') 
+        AND DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 7 DAY), '%m-%d') AND status = 0 " . $AND . " ORDER BY birth_date ASC");
     }
 
     public function get_upcoming_anniversary_list()
@@ -49,7 +50,8 @@ class Advisor
             $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
         }
 
-        return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,anniversary_date FROM advisor WHERE anniversary_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY " . $AND . " ORDER BY anniversary_date ASC");
+        return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,anniversary_date FROM advisor WHERE DATE_FORMAT(anniversary_date, '%m-%d') BETWEEN DATE_FORMAT(CURDATE(), '%m-%d') 
+        AND DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 7 DAY), '%m-%d') AND status = 0 " . $AND . " ORDER BY anniversary_date ASC");
     }
 
     public function get_upcoming_birthday_anniversary_list()
