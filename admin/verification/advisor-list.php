@@ -547,6 +547,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                     $("#send_mail_btn .indicator-progress").hide();
 
                     if (results.status) {
+                        $('#kt_modal_send_verification_mail_form')[0].reset();
                         $("#send_mail_btn").after('<p class="text-success">' + results.msg + '</p>');
                     } else {
                         $("#send_mail_btn").after('<p class="text-danger">' + results.msg + '</p>');

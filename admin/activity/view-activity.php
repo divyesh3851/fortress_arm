@@ -86,6 +86,13 @@ $get_advisor_activity_list = Admin()->get_advisor_activity_list(siget('advisor_i
 
                                                         $log_created_from = $wpdb->get_row("SELECT first_name, last_name FROM admin WHERE id = " . $activity_result->logged_id);
 
+                                                        if ($log_created_from) {
+                                                            $name = $log_created_from->first_name . ' ' . $log_created_from->last_name;
+                                                        } else if ($activity_result->user_id && $activity_result->user_type == 'advisor') {
+                                                            $get_advisor_info = $wpdb->get_row("SELECT first_name, last_name FROM advisor WHERE id = " . $activity_result->user_id);
+                                                            $name = $get_advisor_info->first_name . ' ' . $get_advisor_info->last_name;
+                                                        }
+
                                                         $created_from_profile = Admin()->get_admin_meta($activity_result->logged_id, "profile_img");
                                                     ?>
                                                         <!--begin::Timeline item-->
@@ -110,10 +117,10 @@ $get_advisor_activity_list = Admin()->get_advisor_activity_list(siget('advisor_i
                                                                     <!--begin::Description-->
                                                                     <div class="d-flex align-items-center mt-1 fs-6">
                                                                         <!--begin::Info-->
-                                                                        <div class="text-muted me-2 fs-7">Created at <?php echo date("F d,Y", strtotime($activity_result->created_at)); ?> by </div>
+                                                                        <div class="text-muted me-2 fs-7">Created at <?php echo date("F d,Y", strtotime($activity_result->created_at)); ?> by <?php echo  $name; ?></div>
                                                                         <!--end::Info-->
                                                                         <!--begin::User-->
-                                                                        <div class="symbol symbol-circle symbol-25px" data-bs-toggle="tooltip" data-bs-boundary="window" data-bs-placement="top" title="<?php echo $log_created_from->first_name . ' ' . $log_created_from->last_name; ?>">
+                                                                        <div class="symbol symbol-circle symbol-25px" data-bs-toggle="tooltip" data-bs-boundary="window" data-bs-placement="top" title="<?php echo  $name; ?>">
                                                                             <?php
                                                                             if ($created_from_profile) { ?>
                                                                                 <img src="<?php echo site_url(); ?>/uploads/admin/<?php echo $created_from_profile; ?>" alt="img" />

@@ -30,6 +30,147 @@ class Advisor
         add_action('wp_ajax_send_verification_mail', array($this, 'send_verification_mail'));
     }
 
+    public function update_address($advisor_id = '')
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        if (!$advisor_id || !sipost('address_id') || !sipost('type') || !sipost('address_label') || !sipost('street_address') || !sipost('city') || !sipost('state')) {
+            return false;
+        }
+
+        $address_info = array(
+            'advisor_id'        => $advisor_id,
+            'type'              => sipost('type'),
+            'address_label'     => sipost('address_label'),
+            'street_address'    => sipost('street_address'),
+            'building_name'     => sipost('building_name'),
+            'city'              => sipost('city'),
+            'state'             => sipost('state'),
+            'zipcode'           => sipost('zipcode'),
+            'updated_at'        => current_time('mysql')
+        );
+
+        if ($_FILES['banner'] && $_FILES['banner']['error'] == 0) {
+
+            $file_name  = $_FILES['banner']['name'];
+
+            $file_tmp   = $_FILES['banner']['tmp_name'];
+
+            $file_type  = $_FILES['banner']['type'];
+
+            $ext        = strtolower(end(explode('.', $file_name)));
+
+            $new_file_name    = time() . rand(111, 999) . "." . $ext;
+
+            if (move_uploaded_file($file_tmp, SITE_DIR . '/uploads/address/' . $new_file_name)) {
+                $address_info['banner'] = $new_file_name;
+            }
+        }
+
+        $wpdb->update("advisor_address", $address_info, array('id' => sipost('address_id')));
+
+        Admin()->create_track_log_activity($advisor_id, sipost('address_id'), 'address updated', 'address_update', $address_info, $address_info, 'address has been updated', 'advisor');
+
+        return true;
+    }
+
+    public function add_address($advisor_id = '')
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        if (!$advisor_id || !sipost('type') || !sipost('address_label') || !sipost('street_address') || !sipost('city') || !sipost('state')) {
+            return false;
+        }
+
+        $check_default = $wpdb->get_row("SELECT id FROM advisor_address WHERE advisor_id = " . $advisor_id . " AND type = " . sipost('type') . " AND default_address = 1");
+
+        if ($check_default) {
+            $wpdb->update("advisor_address", array("default_address" => 0), array("id" => $check_default->id));
+        }
+
+        $address_info = array(
+            'advisor_id'        => $advisor_id,
+            'type'              => sipost('type'),
+            'address_label'     => sipost('address_label'),
+            'street_address'    => sipost('street_address'),
+            'building_name'     => sipost('building_name'),
+            'city'              => sipost('city'),
+            'state'             => sipost('state'),
+            'zipcode'           => sipost('zipcode'),
+            'default_address'   => 1,
+            'created_at'        => current_time('mysql')
+        );
+
+        if ($_FILES['banner'] && $_FILES['banner']['error'] == 0) {
+
+            $file_name  = $_FILES['banner']['name'];
+
+            $file_tmp   = $_FILES['banner']['tmp_name'];
+
+            $file_type  = $_FILES['banner']['type'];
+
+            $ext        = strtolower(end(explode('.', $file_name)));
+
+            $new_file_name    = time() . rand(111, 999) . "." . $ext;
+
+            if (move_uploaded_file($file_tmp, SITE_DIR . '/uploads/address/' . $new_file_name)) {
+                $address_info['banner'] = $new_file_name;
+            }
+        }
+
+        $wpdb->insert("advisor_address", $address_info);
+        $last_id = $wpdb->insert_id;
+
+        Admin()->create_track_log_activity($advisor_id, $last_id, 'new address add', 'address_add', $address_info, $address_info, 'address has been added', 'advisor');
+
+        return true;
+    }
+
+    public function get_advisor_address_list($advisor_id = '')
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        if (!$advisor_id) {
+            return false;
+        }
+
+        return $wpdb->get_results("SELECT * FROM advisor_address WHERE advisor_id = " . $advisor_id . " AND status = 0");
+    }
+
+    public function get_advisor_default_address($advisor_id = '')
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        if (!$advisor_id) {
+            return false;
+        }
+
+        $address_list = $wpdb->get_results("SELECT * FROM advisor_address WHERE advisor_id = " . $advisor_id . " AND  default_address = 1 AND status = 0");
+
+        $address_array = array();
+        if ($address_list) {
+            foreach ($address_list as $address_result) {
+                if ($address_result->type == 1) {
+                    $address_array['resident'] = $address_result;
+                } else if ($address_result->type == 2) {
+                    $address_array['business'] = $address_result;
+                } else if ($address_result->type) {
+                    $address_array['other'] = $address_result;
+                }
+            }
+        }
+
+        return $address_array;
+    }
+
     public function send_verification_mail()
     {
         global $wpdb;
@@ -186,7 +327,7 @@ class Advisor
             return false;
         }
 
-        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date < '" . date('Y-m-d') . "' ORDER BY activity_date DESC LIMIT 0,5");
+        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date < '" . date('Y-m-d') . "' AND user_id = " . $advisor_id . " ORDER BY activity_date DESC LIMIT 0,5");
     }
 
     public function get_advisor_upcoming_activity($advisor_id)
@@ -199,7 +340,7 @@ class Advisor
             return false;
         }
 
-        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' ORDER BY activity_date ASC LIMIT 0,5");
+        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND user_id = " . $advisor_id . " ORDER BY activity_date ASC LIMIT 0,5");
     }
 
     public function add_activity($advisor_id)
@@ -216,6 +357,7 @@ class Advisor
         $activity_date = ($activity_date) ? date('Y-m-d', $activity_date) : '';
 
         $activity_info = array(
+            'logged_id'     => ADMIN_USER_ID,
             'user_id'       => $advisor_id,
             'user_type'     => 'advisor',
             'title'         => sipost('title'),
@@ -351,40 +493,28 @@ class Advisor
         */
     }
 
-    public function get_selected_address_data($advisor_id)
+    public function get_selected_address_data($address_id = '')
     {
         global $wpdb;
 
-        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+        $address_id = (sipost('address_id')) ? sipost('address_id') : $address_id;
 
-        if (!$advisor_id) {
+        if (!$address_id) {
             return false;
         }
 
-        $address_info = $wpdb->get_row("SELECT city,state,zipcode,business_city,business_state,business_zipcode FROM advisor WHERE id = " . $advisor_id);
+        $address_info = $wpdb->get_row("SELECT * FROM advisor_address WHERE id = " . $address_id);
 
-        $resident_address_info = array(
-            'city'          => $address_info->city,
-            'state'         => $address_info->state,
-            'zipcode'       => $address_info->zipcode,
-            'address_label' => $this->get_advisor_meta($advisor_id, 'resident_address_label'),
-            'street_address' => $this->get_advisor_meta($advisor_id, 'resident_street_address'),
-            'building_name' => $this->get_advisor_meta($advisor_id, 'resident_building_name'),
-        );
+        if ($address_info) {
+            echo json_encode(array("status" => true, "address_info" => $address_info));
+        } else {
+            echo json_encode(array("status" => false));
+        }
 
-        $business_address_info = array(
-            'city'          => $address_info->business_city,
-            'state'         => $address_info->business_state,
-            'zipcode'       => $address_info->business_zipcode,
-            'address_label' => $this->get_advisor_meta($advisor_id, 'business_address_label'),
-            'street_address' => $this->get_advisor_meta($advisor_id, 'business_street_address'),
-            'building_name' => $this->get_advisor_meta($advisor_id, 'business_building_name'),
-        );
-
-        echo json_encode(array("resident" => $resident_address_info, "business" => $business_address_info));
         die();
     }
 
+    // no use
     public function update_advisor_business_address($advisor_id)
     {
         global $wpdb;
@@ -427,6 +557,7 @@ class Advisor
         }
     }
 
+    // no use
     public function update_advisor_resident_address($advisor_id)
     {
         global $wpdb;
@@ -731,15 +862,15 @@ class Advisor
         }
     }
 
-    public function update_advisor()
+    public function update_advisor($advisor_id = '')
     {
         global $wpdb;
 
-        if (!sipost('advisor_id') || !sipost("preferred_name") || !sipost('first_name') || !sipost('last_name') || !sipost('email')) {
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        if (!$advisor_id || !sipost("preferred_name") || !sipost('first_name') || !sipost('last_name') || !sipost('email')) {
             return false;
         }
-
-        $advisor_id = sipost('advisor_id');
 
         $email = trim(strtolower(sipost('email')));
 
@@ -807,9 +938,21 @@ class Advisor
 
         if (!empty(sipost('contact_info_row_list'))) {
 
-            foreach (sipost('contact_info_row_list') as $row_no) {
+            $all_contact_ids = $wpdb->get_results($wpdb->prepare("SELECT id FROM advisor_extra_contact WHERE advisor_id = %d", $advisor_id));
 
-                $email = trim(strtolower(sipost("email_" . $row_no)));
+            $old_ids = array();
+            foreach ($all_contact_ids as $contact_result) {
+                $old_ids[] = $contact_result->id;
+            }
+
+            $need_to_delete = array();
+
+            $i = 0;
+            foreach ($_POST['contact_info_row_list'] as $row_no) {
+
+                if (!sipost("contact_type_" . $row_no) && (!sipost("mobile_no_" . $row_no) || !sipost("email_" . $row_no))) {
+                    continue;
+                }
 
                 $advisor_contact = array(
                     "advisor_id"    => $advisor_id,
@@ -818,8 +961,34 @@ class Advisor
                     "email"         => $email,
                 );
 
-                $wpdb->update("advisor_extra_contact", $advisor_contact, array("id" => sipost("contact_id_" . $row_no)));
+                if (sipost("contact_id_"  . $row_no)) {
+
+                    if (in_array(sipost("contact_id_"  . $row_no), $old_ids)) {
+
+                        $email = trim(strtolower(sipost("email_" . $row_no)));
+
+                        //$wpdb->update("advisor_extra_contact", $advisor_contact, array("id" => sipost("contact_id_"  . $row_no)));
+
+                        $need_to_delete[] = sipost("contact_id_"  . $row_no);
+                    }
+                } else {
+                    $check_contact = $wpdb->get_var("SELECT id FROM advisor_extra_contact WHERE contact_type = '" . sipost("contact_type_" . $row_no) . "' AND ( mobile_no = '" . sipost("mobile_no_" . $row_no) . "' || email = '" . $email . "')");
+
+                    if (!$check_contact) {
+                        //$wpdb->insert("advisor_extra_contact", $advisor_contact);
+                    }
+                }
+
+                $i++;
             }
+
+            $remove_ids = array_diff($old_ids, $need_to_delete);
+
+            foreach ($remove_ids as $delete_id) {
+                $wpdb->delete("advisor_extra_contact", array('id' => $delete_id));
+            }
+        } else {
+            $wpdb->delete("advisor_extra_contact", array('advisor_id' => $advisor_id));
         }
 
         $this->update_advisor_meta($advisor_id, 'lead_owner', sipost('lead_owner'));

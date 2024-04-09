@@ -46,6 +46,17 @@ class Settings
         add_action('wp_ajax_market_delete', array($this, 'market_delete'));
     }
 
+    public function get_address_type_list()
+    {
+        $address_type = array(
+            "1" => "Resident",
+            "2" => "Business",
+            "3" => "Other",
+        );
+
+        return $address_type;
+    }
+
     public function get_lead_owner_list()
     {
         global $wpdb;

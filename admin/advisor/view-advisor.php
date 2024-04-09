@@ -46,44 +46,18 @@ if (isset($_POST['save_employment'])) {
 	exit;
 }
 
-if (isset($_POST['save_resident_address'])) {
+if (isset($_POST['save_address'])) {
 
-	$response = Advisor()->update_advisor_resident_address($selected_advisor_data->id);
+	if (sipost('address_id')) {
+		$response = Advisor()->update_address($selected_advisor_data->id);
+	} else {
+		$response = Advisor()->add_address($selected_advisor_data->id);
+	}
 
 	if ($response == 1) {
 		$_SESSION['update_address_process_success'] = true;
 	} else {
 		$_SESSION['update_address_process_fail'] = true;
-	}
-
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
-	exit;
-}
-
-if (isset($_POST['save_business_address'])) {
-
-	$response = Advisor()->update_advisor_business_address($selected_advisor_data->id);
-
-	if ($response == 1) {
-		$_SESSION['update_address_process_success'] = true;
-	} else {
-		$_SESSION['update_address_process_fail'] = true;
-	}
-
-	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
-	exit;
-}
-
-if (isset($_POST['save_interest']) || isset($_POST['update_interest'])) {
-
-	$response = Advisor()->update_interest($selected_advisor_data->id);
-
-	if ($response == 1) {
-		$_SESSION['process_interest_success'] = true;
-	} elseif ($response == 'duplicate') {
-		$_SESSION['process_interest_duplicate'] = true;
-	} else {
-		$_SESSION['process_interest_fail'] = true;
 	}
 
 	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
@@ -124,6 +98,8 @@ $get_interest_disability_income_list = Settings()->get_interest_disability_incom
 
 $get_interest_group_insurance_list = Settings()->get_interest_group_insurance();
 
+$get_address_type_list = Settings()->get_address_type_list();
+
 $get_selected_advisor_interest = Advisor()->get_selected_advisor_interest($selected_advisor_data->id);
 
 $selected_life_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->life_insurance) ? explode(",", $get_selected_advisor_interest->life_insurance) : array();
@@ -141,6 +117,8 @@ $financial_interest = ($selected_advisor_data->financial_interest) ? implode(","
 $get_advisor_upcoming_activity_list = Advisor()->get_advisor_upcoming_activity($selected_advisor_data->id);
 
 $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected_advisor_data->id);
+
+$get_advisor_default_address = Advisor()->get_advisor_default_address($selected_advisor_data->id); // 1 Resident
 
 ?>
 <!DOCTYPE html>
@@ -605,66 +583,8 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 																	</div>
 																</div>
 															</div>
-														</div>
-														<div class="col-xl-6 col-md-6 col-sm-12">
-															<div class="card mb-5 mb-xl-10" id="">
-																<!--begin::Card header-->
-																<div class="card-header p-5 pt-0 pb-0">
-																	<!--begin::Card title-->
-																	<div class="card-title">
-																		<i class="ki-duotone ki-geolocation fs-2x">
-																			<span class="path1"></span>
-																			<span class="path2"></span>
-																		</i>
-																		<h3 class="fw-bold p-2 pt-0 pb-0">
-																			Address
-																		</h3>
-																	</div>
-																	<!--end::Card title-->
-																</div>
-																<!--end::Card header-->
-																<!--begin::Card body-->
-																<div class="card-body p-5">
-																	<div class="row">
-																		<div class="col-md-10">
-																			<h4 class="text-gray-800 fw-bold"><?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, 'resident_address_label'); ?> </h4>
-																		</div>
-																		<div class="col-md-2">
-																			<a href="" class="badge badge-light-primary fw-bold me-auto px-4 py-3 " data-bs-toggle="modal" data-bs-target="#kt_modal_edit_resident_address" address_type='resident' id="edit_resident_address" advisor_id="<?php echo $selected_advisor_data->id; ?>">Edit </a>
-																		</div>
-																	</div>
-																	<div class="">
-																		<div class="mb-8 mt-4">
-																			<img src="<?php echo site_url(); ?>/assets/media/stock/900x600/44.jpg" class="rounded mw-100" alt="">
-																		</div>
-																		<!--begin::Item-->
-																		<div class="d-flex align-items-center ">
-																			<!--begin::Icon-->
-																			<i class="ki-outline ki-geolocation fs-1 text-primary me-5"></i>
-																			<!--end::Icon-->
-																			<!--begin::Info-->
-																			<div class="d-flex flex-column">
-																				<h5 class="text-gray-800 fw-bold">Resident Address
-																				</h5>
-																				<!--begin::Section-->
-																				<div class="fw-semibold">
-																					<!--begin::Link-->
-																					<a href="#" class="link-primary"><?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, 'resident_street_address') . '  ' . Advisor()->get_advisor_meta($selected_advisor_data->id, 'resident_building_name') . ', ' . $selected_advisor_data->city . ', ' . $selected_advisor_data->state . ', ' . $selected_advisor_data->zipcode; ?></a>
-																					<!--end::Link-->
-																				</div>
-																				<!--end::Section-->
-																			</div>
-																			<!--end::Info-->
-																		</div>
-																		<!--end::Item-->
-																	</div>
-																</div>
-																<!--end::Card body-->
-															</div>
-														</div>
+															<?php if (!empty($get_advisor_last_employment)) {  ?>
 
-														<?php if (!empty($get_advisor_last_employment)) {  ?>
-															<div class="col-xl-6 col-md-6 col-sm-12">
 																<div class="card mb-5 mb-xl-10" id="">
 																	<!--begin::Card header-->
 																	<div class="card-header p-5 pt-0 pb-0">
@@ -755,10 +675,121 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 																	</div>
 																	<!--end::Card body-->
 																</div>
-															</div>
-														<?php } ?>
-
+															<?php } ?>
+														</div>
 														<div class="col-xl-6 col-md-6 col-sm-12">
+															<div class="card mb-5 mb-xl-10" id="">
+																<!--begin::Card header-->
+																<div class="card-header p-5 pt-0 pb-0">
+																	<!--begin::Card title-->
+																	<div class="card-title">
+																		<i class="ki-duotone ki-geolocation fs-2x">
+																			<span class="path1"></span>
+																			<span class="path2"></span>
+																		</i>
+																		<h3 class="fw-bold p-2 pt-0 pb-0">
+																			Address
+																		</h3>
+																	</div>
+																	<!--end::Card title-->
+																	<!--begin::Action-->
+																	<a href="" class=" align-self-center modal_address" data-bs-toggle="modal" data-bs-target="#kt_modal_address" id="add_address" address_id=""><i class="bi bi-plus-circle text-primary fs-2x"></i>
+																	</a>
+																	<!--end::Action-->
+																</div>
+																<!--end::Card header-->
+																<!--begin::Card body-->
+																<?php
+																if ($get_advisor_default_address && isset($get_advisor_default_address['resident'])) { ?>
+																	<div class="card-body p-5">
+																		<div class="row">
+																			<div class="col-md-10">
+																				<h4 class="text-gray-800 fw-bold"><?php echo $get_advisor_default_address['resident']->address_label; ?></h4>
+																			</div>
+																			<div class="col-md-2">
+																				<a href="" class="badge badge-light-primary fw-bold me-auto px-4 py-3 modal_address" data-bs-toggle="modal" data-bs-target="#kt_modal_address" address_id="<?php echo $get_advisor_default_address['resident']->id; ?>">Edit </a>
+																			</div>
+																		</div>
+																		<div class="">
+																			<div class="mb-8 mt-4">
+																				<?php if ($get_advisor_default_address['resident']->banner) { ?>
+																					<img src="<?php echo site_url(); ?>/uploads/address/<?php echo $get_advisor_default_address['resident']->banner; ?>" class="rounded mw-100" alt="">
+																				<?php } else { ?>
+																					<img src="<?php echo site_url(); ?>/assets/media/stock/900x600/44.jpg" class="rounded mw-100" alt="">
+																				<?php } ?>
+																			</div>
+																			<!--begin::Item-->
+																			<div class="d-flex align-items-center ">
+																				<!--begin::Icon-->
+																				<i class="ki-outline ki-geolocation fs-1 text-primary me-5"></i>
+																				<!--end::Icon-->
+																				<!--begin::Info-->
+																				<div class="d-flex flex-column">
+
+																					<h5 class="text-gray-800 fw-bold">Resident Address
+																					</h5>
+
+																					<!--begin::Section-->
+																					<div class="fw-semibold">
+																						<!--begin::Link-->
+																						<a href="#" class="link-primary"><?php echo $get_advisor_default_address['resident']->street_address . '  ' . $get_advisor_default_address['resident']->building_name . ', ' . $get_advisor_default_address['resident']->city . ', ' . $get_advisor_default_address['resident']->state . ', ' . $get_advisor_default_address['resident']->zipcode; ?></a>
+																						<!--end::Link-->
+																					</div>
+																					<!--end::Section-->
+																				</div>
+																				<!--end::Info-->
+																			</div>
+																			<!--end::Item-->
+																		</div>
+																	</div>
+																<?php } ?>
+																<?php
+																if ($get_advisor_default_address && isset($get_advisor_default_address['business'])) { ?>
+																	<div class="separator separator-dashed "></div>
+																	<div class="card-body p-5">
+																		<div class="row">
+																			<div class="col-md-10">
+																				<h4 class="text-gray-800 fw-bold"><?php echo $get_advisor_default_address['business']->address_label; ?></h4>
+																			</div>
+																			<div class="col-md-2">
+																				<a href="" class="badge badge-light-primary fw-bold me-auto px-4 py-3 modal_address" data-bs-toggle="modal" data-bs-target="#kt_modal_address" address_id="<?php echo $get_advisor_default_address['business']->id; ?>">Edit </a>
+																			</div>
+																		</div>
+																		<div class="">
+																			<div class="mb-8 mt-4">
+																				<?php if ($get_advisor_default_address['business']->banner) { ?>
+																					<img src="<?php echo site_url(); ?>/uploads/address/<?php echo $get_advisor_default_address['business']->banner; ?>" class="rounded mw-100" alt="">
+																				<?php } else { ?>
+																					<img src="<?php echo site_url(); ?>/assets/media/stock/900x600/44.jpg" class="rounded mw-100" alt="">
+																				<?php } ?>
+																			</div>
+																			<!--begin::Item-->
+																			<div class="d-flex align-items-center ">
+																				<!--begin::Icon-->
+																				<i class="ki-outline ki-geolocation fs-1 text-primary me-5"></i>
+																				<!--end::Icon-->
+																				<!--begin::Info-->
+																				<div class="d-flex flex-column">
+
+																					<h5 class="text-gray-800 fw-bold">Business Address
+																					</h5>
+
+																					<!--begin::Section-->
+																					<div class="fw-semibold">
+																						<!--begin::Link-->
+																						<a href="#" class="link-primary"><?php echo $get_advisor_default_address['business']->street_address . '  ' . $get_advisor_default_address['business']->building_name . ', ' . $get_advisor_default_address['business']->city . ', ' . $get_advisor_default_address['business']->state . ', ' . $get_advisor_default_address['business']->zipcode; ?></a>
+																						<!--end::Link-->
+																					</div>
+																					<!--end::Section-->
+																				</div>
+																				<!--end::Info-->
+																			</div>
+																			<!--end::Item-->
+																		</div>
+																	</div>
+																<?php } ?>
+																<!--end::Card body-->
+															</div>
 															<div class="card mb-5 mb-xl-10" id="">
 																<!--begin::Card header-->
 																<div class="card-header p-5 pt-0 pb-0">
@@ -843,10 +874,10 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 																				<?php echo $activity_result->note; ?>
 																			</div>
 																			<div class="meta mt-2">
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary"><?php echo $activity_result->start_time; ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo $activity_result->start_time; ?></span>
 																				<?php if ($activity_result->type) { ?>
-																					<span class="badge py-3 px-4 fs-7 badge-light-primary"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
+																					<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
 																				<?php } ?>
 																			</div>
 																			<div class="separator separator-dashed mb-6 mt-5"></div>
@@ -860,10 +891,10 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 																				<?php echo $activity_result->note; ?>
 																			</div>
 																			<div class="meta mt-2">
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary"><?php echo $activity_result->start_time; ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo $activity_result->start_time; ?></span>
 																				<?php if ($activity_result->type) { ?>
-																					<span class="badge py-3 px-4 fs-7 badge-light-primary"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
+																					<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
 																				<?php } ?>
 																			</div>
 																			<div class="separator separator-dashed mb-6 mt-5"></div>
@@ -1221,9 +1252,8 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 	</div>
 	<!--end::Modals-->
 
-	<!--begin::Modals-->
 	<!--begin::Modal - Edit Resident Address -->
-	<div class="modal fade" id="kt_modal_edit_resident_address" tabindex="-1" aria-hidden="true">
+	<div class="modal fade" id="kt_modal_address" tabindex="-1" aria-hidden="true">
 		<!--begin::Modal dialog-->
 		<div class="modal-dialog modal-dialog-centered mw-850px">
 			<!--begin::Modal content-->
@@ -1231,7 +1261,7 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 				<!--begin::Modal header-->
 				<div class="modal-header py-5 d-flex justify-content-between">
 					<!--begin::Modal title-->
-					<h2>Residential Address Details</h2>
+					<h2>Address Details</h2>
 					<!--end::Modal title-->
 					<!--begin::Close-->
 					<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -1242,17 +1272,31 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 				<!--begin::Modal header-->
 				<!--begin::Modal body-->
 				<div class="modal-body scroll-y m-2">
-					<form class="" id="edit_resident_address_form" method="post" enctype="multipart/form-data">
+					<form class="" id="address_form" method="post" enctype="multipart/form-data">
+						<input type="hidden" id="address_id" name="address_id" class="is_empty">
 						<div class="w-100">
 							<!--begin::Input group-->
 							<div class="row mb-7">
-								<div class="col-md-12 fv-row">
+								<div class="col-md-4 fv-row">
 									<!--begin::Label-->
-									<label class="required fw-semibold fs-6 mb-2">Custom Residential Label
+									<label class="required fw-semibold fs-6 mb-2">State</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="type" id="type" data-control="select2" data-placeholder="Select a Type..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_address" required>
+										<option value="">Select Type</option>
+										<?php foreach (Settings()->get_address_type_list() as $key => $type_result) { ?>
+											<option value="<?php echo $key; ?>"><?php echo $type_result; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+								<div class="col-md-8 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">Custom Address Label
 									</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="resident_address_label" id="resident_address_label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Street Address" required />
+									<input type="text" name="address_label" id="address_label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Street Address" required />
 									<!--end::Input-->
 								</div>
 							</div>
@@ -1263,7 +1307,7 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 									<label class="required fw-semibold fs-6 mb-2">Street Address</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="resident_street_address" id="resident_street_address" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Street Address" required />
+									<input type="text" name="street_address" id="street_address" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Street Address" required />
 									<!--end::Input-->
 								</div>
 
@@ -1272,7 +1316,7 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 									<label class=" fw-semibold fs-6 mb-2">Apartment, suite, unit, building, floor, etc.</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="resident_building_name" id="resident_building_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Apartment, suite, unit, building, floor, etc" />
+									<input type="text" name="building_name" id="building_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Apartment, suite, unit, building, floor, etc" />
 									<!--end::Input-->
 								</div>
 							</div>
@@ -1282,7 +1326,7 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 									<label class="required fw-semibold fs-6 mb-2">City</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="resident_city" id="resident_city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
+									<input type="text" name="city" id="address_city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
 									<!--end::Input-->
 								</div>
 
@@ -1291,7 +1335,7 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 									<label class="required fw-semibold fs-6 mb-2">State</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<select name="resident_state" id="resident_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_resident_address" required>
+									<select name="state" id="address_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_address" required>
 										<option value="">Select State</option>
 										<?php foreach ($get_state_list as $state_result) { ?>
 											<option value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
@@ -1305,13 +1349,60 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 									<label class="required fw-semibold fs-6 mb-2">Zipcode</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="resident_zipcode" id="resident_zipcode" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Zipcode" required />
+									<input type="text" name="zipcode" id="address_zipcode" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Zipcode" required />
 									<!--end::Input-->
+								</div>
+							</div>
+							<div class="row mb-7">
+								<div class="col-md-4 fv-row">
+									<!--begin::Input group-->
+									<!--begin::Label-->
+									<label class="d-block fw-semibold fs-6 mb-5">Banner Image</label>
+									<!--end::Label-->
+									<!--begin::Image placeholder-->
+									<style>
+										.image-input-placeholder {
+											background-image: url('<?php echo site_url(); ?>/assets/media/svg/files/blank-image.svg');
+										}
+
+										[data-bs-theme="dark"] .image-input-placeholder {
+											background-image: url('<?php echo site_url(); ?>/assets/media/svg/files/blank-image-dark.svg');
+										}
+									</style>
+									<!--end::Image placeholder-->
+									<!--begin::Image input-->
+									<div class="image-input image-input-outline image-input-placeholder" data-kt-image-input="true">
+										<div class="image-input-wrapper w-125px h-125px" id="banner_src" style="background-image: url(<?php echo site_url() . '/assets/media/svg/files/blank-image.svg'; ?>);"></div>
+										<!--end::Preview existing avatar-->
+										<!--begin::Label-->
+										<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Banner Image">
+											<i class="ki-outline ki-pencil fs-7"></i>
+											<!--begin::Inputs-->
+											<input type="file" name="banner" accept=".png, .jpg, .jpeg" />
+											<input type="hidden" name="banner_remove" />
+											<!--end::Inputs-->
+										</label>
+										<!--end::Label-->
+										<!--begin::Cancel-->
+										<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Banner">
+											<i class="ki-outline ki-cross fs-2"></i>
+										</span>
+										<!--end::Cancel-->
+										<!--begin::Remove-->
+										<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Banner">
+											<i class="ki-outline ki-cross fs-2"></i>
+										</span>
+										<!--end::Remove-->
+									</div>
+									<!--end::Image input-->
+									<!--begin::Hint-->
+									<div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+									<!--end::Hint-->
 								</div>
 							</div>
 							<div class="d-flex justify-content-end align-items-center mt-12">
 								<!--begin::Button-->
-								<button type="submit" class="btn btn-primary" id="save_resident_address" name="save_resident_address">
+								<button type="submit" class="btn btn-primary" id="save_address" name="save_address">
 									<span class="indicator-label">
 										Save
 									</span>
@@ -1328,117 +1419,6 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 			</div>
 		</div>
 		<!--end::Modal - Edit Resident Address-->
-	</div>
-	<!--end::Modals-->
-
-	<!--begin::Modals-->
-	<!--begin::Modal - Edit Business Address -->
-	<div class="modal fade" id="kt_modal_edit_business_address" tabindex="-1" aria-hidden="true">
-		<!--begin::Modal dialog-->
-		<div class="modal-dialog modal-dialog-centered mw-850px">
-			<!--begin::Modal content-->
-			<div class="modal-content modal-rounded">
-				<!--begin::Modal header-->
-				<div class="modal-header py-5 d-flex justify-content-between">
-					<!--begin::Modal title-->
-					<h2>Business Address Details</h2>
-					<!--end::Modal title-->
-					<!--begin::Close-->
-					<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-						<i class="ki-outline ki-cross fs-1"></i>
-					</div>
-					<!--end::Close-->
-				</div>
-				<!--begin::Modal header-->
-				<!--begin::Modal body-->
-				<div class="modal-body scroll-y m-2">
-					<form class="" id="edit_business_address_form" method="post" enctype="multipart/form-data">
-						<div class="w-100">
-							<!--begin::Input group-->
-							<div class="row mb-7">
-								<div class="col-md-12 fv-row">
-									<!--begin::Label-->
-									<label class="required fw-semibold fs-6 mb-2">Custom Business Label
-									</label>
-									<!--end::Label-->
-									<!--begin::Input-->
-									<input type="text" name="business_address_label" id="business_address_label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Street Address" required />
-									<!--end::Input-->
-								</div>
-							</div>
-							<div class="row mb-7">
-
-								<div class="col-md-6 fv-row">
-									<!--begin::Label-->
-									<label class="required fw-semibold fs-6 mb-2">Street Address</label>
-									<!--end::Label-->
-									<!--begin::Input-->
-									<input type="text" name="business_street_address" id="business_street_address" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Street Address" required />
-									<!--end::Input-->
-								</div>
-
-								<div class="col-md-6 fv-row">
-									<!--begin::Label-->
-									<label class=" fw-semibold fs-6 mb-2">Apartment, suite, unit, building, floor, etc.</label>
-									<!--end::Label-->
-									<!--begin::Input-->
-									<input type="text" name="business_building_name" id="business_building_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Apartment, suite, unit, building, floor, etc" />
-									<!--end::Input-->
-								</div>
-							</div>
-							<div class="row mb-7">
-								<div class="col-md-4 fv-row">
-									<!--begin::Label-->
-									<label class="required fw-semibold fs-6 mb-2">City</label>
-									<!--end::Label-->
-									<!--begin::Input-->
-									<input type="text" name="business_city" id="business_city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
-									<!--end::Input-->
-								</div>
-
-								<div class="col-md-4 fv-row">
-									<!--begin::Label-->
-									<label class="required fw-semibold fs-6 mb-2">State</label>
-									<!--end::Label-->
-									<!--begin::Input-->
-									<select name="business_state" id="business_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_business_address" required>
-										<option value="">Select State</option>
-										<?php foreach ($get_state_list as $state_result) { ?>
-											<option value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
-										<?php } ?>
-									</select>
-									<!--end::Input-->
-								</div>
-
-								<div class="col-md-4 fv-row">
-									<!--begin::Label-->
-									<label class="required fw-semibold fs-6 mb-2">Zipcode</label>
-									<!--end::Label-->
-									<!--begin::Input-->
-									<input type="text" name="business_zipcode" id="business_zipcode" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Zipcode" required />
-									<!--end::Input-->
-								</div>
-							</div>
-							<div class="d-flex justify-content-end align-items-center mt-12">
-
-								<!--begin::Button-->
-								<button type="submit" class="btn btn-primary" id="save_business_address" name="save_business_address">
-									<span class="indicator-label">
-										Save
-									</span>
-									<span class="indicator-progress">
-										Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-									</span>
-								</button>
-								<!--end::Button-->
-							</div>
-						</div>
-					</form>
-				</div>
-				<!--begin::Modal body-->
-			</div>
-		</div>
-		<!--end::Modal - Edit Profile-->
 	</div>
 	<!--end::Modals-->
 
@@ -1957,54 +1937,22 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 			});
 		});
 
-		$(document).on("click", "#edit_resident_address", function() {
+		$(document).on("click", ".modal_address", function() {
 
-			var advisor_id = $(this).attr('advisor_id');
-
-			var address_type = $(this).attr('address_type');
-
+			var address_id = $(this).attr('address_id');
+			console.log(address_id);
 			$(".is_empty").val("");
 
 			$("select.is_empty").val(null).trigger("change");
 
 			$("textarea.is_empty").html("");
 
-			if (!advisor_id)
+			if (!address_id)
 				return false;
-
-			get_address(advisor_id, address_type);
-
-		});
-
-		$(document).on("click", "#edit_business_address", function() {
-
-			var advisor_id = $(this).attr('advisor_id');
-
-			var address_type = $(this).attr('address_type');
-
-			$(".is_empty").val("");
-
-			$("select.is_empty").val(null).trigger("change");
-
-			$("textarea.is_empty").html("");
-
-			if (!advisor_id)
-				return false;
-
-			get_address(advisor_id, address_type);
-
-		});
-
-		function get_address(advisor_id, address_type) {
-
-			if (!advisor_id)
-				return false;
-
-			console.log(address_type);
 
 			$.post(ajax_url, {
 				action: 'get_selected_address_data',
-				advisor_id: advisor_id,
+				address_id: address_id,
 				is_ajax: true,
 			}, function(result) {
 
@@ -2012,28 +1960,19 @@ $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected
 
 				if (results) {
 
-					if (address_type == 'resident') {
-						$("#resident_address_label").val(results.resident.address_label);
-						$("#resident_street_address").val(results.resident.street_address);
-						$("#resident_building_name").val(results.resident.resident_building_name);
-						$("#resident_city").val(results.resident.city);
-						$("#resident_state").val(results.resident.state).trigger("change");
-						$("#resident_zipcode").val(results.resident.zipcode);
-					}
-
-					if (address_type == 'business') {
-						$("#business_address_label").val(results.business.address_label);
-						$("#business_street_address").val(results.business.street_address);
-						$("#business_building_name").val(results.business.business_building_name);
-						$("#business_city").val(results.business.city);
-						$("#business_state").val(results.business.state).trigger("change");
-						$("#business_zipcode").val(results.business.zipcode);
-					}
+					$("#address_id").val(results.address_info.id);
+					$("#type").val(results.address_info.type).trigger("change");
+					$("#address_label").val(results.address_info.address_label);
+					$("#street_address").val(results.address_info.street_address);
+					$("#building_name").val(results.address_info.building_name);
+					$("#address_city").val(results.address_info.city);
+					$("#address_state").val(results.address_info.state).trigger("change");
+					$("#address_zipcode").val(results.address_info.zipcode);
 
 				}
 
 			});
-		}
+		});
 	</script>
 </body>
 <!--end::Body-->

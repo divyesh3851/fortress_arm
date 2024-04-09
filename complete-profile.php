@@ -1,24 +1,21 @@
-<?php require '../../config.php';
-$page_name = 'advisor';
-$sub_page_name = 'advisor-list';
-Admin()->check_login();
+<?php require 'config.php';
+$page_name = 'notes';
+$sub_page_name = '';
 
-if (siget('advisor_id')) {
-    $selected_advisor_data = Advisor()->get_selected_advisor_data(siget('advisor_id'));
+if (!siget('key')) {
+    wp_redirect(site_url());
+    die();
 }
 
+$selected_advisor_data  = $wpdb->get_row("SELECT * FROM advisor WHERE hash_key = '" . siget('key') . "' AND status = 0");
 if (!$selected_advisor_data) {
-    wp_redirect(site_url() . '/admin/advisor/advisor-list');
-    exit;
+    wp_redirect(site_url());
+    die();
 }
 
 if (isset($_POST['save_advisor']) || isset($_POST['save_step'])) {
 
-    if (!empty(sipost('advisor_id'))) {
-        $response = Advisor()->update_advisor();
-    } else {
-        $response = Advisor()->add_advisor();
-    }
+    $response = Advisor()->update_advisor($selected_advisor_data->id);
 
     if ($response == 1) {
         $_SESSION['process_success'] = true;
@@ -28,7 +25,7 @@ if (isset($_POST['save_advisor']) || isset($_POST['save_step'])) {
         $_SESSION['process_fail'] = true;
     }
 
-    wp_redirect(site_url() . '/admin/advisor/advisor-list');
+    wp_redirect(site_url() . '/complete-profile/' . siget('key'));
     exit;
 }
 
@@ -104,7 +101,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
 <!--end::Head-->
 <!--begin::Body-->
 
-<body id="kt_app_body" data-kt-app-header-fixed="true" data-kt-app-header-fixed-mobile="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" data-kt-app-aside-enabled="true" data-kt-app-aside-fixed="true" data-kt-app-aside-push-toolbar="true" data-kt-app-aside-push-footer="true" class="app-default">
+<body id="kt_app_body" data-kt-app-layout="dark-header" data-kt-app-header-fixed="true" data-kt-app-toolbar-enabled="true" class="app-default">
     <!--begin::Theme mode setup on page load-->
     <script>
         var defaultThemeMode = "light";
@@ -130,45 +127,18 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-            <!--begin::Header-->
-            <?php require SITE_DIR . '/admin/header.php'; ?>
-            <!--end::Header-->
             <!--begin::Wrapper-->
-            <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
-                <!--begin::Sidebar-->
-                <?php require SITE_DIR . '/admin/sidebar.php'; ?>
-                <!--end::Sidebar-->
+            <div class="app-wrapper flex-column flex-row-fluid mt-0" id="kt_app_wrapper">
 
                 <!--begin::Main-->
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
                     <!--begin::Content wrapper-->
                     <div class="d-flex flex-column flex-column-fluid">
-                        <!--begin::Toolbar-->
-                        <div id="kt_app_toolbar" class="app-toolbar pt-6 pb-2">
-                            <!--begin::Toolbar container-->
-                            <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex align-items-stretch">
-                                <!--begin::Toolbar wrapper-->
-                                <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-                                    <!--begin::Page title-->
-                                    <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
-                                        <!--begin::Title-->
-                                        <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Advisor</h1>
-                                        <!--end::Title-->
-                                    </div>
-                                    <!--end::Page title-->
-                                    <!--begin::Actions-->
-                                    <!--end::Actions-->
-                                </div>
-                                <!--end::Toolbar wrapper-->
-                            </div>
-                            <!--end::Toolbar container-->
-                        </div>
-                        <!--end::Toolbar-->
 
                         <!--begin::Content-->
                         <div id="kt_app_content" class="app-content flex-column-fluid">
                             <!--begin::Content container-->
-                            <div id="kt_app_content_container" class="app-container container-fluid">
+                            <div id="kt_app_content_container" class="app-container  container-xxl ">
                                 <?php if (isset($_SESSION['process_success'])) {
                                     unset($_SESSION['process_success']); ?>
                                     <div class="alert alert-success d-flex align-items-center p-5">
@@ -203,6 +173,12 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                 <div class="card">
                                     <!--begin::Card body-->
                                     <div class="card-body pt-10">
+                                        <div class="row">
+                                            <div class="text-center">
+                                                <img src="<?php echo site_url(); ?>/assets/images/logo_blue.png">
+                                                <h2 class="mt-10">Please complete your profile</h2>
+                                            </div>
+                                        </div>
                                         <!--begin::Stepper-->
                                         <div class="stepper stepper-links d-flex flex-column pt-5" id="kt_create_account_stepper">
                                             <!--begin::Nav-->
@@ -243,7 +219,6 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                             <form class=" w-100 pt-15 pb-10" id="kt_create_account_form" method="post" enctype="multipart/form-data">
                                                 <!--begin::Step 1-->
                                                 <div class="current" data-kt-stepper-element="content">
-                                                    <input type="hidden" name="advisor_id" value="<?php echo $selected_advisor_data->id; ?>">
                                                     <!--begin::Wrapper-->
                                                     <div class="w-100">
                                                         <div class="row mb-7">
@@ -409,19 +384,6 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                             </div>
                                                             <div class="col-md-3 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Status</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <select name="advisor_status" id="advisor_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty" required>
-                                                                    <option value="">Select Status</option>
-                                                                    <?php foreach (Settings()->get_advisor_status_list() as $key => $advisor_status_result) { ?>
-                                                                        <option <?php echo ($selected_advisor_data->advisor_status ==  $key) ? 'selected' : '';  ?> value="<?php echo $key; ?>"><?php echo $advisor_status_result; ?></option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="col-md-3 fv-row">
-                                                                <!--begin::Label-->
                                                                 <label class="required fw-semibold fs-6 mb-2">City</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
@@ -564,9 +526,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                 <div class="card-body pt-0">
                                                                     <div class="row mb-4">
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
                                                                             <label class="fw-semibold fs-6 mb-2">Email Opt Out</label>
-                                                                            <!--end::Label-->
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
                                                                                     <i class="bi bi-envelope fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
@@ -598,7 +558,6 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                                 </span>
                                                                                 <input type="url" class="form-control" name="linkedin_url" id="linkedin_url" placeholder="LinkedIn URL" aria-label="LinkedIn URL" aria-describedby="basic-addon1" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "linkedin_url"); ?>" />
                                                                             </div>
-                                                                            <!--begin::Input-->
                                                                         </div>
                                                                         <!--end::Input wrapper-->
                                                                         <!--begin::Input wrapper-->
@@ -627,6 +586,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                                 </span>
                                                                                 <input type="url" class="form-control" name="twitter_url" id="twitter_url" placeholder="Twitter URL" aria-label="Twitter URL" aria-describedby="basic-addon1" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "twitter_url"); ?>" />
                                                                             </div>
+
                                                                         </div>
                                                                         <!--end::Input wrapper-->
                                                                     </div>
@@ -650,6 +610,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                                 <!--end::Step 1-->
                                                 <!--begin::Step 2-->
@@ -718,10 +679,8 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                                     </a>
                                                                                 </div>
                                                                                 <input type="hidden" name="contact_info_row_list[]" id="contact_info_row_list" class="contact_info_row_list" value="<?php echo $i; ?>">
-                                                                                <input type="hidden" name="contact_id_<?php echo $contact_results->id; ?>" id="contact_id_<?php echo $contact_results->id; ?>" class="" value="<?php echo $contact_results->id; ?>">
                                                                             </div>
-                                                                        <?php $i++;
-                                                                        }
+                                                                        <?php }
                                                                     } else { ?>
                                                                         <div class="form-group row mb-5" id="row_id_1">
                                                                             <div class="col-md-2">
@@ -819,6 +778,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
+                                                        <!--end::Repeater-->
                                                         <div class="row mt-7">
                                                             <div class="mb-0">
                                                                 <button type="submit" name="save_step" class="btn btn-primary" id="">
@@ -870,6 +830,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
+                                                        <!--end::Repeater-->
                                                         <div class="row mt-7">
                                                             <div class="mb-0">
                                                                 <button type="submit" name="save_step" class="btn btn-primary" id="">
@@ -934,6 +895,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
+                                                        <!--end::Repeater-->
                                                         <div class="row mt-7">
                                                             <div class="mb-0">
                                                                 <button type="submit" name="save_step" class="btn btn-primary" id="">
@@ -1090,6 +1052,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                             </div>
                                                             <!--end::Input wrapper-->
                                                         </div>
+                                                        <!--end::Repeater-->
                                                         <div class="row mt-7">
                                                             <div class="mb-0">
                                                                 <button type="submit" name="save_step" class="btn btn-primary" id="">

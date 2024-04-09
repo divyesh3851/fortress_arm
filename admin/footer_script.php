@@ -17,8 +17,13 @@
     });
 
     function change_ymd_to_dmy_text(date = '') {
+
         if (!date) {
-            return false;
+            return;
+        }
+
+        if (date == '0000-00-00') {
+            return;
         }
 
         var dateString = date;
