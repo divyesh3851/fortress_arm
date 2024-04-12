@@ -83,11 +83,15 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                                     <!--begin::Page title-->
                                     <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
                                         <!--begin::Title-->
-                                        <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Advisor List</h1>
+                                        <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Verification</h1>
                                         <!--end::Title-->
                                     </div>
                                     <!--end::Page title-->
                                     <!--begin::Actions-->
+                                    <button type="button" class="btn btn-primary advisor_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_advisor" title="Add Advisor">
+                                        <i class="ki-duotone ki-plus fs-2"></i>
+                                        Add Advisor
+                                    </button>
                                     <!--end::Actions-->
                                 </div>
                                 <!--end::Toolbar wrapper-->
@@ -130,141 +134,251 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                                     </div>
                                 <?php } ?>
 
-                                <!--begin::Card-->
-                                <div class="card">
-                                    <!--begin::Card header-->
-                                    <div class="card-header border-0 pt-6">
-                                        <!--begin::Card title-->
-                                        <div class="card-title">
-                                            <!--begin::Search-->
-                                            <div class="d-flex align-items-center position-relative my-1">
-                                                <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span class="path1"></span><span class="path2"></span></i>
-                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Advisor" />
-                                            </div>
-                                            <!--end::Search-->
-                                        </div>
-                                        <!--begin::Card title-->
-                                        <!--begin::Card toolbar-->
-                                        <div class="card-toolbar">
-                                            <!--begin::Toolbar-->
-                                            <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
-                                                <!--begin::Filter-->
-                                                <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                    <i class="ki-outline ki-filter fs-2"></i>Filter</button>
-                                                <!--begin::Menu 1-->
-                                                <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="kt-toolbar-filter">
-                                                    <!--begin::Header-->
-                                                    <div class="px-7 py-5">
-                                                        <div class="fs-4 text-gray-900 fw-bold">Filter Options</div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!--begin::Card-->
+                                        <div class="card">
+                                            <!--begin::Card header-->
+                                            <div class="card-header border-0 pt-6">
+                                                <!--begin::Card title-->
+                                                <div class="card-title">
+                                                    <!--begin::Search-->
+                                                    <div class="d-flex align-items-center position-relative my-1">
+                                                        <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span class="path1"></span><span class="path2"></span></i>
+                                                        <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Advisor" />
                                                     </div>
-                                                    <!--end::Header-->
-                                                    <!--begin::Separator-->
-                                                    <div class="separator border-gray-200"></div>
-                                                    <!--end::Separator-->
-                                                    <!--begin::Content-->
-                                                    <div class="px-7 py-5">
-                                                        <!--begin::Input group-->
-                                                        <div class="mb-10">
-                                                            <!--begin::Label-->
-                                                            <label class="form-label fs-5 fw-semibold mb-3">Advisor Status :</label>
-                                                            <!--end::Label-->
-
-                                                            <!--begin::Options-->
-                                                            <div class="d-flex flex-column flex-wrap fw-semibold" data-kt-docs-table-filter="advisor_status">
-                                                                <!--begin::Option-->
-                                                                <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
-                                                                    <input class="form-check-input" type="radio" name="advisor_status" value="all" checked="checked">
-                                                                    <span class="form-check-label text-gray-600">
-                                                                        All
-                                                                    </span>
-                                                                </label>
-                                                                <!--end::Option-->
-
-                                                                <!--begin::Option-->
-                                                                <?php foreach (Settings()->get_advisor_status_list() as $key => $status_result) { ?>
-                                                                    <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
-                                                                        <input class="form-check-input" type="radio" name="advisor_status" value="<?php echo $status_result; ?>">
-                                                                        <span class="form-check-label text-gray-600">
-                                                                            <?php echo $status_result; ?>
-                                                                        </span>
-                                                                    </label>
-                                                                <?php } ?>
-                                                                <!--end::Option-->
-
-
+                                                    <!--end::Search-->
+                                                </div>
+                                                <!--begin::Card title-->
+                                                <!--begin::Card toolbar-->
+                                                <div class="card-toolbar">
+                                                    <!--begin::Toolbar-->
+                                                    <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
+                                                        <!--begin::Filter-->
+                                                        <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                                            <i class="ki-outline ki-filter fs-2"></i>Filter</button>
+                                                        <!--begin::Menu 1-->
+                                                        <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="kt-toolbar-filter">
+                                                            <!--begin::Header-->
+                                                            <div class="px-7 py-5">
+                                                                <div class="fs-4 text-gray-900 fw-bold">Filter Options</div>
                                                             </div>
-                                                            <!--end::Options-->
-                                                        </div>
-                                                        <!--end::Input group-->
+                                                            <!--end::Header-->
+                                                            <!--begin::Separator-->
+                                                            <div class="separator border-gray-200"></div>
+                                                            <!--end::Separator-->
+                                                            <!--begin::Content-->
+                                                            <div class="px-7 py-5">
+                                                                <!--begin::Input group-->
+                                                                <div class="mb-10">
+                                                                    <!--begin::Label-->
+                                                                    <label class="form-label fs-5 fw-semibold mb-3">Advisor Status :</label>
+                                                                    <!--end::Label-->
 
-                                                        <!--begin::Actions-->
-                                                        <div class="d-flex justify-content-end">
-                                                            <button type="reset" class="btn btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true" data-kt-docs-table-filter="reset">Reset</button>
+                                                                    <!--begin::Options-->
+                                                                    <div class="d-flex flex-column flex-wrap fw-semibold" data-kt-docs-table-filter="advisor_status">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                                            <input class="form-check-input" type="radio" name="advisor_status" value="all" checked="checked">
+                                                                            <span class="form-check-label text-gray-600">
+                                                                                All
+                                                                            </span>
+                                                                        </label>
+                                                                        <!--end::Option-->
 
-                                                            <button type="submit" class="btn btn-primary" data-kt-menu-dismiss="true" data-kt-docs-table-filter="filter">Apply</button>
+                                                                        <!--begin::Option-->
+                                                                        <?php foreach (Settings()->get_advisor_status_list() as $key => $status_result) { ?>
+                                                                            <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                                                <input class="form-check-input" type="radio" name="advisor_status" value="<?php echo $status_result; ?>">
+                                                                                <span class="form-check-label text-gray-600">
+                                                                                    <?php echo $status_result; ?>
+                                                                                </span>
+                                                                            </label>
+                                                                        <?php } ?>
+                                                                        <!--end::Option-->
+
+
+                                                                    </div>
+                                                                    <!--end::Options-->
+                                                                </div>
+                                                                <!--end::Input group-->
+
+                                                                <!--begin::Actions-->
+                                                                <div class="d-flex justify-content-end">
+                                                                    <button type="reset" class="btn btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true" data-kt-docs-table-filter="reset">Reset</button>
+
+                                                                    <button type="submit" class="btn btn-primary" data-kt-menu-dismiss="true" data-kt-docs-table-filter="filter">Apply</button>
+                                                                </div>
+                                                                <!--end::Actions-->
+                                                            </div>
+                                                            <!--end::Content-->
                                                         </div>
-                                                        <!--end::Actions-->
+                                                        <!--end::Menu 1-->
+                                                        <!--end::Filter-->
+                                                        <!--begin::Add Advisor-->
+
+                                                        <!--end::Add Advisor-->
                                                     </div>
-                                                    <!--end::Content-->
-                                                </div>
-                                                <!--end::Menu 1-->
-                                                <!--end::Filter-->
-                                                <!--begin::Add Advisor-->
-                                                <?php /*
-                                                <a href="<?php echo site_url() ?>/admin/advisor/add-advisor" class="btn btn-primary" title="Add Advisor">
-                                                    <i class="ki-duotone ki-plus fs-2"></i>
-                                                    Add Advisor
-                                                </a>
-                                                */ ?>
-                                                <button type="button" class="btn btn-primary advisor_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_advisor" title="Add Advisor">
-                                                    <i class="ki-duotone ki-plus fs-2"></i>
-                                                    Add Advisor
-                                                </button>
-                                                <!--end::Add Advisor-->
-
-                                            </div>
-                                            <!--end::Toolbar-->
-                                            <!--begin::Group actions-->
-                                            <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
-                                                <div class="fw-bold me-5">
-                                                    <span class="me-2" data-kt-docs-table-select="selected_count"></span>Selected
-                                                </div>
-                                                <button type="button" class="btn btn-danger" data-kt-docs-table-select="delete_selected">Delete Selected</button>
-                                            </div>
-                                            <!--end::Group actions-->
-                                        </div>
-                                        <!--end::Card toolbar-->
-                                    </div>
-                                    <!--end::Card header-->
-                                    <!--begin::Card body-->
-                                    <div class="card-body pt-0">
-                                        <!--begin::Datatable-->
-                                        <table id="kt_datatable_example_1" class="table align-middle table-row-dashed fs-6 gy-5">
-                                            <thead>
-                                                <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
-                                                    <th class="w-10px pe-2">
-                                                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                                            <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                                                    <!--end::Toolbar-->
+                                                    <!--begin::Group actions-->
+                                                    <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
+                                                        <div class="fw-bold me-5">
+                                                            <span class="me-2" data-kt-docs-table-select="selected_count"></span>Selected
                                                         </div>
-                                                    </th>
-                                                    <th>Name</th>
-                                                    <th>Status</th>
-                                                    <th>Rating</th>
-                                                    <th>City</th>
-                                                    <th>State</th>
-                                                    <th>Lead Source</th>
-                                                    <th>Registerd Date</th>
-                                                    <th class="text-start">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="text-gray-600 fw-semibold">
-                                            </tbody>
-                                        </table>
-                                        <!--end::Datatable-->
+                                                        <button type="button" class="btn btn-danger" data-kt-docs-table-select="delete_selected">Delete Selected</button>
+                                                    </div>
+                                                    <!--end::Group actions-->
+                                                </div>
+                                                <!--end::Card toolbar-->
+                                            </div>
+                                            <!--end::Card header-->
+                                            <!--begin::Card body-->
+                                            <div class="card-body pt-0">
+                                                <!--begin::Datatable-->
+                                                <table id="kt_datatable_example_1" class="table align-middle table-row-dashed fs-6 gy-5">
+                                                    <thead>
+                                                        <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                            <th class="w-10px pe-2">
+                                                                <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                                                    <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                                                                </div>
+                                                            </th>
+                                                            <th>Name</th>
+                                                            <th>Lead Source</th>
+                                                            <th class="text-start">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-gray-600 fw-semibold">
+                                                    </tbody>
+                                                </table>
+                                                <!--end::Datatable-->
+                                            </div>
+                                            <!--end::Card body-->
+                                        </div>
+                                        <!--end::Card-->
                                     </div>
-                                    <!--end::Card body-->
+                                    <div class="col-md-6">
+                                        <!--begin::Card-->
+                                        <div class="card">
+                                            <!--begin::Card header-->
+                                            <div class="card-header border-0 pt-6">
+                                                <!--begin::Card title-->
+                                                <div class="card-title">
+                                                    <!--begin::Search-->
+                                                    <div class="d-flex align-items-center position-relative my-1">
+                                                        <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span class="path1"></span><span class="path2"></span></i>
+                                                        <input type="text" data-kt-docs-table-sent-verification-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Advisor" />
+                                                    </div>
+                                                    <!--end::Search-->
+                                                </div>
+                                                <!--begin::Card title-->
+                                                <!--begin::Card toolbar-->
+                                                <div class="card-toolbar">
+                                                    <!--begin::Toolbar-->
+                                                    <div class="d-flex justify-content-end" data-kt-docs-table-verification-sent-toolbar="base">
+                                                        <!--begin::Filter-->
+                                                        <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                                            <i class="ki-outline ki-filter fs-2"></i>Filter</button>
+                                                        <!--begin::Menu 1-->
+                                                        <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="kt-toolbar-filter">
+                                                            <!--begin::Header-->
+                                                            <div class="px-7 py-5">
+                                                                <div class="fs-4 text-gray-900 fw-bold">Filter Options</div>
+                                                            </div>
+                                                            <!--end::Header-->
+                                                            <!--begin::Separator-->
+                                                            <div class="separator border-gray-200"></div>
+                                                            <!--end::Separator-->
+                                                            <!--begin::Content-->
+                                                            <div class="px-7 py-5">
+                                                                <!--begin::Input group-->
+                                                                <div class="mb-10">
+                                                                    <!--begin::Label-->
+                                                                    <label class="form-label fs-5 fw-semibold mb-3">Advisor Status :</label>
+                                                                    <!--end::Label-->
+
+                                                                    <!--begin::Options-->
+                                                                    <div class="d-flex flex-column flex-wrap fw-semibold" data-kt-docs-table-sent-verification-filter="advisor_status">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                                            <input class="form-check-input" type="radio" name="advisor_status" value="all" checked="checked">
+                                                                            <span class="form-check-label text-gray-600">
+                                                                                All
+                                                                            </span>
+                                                                        </label>
+                                                                        <!--end::Option-->
+
+                                                                        <!--begin::Option-->
+                                                                        <?php foreach (Settings()->get_advisor_status_list() as $key => $status_result) { ?>
+                                                                            <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                                                <input class="form-check-input" type="radio" name="advisor_status" value="<?php echo $status_result; ?>">
+                                                                                <span class="form-check-label text-gray-600">
+                                                                                    <?php echo $status_result; ?>
+                                                                                </span>
+                                                                            </label>
+                                                                        <?php } ?>
+                                                                        <!--end::Option-->
+
+
+                                                                    </div>
+                                                                    <!--end::Options-->
+                                                                </div>
+                                                                <!--end::Input group-->
+
+                                                                <!--begin::Actions-->
+                                                                <div class="d-flex justify-content-end">
+                                                                    <button type="reset" class="btn btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true" data-kt-docs-table-sent-verification-filter="reset">Reset</button>
+
+                                                                    <button type="submit" class="btn btn-primary" data-kt-menu-dismiss="true" data-kt-docs-table-sent-verification-filter="filter">Apply</button>
+                                                                </div>
+                                                                <!--end::Actions-->
+                                                            </div>
+                                                            <!--end::Content-->
+                                                        </div>
+                                                        <!--end::Menu 1-->
+                                                        <!--end::Filter-->
+                                                        <!--begin::Add Advisor-->
+                                                        <!--end::Add Advisor-->
+                                                    </div>
+                                                    <!--end::Toolbar-->
+                                                    <!--begin::Group actions-->
+                                                    <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-verification-sent-toolbar="selected">
+                                                        <div class="fw-bold me-5">
+                                                            <span class="me-2" data-kt-docs-table-verification-sent-select="selected_count"></span>Selected
+                                                        </div>
+                                                        <button type="button" class="btn btn-danger" data-kt-docs-table-verification-sent-select="delete_selected">Delete Selected</button>
+                                                    </div>
+                                                    <!--end::Group actions-->
+                                                </div>
+                                                <!--end::Card toolbar-->
+                                            </div>
+                                            <!--end::Card header-->
+                                            <!--begin::Card body-->
+                                            <div class="card-body pt-0">
+                                                <!--begin::Datatable-->
+                                                <table id="verification_sent_datatable" class="table align-middle table-row-dashed fs-6 gy-5">
+                                                    <thead>
+                                                        <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                            <th class="w-10px pe-2">
+                                                                <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                                                    <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#verification_sent_datatable .form-check-input" value="1" />
+                                                                </div>
+                                                            </th>
+                                                            <th>Name</th>
+                                                            <th>Lead Source</th>
+                                                            <th class="text-start">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-gray-600 fw-semibold">
+                                                    </tbody>
+                                                </table>
+                                                <!--end::Datatable-->
+                                            </div>
+                                            <!--end::Card body-->
+                                        </div>
+                                        <!--end::Card-->
+                                    </div>
                                 </div>
-                                <!--end::Card-->
                             </div>
                             <!--end::Content container-->
                         </div>
@@ -522,40 +636,6 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
 
         $(document).ready(function() {
 
-            $('#send_mail_btn').click(function(event) {
-
-                if (!$("#verification_req_email").val() || !$("#advisor_id").val()) {
-                    return false;
-                }
-
-                $("#send_mail_btn .indicator-label").hide();
-                $("#send_mail_btn .indicator-progress").show();
-
-                // Prevent the default form submission
-                event.preventDefault();
-
-                $.post(ajax_url, {
-                    action: 'send_verification_mail',
-                    email: $("#verification_req_email").val(),
-                    advisor_id: $("#advisor_id").val(),
-                    is_ajax: true,
-                }, function(result) {
-
-                    var results = JSON.parse(result);
-
-                    $("#send_mail_btn .indicator-label").show();
-                    $("#send_mail_btn .indicator-progress").hide();
-
-                    if (results.status) {
-                        $('#kt_modal_send_verification_mail_form')[0].reset();
-                        $("#send_mail_btn").after('<p class="text-success">' + results.msg + '</p>');
-                    } else {
-                        $("#send_mail_btn").after('<p class="text-danger">' + results.msg + '</p>');
-                    }
-
-                });
-            });
-
             //$('#kt_modal_advisor_form').submit(function(event) {
             $('#save_advisor').click(function(event) {
 
@@ -590,7 +670,6 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
     </script>
     <script>
         "use strict";
-
         // Class definition
         var KTDatatablesServerSide = function() {
             // Shared variables
@@ -605,7 +684,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                     processing: true,
                     serverSide: true,
                     order: [
-                        [7, 'desc']
+                        [3, 'desc']
                     ],
                     stateSave: true,
                     select: {
@@ -623,22 +702,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             data: 'name'
                         },
                         {
-                            data: 'status'
-                        },
-                        {
-                            data: 'rating'
-                        },
-                        {
-                            data: 'city'
-                        },
-                        {
-                            data: 'state'
-                        },
-                        {
                             data: 'lead_source'
-                        },
-                        {
-                            data: 'created_at'
                         },
                         {
                             data: null
@@ -667,18 +731,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             target: 3,
                             orderable: false,
                         },
-                        {
-                            target: 4,
-                            orderable: false,
-                        },
-                        {
-                            target: 5,
-                            orderable: false,
-                        },
-                        {
-                            target: 6,
-                            orderable: false,
-                        },
+
                         /*{
                             targets: 4,
                             render: function(data, type, row) {
@@ -692,7 +745,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             className: 'text-start',
                             render: function(data, type, row) {
                                 return `<div class="d-flex">  
-                                            <span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Add Advisor">Send Mail</span>
+                                            <span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" id="send_verification_mail_btn_${data.record_id}" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Send Mail">Send Mail</span>
                                             <a href="tel:${data.mobile_no}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">
@@ -704,27 +757,6 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-2 fw-bold text-gray-700">
                                                         <i class="las la-envelope-open-text fs-2  text-success"></i>
-                                                    </div>
-                                                </div> 
-                                            </a>
-                                            <a href="<?php echo site_url(); ?>/admin/verification/view-advisor/${data.record_id}">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-3 fw-bold text-gray-700">
-                                                        <i class="las la-eye fs-2 text-primary"></i>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="<?php echo site_url(); ?>/admin/verification/edit-advisor/${data.record_id}">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-user-edit fs-2 text-primary"></i>
-                                                    </div>
-                                                </div> 
-                                            </a>
-                                            <a href="#" data-kt-docs-table-filter="delete_row" advisor_id="${data.record_id}">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-trash-alt fs-2 text-primary"></i>
                                                     </div>
                                                 </div> 
                                             </a>  
@@ -1024,6 +1056,436 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
         // On document ready
         KTUtil.onDOMContentLoaded(function() {
             KTDatatablesServerSide.init();
+        });
+
+        // verification sent datatable
+        var verification_sent_datatable = function() {
+            // Shared variables
+            var table;
+            var dt;
+            var filterAdvisor;
+
+            // Private functions
+            var initDatatable = function() {
+                dt = $("#verification_sent_datatable").DataTable({
+                    searchDelay: 500,
+                    processing: true,
+                    serverSide: true,
+                    order: [
+                        [3, 'desc']
+                    ],
+                    stateSave: true,
+                    select: {
+                        style: 'multi',
+                        selector: 'td:first-child input[type="checkbox"]',
+                        className: 'row-selected'
+                    },
+                    ajax: {
+                        url: "<?php echo site_url(); ?>/admin/verification/advisor-list-sent-verification-ajax.php",
+                    },
+                    columns: [{
+                            data: 'record_id'
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'lead_source'
+                        },
+                        {
+                            data: null
+                        },
+                    ],
+                    columnDefs: [{
+                            targets: 0,
+                            orderable: false,
+                            render: function(data) {
+                                return `
+                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                <input class="form-check-input" type="checkbox" value="${data}" />
+                            </div>`;
+                            }
+                        },
+                        {
+                            target: 1,
+                            orderable: false,
+                            className: 'd-flex align-items-center'
+                        },
+                        {
+                            target: 2,
+                            orderable: false,
+                        },
+                        {
+                            target: 3,
+                            orderable: false,
+                        },
+
+                        /*{
+                            targets: 4,
+                            render: function(data, type, row) {
+                                return `<img src="${hostUrl}media/svg/card-logos/${row.CreditCardType}.svg" class="w-35px me-3" alt="${row.CreditCardType}">` + data;
+                            }
+                        },*/
+                        {
+                            targets: -1,
+                            data: null,
+                            orderable: false,
+                            className: 'text-start',
+                            render: function(data, type, row) {
+                                return `<div class="d-flex">  
+                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" class="badge badge-light-info flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer" title="Complete Now">Complete Now</a>
+                                            <a href="tel:${data.mobile_no}">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-3 fw-bold text-gray-700">
+                                                        <i class="las la-phone-volume fs-2 text-success"></i>
+                                                    </div>
+                                                </div>
+                                            </a> 
+                                            <a href="mailto:${data.email}">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-envelope-open-text fs-2  text-success"></i>
+                                                    </div>
+                                                </div> 
+                                            </a>  
+                                    </div>`;
+                            },
+                        },
+                    ],
+                    // Add data-filter attribute
+                    createdRow: function(row, data, dataIndex) {
+                        $(row).find('td:eq(3)').attr('data-filter', data.CreditCardType);
+                    }
+                });
+
+                table = dt.$;
+
+                // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+                dt.on('draw', function() {
+                    initToggleToolbar();
+                    toggleToolbars();
+                    handleDeleteRows();
+                    KTMenu.createInstances();
+                });
+            }
+
+            // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
+            var handleSearchDatatable = function() {
+                const filterSearch = document.querySelector('[data-kt-docs-table-sent-verification-filter="search"]');
+                filterSearch.addEventListener('keyup', function(e) {
+                    dt.search(e.target.value).draw();
+                });
+            }
+
+            // Filter Datatable
+            var handleFilterDatatable = () => {
+                // Select filter options
+                filterAdvisor = document.querySelectorAll('[data-kt-docs-table-sent-verification-filter="advisor_status"] [name="advisor_status"]');
+
+                const filterButton = document.querySelector('[data-kt-docs-table-sent-verification-filter="filter"]');
+
+                // Filter datatable on submit
+                if (filterButton) {
+                    filterButton.addEventListener('click', function() {
+                        // Get filter values
+                        let advisorStatus = '';
+
+                        // Get Advisor value
+                        filterAdvisor.forEach(r => {
+
+                            if (r.checked) {
+                                advisorStatus = r.value;
+                            }
+
+                            // Reset Advisor value if "All" is selected
+                            if (advisorStatus === 'all') {
+                                advisorStatus = '';
+                            }
+                        });
+
+                        // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
+                        dt.search(advisorStatus).draw();
+                    });
+                }
+
+            }
+
+            // Delete Row
+            var handleDeleteRows = () => {
+                // Select all delete buttons
+                const deleteButtons = document.querySelectorAll('[data-kt-docs-table-sent-verification-filter="delete_row"]');
+
+                deleteButtons.forEach(d => {
+                    // Delete button on click
+                    d.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        // Select parent row
+                        const parent = e.target.closest('tr');
+
+                        // Get customer name
+                        const customerName = parent.querySelectorAll('td')[1].innerText;
+
+                        var advisor_id = d.getAttribute('advisor_id');
+
+                        // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                        Swal.fire({
+                            text: "Are you sure you want to delete " + customerName + "?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            buttonsStyling: false,
+                            confirmButtonText: "Yes, delete!",
+                            cancelButtonText: "No, cancel",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-danger",
+                                cancelButton: "btn fw-bold btn-active-light-primary"
+                            }
+                        }).then(function(result) {
+                            if (result.value) {
+                                // Simulate delete request -- for demo purpose only
+                                Swal.fire({
+                                    text: "Deleting " + customerName,
+                                    icon: "info",
+                                    buttonsStyling: false,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                }).then(function() {
+                                    $.post(ajax_url, {
+                                        action: 'advisor_delete',
+                                        advisor_id: advisor_id
+                                    }, function(result) {
+
+                                    });
+                                    Swal.fire({
+                                        text: "You have deleted " + customerName + "!.",
+                                        icon: "success",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-primary",
+                                        }
+                                    }).then(function() {
+                                        // delete row data from server and re-draw datatable 
+
+                                        dt.draw();
+                                    });
+                                });
+                            } else if (result.dismiss === 'cancel') {
+                                Swal.fire({
+                                    text: customerName + " was not deleted.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                });
+                            }
+                        });
+                    })
+                });
+            }
+
+            // Reset Filter
+            var handleResetForm = () => {
+                // Select reset button
+                const resetButton = document.querySelector('[data-kt-docs-table-sent-verification-filter="reset"]');
+
+                // Reset datatable
+                if (resetButton) {
+                    resetButton.addEventListener('click', function() {
+                        // Reset Advisor type
+                        filterAdvisor[0].checked = true;
+
+                        // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
+                        dt.search('').draw();
+                    });
+                }
+
+            }
+
+            // Init toggle toolbar
+            var initToggleToolbar = function() {
+                // Toggle selected action toolbar
+                // Select all checkboxes
+                const container = document.querySelector('#verification_sent_datatable');
+                const checkboxes = container.querySelectorAll('[type="checkbox"]');
+
+                // Select elements
+                const deleteSelected = document.querySelector('[data-kt-docs-table-sent-verification-select="delete_selected"]');
+
+                var SelectedRow = [];
+                // Toggle delete selected toolbar
+                checkboxes.forEach(c => {
+                    // Checkbox on click event
+                    c.addEventListener('click', function() {
+                        SelectedRow.push(c.value);
+                        setTimeout(function() {
+                            toggleToolbars();
+                        }, 50);
+                    });
+                });
+
+                // Deleted selected rows
+                if (deleteSelected) {
+
+                    deleteSelected.addEventListener('click', function() {
+                        // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                        Swal.fire({
+                            text: "Are you sure you want to delete selected customers?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            buttonsStyling: false,
+                            showLoaderOnConfirm: true,
+                            confirmButtonText: "Yes, delete!",
+                            cancelButtonText: "No, cancel",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-danger",
+                                cancelButton: "btn fw-bold btn-active-light-primary"
+                            },
+                        }).then(function(result) {
+
+                            if (result.value) {
+                                // Simulate delete request -- for demo purpose only
+                                Swal.fire({
+                                    text: "Deleting selected customers",
+                                    icon: "info",
+                                    buttonsStyling: false,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                }).then(function() {
+                                    Swal.fire({
+                                        text: "You have deleted all selected customers!.",
+                                        icon: "success",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-primary",
+                                        }
+                                    }).then(function() {
+                                        $.post(ajax_url, {
+                                            action: 'delete_multiple_selected_advisor',
+                                            advisor_ids: SelectedRow
+                                        }, function(result) {
+
+                                        });
+                                        // delete row data from server and re-draw datatable
+                                        dt.draw();
+                                    });
+
+                                    // Remove header checked box
+                                    const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
+                                    headerCheckbox.checked = false;
+                                });
+                            } else if (result.dismiss === 'cancel') {
+                                Swal.fire({
+                                    text: "Selected customers was not deleted.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                });
+                            }
+                        });
+                    });
+
+                }
+            }
+
+            // Toggle toolbars
+            var toggleToolbars = function() {
+                // Define variables
+                const container = document.querySelector('#verification_sent_datatable');
+                const toolbarBase = document.querySelector('[data-kt-docs-table-verification-sent-toolbar="base"]');
+                const toolbarSelected = document.querySelector('[data-kt-docs-table-verification-sent-toolbar="selected"]');
+                const selectedCount = document.querySelector('[data-kt-docs-table-verification-sent-select="selected_count"]');
+
+                // Select refreshed checkbox DOM elements
+                const allCheckboxes = container.querySelectorAll('tbody [type="checkbox"]');
+
+                // Detect checkboxes state & count
+                let checkedState = false;
+                let count = 0;
+
+                // Count checked boxes
+                allCheckboxes.forEach(c => {
+                    if (c.checked) {
+                        checkedState = true;
+                        count++;
+                    }
+                });
+
+                // Toggle toolbars
+                if (checkedState) {
+                    selectedCount.innerHTML = count;
+                    toolbarBase.classList.add('d-none');
+                    toolbarSelected.classList.remove('d-none');
+                } else {
+                    toolbarBase.classList.remove('d-none');
+                    toolbarSelected.classList.add('d-none');
+                }
+            }
+
+            // Public methods
+            return {
+                init: function() {
+                    initDatatable();
+                    handleSearchDatatable();
+                    initToggleToolbar();
+                    handleFilterDatatable();
+                    handleDeleteRows();
+                    handleResetForm();
+                }
+            }
+        }();
+
+        // On document ready
+        KTUtil.onDOMContentLoaded(function() {
+            verification_sent_datatable.init();
+        });
+
+        $('#send_mail_btn').click(function(event) {
+
+            if (!$("#verification_req_email").val() || !$("#advisor_id").val()) {
+                return false;
+            }
+
+            var advisor_id = $("#advisor_id").val();
+
+            $("#send_mail_btn .indicator-label").hide();
+            $("#send_mail_btn .indicator-progress").show();
+
+            // Prevent the default form submission
+            event.preventDefault();
+
+            $.post(ajax_url, {
+                action: 'send_verification_mail',
+                email: $("#verification_req_email").val(),
+                advisor_id: advisor_id,
+                is_ajax: true,
+            }, function(result) {
+
+                var results = JSON.parse(result);
+
+                $("#send_mail_btn .indicator-label").show();
+                $("#send_mail_btn .indicator-progress").hide();
+
+                if (results.status) {
+                    $('#kt_modal_send_verification_mail_form')[0].reset();
+                    $("#send_verification_mail_btn_" + advisor_id).text("Sent");
+                    $("#send_verification_mail_btn_" + advisor_id).removeClass("badge-light-danger");
+                    $("#send_verification_mail_btn_" + advisor_id).addClass("badge-light-success");
+                    $("#send_mail_btn").after('<p class="text-success">' + results.msg + '</p>');
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, 2000);
+                } else {
+                    $("#send_mail_btn").after('<p class="text-danger">' + results.msg + '</p>');
+                }
+
+            });
         });
     </script>
 

@@ -21,7 +21,7 @@
                 <!--begin::Row-->
                 <div class="row g-6 g-xl-9">
                     <?php
-                    if ($get_upcoming_birthday_anniversary_list) {
+                    if (isset($get_upcoming_birthday_anniversary_list)) {
                         foreach ($get_upcoming_birthday_anniversary_list as $greeting_result) { ?>
                             <!--begin::Col-->
                             <div class="col-md-6 col-xxl-4">

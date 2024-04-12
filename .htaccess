@@ -40,4 +40,12 @@ Options -MultiViews
 	RewriteRule ^admin/verification/edit-advisor/([^/]+)$ admin/verification/edit-advisor.php?advisor_id=$1 [NC,L]
 	RewriteRule ^admin/verification/view-advisor/([^/]+)$ admin/verification/view-advisor.php?advisor_id=$1 [NC,L]
 	RewriteRule ^complete-profile/([^/]+)$ complete-profile.php?key=$1 [NC,L]
+
+	RewriteRule ^admin/message/messages-list?$ admin/message/messages-list.php [NC,L]
+	RewriteRule ^admin/document/document-vault?$ admin/document/document-vault.php [NC,L]
+	RewriteRule ^admin/newsletter?$ admin/newsletter.php [NC,L]
+	RewriteRule ^admin/newsletter/([^/]+)$ admin/newsletter.php?id=$1 [NC,L]
+	RewriteRule ^admin/analytics/dashboard?$ admin/analytics/dashboard.php [NC,L]
+	RewriteRule ^admin/campaigns/list?$ admin/campaigns/list.php [NC,L]
+	RewriteRule ^admin/campaigns/single/([^/]+)$ admin/campaigns/single.php?id=$1 [NC,L] 
 </IfModule>

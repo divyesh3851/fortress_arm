@@ -29,7 +29,7 @@ if (isset($_POST['save_profile'])) {
 if (isset($_POST['save_employment'])) {
 
 	if (sipost('employment_history_id')) {
-		$response = Advisor()->add_advisor_employment($selected_advisor_data->id);
+		$response = Advisor()->update_advisor_employment($selected_advisor_data->id);
 	} else {
 		$response = Advisor()->add_advisor_employment($selected_advisor_data->id);
 	}
@@ -583,30 +583,31 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 																	</div>
 																</div>
 															</div>
-															<?php if (!empty($get_advisor_last_employment)) {  ?>
 
-																<div class="card mb-5 mb-xl-10" id="">
-																	<!--begin::Card header-->
-																	<div class="card-header p-5 pt-0 pb-0">
-																		<!--begin::Card title-->
-																		<div class="card-title">
-																			<i class="ki-duotone ki-brifecase-tick fs-2x">
-																				<span class="path1"></span>
-																				<span class="path2"></span>
-																				<span class="path3"></span>
-																			</i>
-																			<h3 class="fw-bold p-2 pt-0 pb-0">
-																				Employed
-																			</h3>
-																		</div>
-																		<!--end::Card title-->
-																		<!--begin::Action-->
-																		<a href="" class=" align-self-center" data-bs-toggle="modal" data-bs-target="#kt_modal_employment" id=""><i class="bi bi-plus-circle text-primary fs-2x"></i>
-																		</a>
-																		<!--end::Action-->
+
+															<div class="card mb-5 mb-xl-10" id="">
+																<!--begin::Card header-->
+																<div class="card-header p-5 pt-0 pb-0">
+																	<!--begin::Card title-->
+																	<div class="card-title">
+																		<i class="ki-duotone ki-brifecase-tick fs-2x">
+																			<span class="path1"></span>
+																			<span class="path2"></span>
+																			<span class="path3"></span>
+																		</i>
+																		<h3 class="fw-bold p-2 pt-0 pb-0">
+																			Employed
+																		</h3>
 																	</div>
-																	<!--begin::Card header-->
-																	<!--begin::Card body-->
+																	<!--end::Card title-->
+																	<!--begin::Action-->
+																	<a href="" class=" align-self-center" data-bs-toggle="modal" data-bs-target="#kt_modal_employment" id=""><i class="bi bi-plus-circle text-primary fs-2x"></i>
+																	</a>
+																	<!--end::Action-->
+																</div>
+																<!--begin::Card header-->
+																<!--begin::Card body-->
+																<?php if (!empty($get_advisor_last_employment)) {  ?>
 																	<div class="card-body p-5">
 																		<!--begin::Row-->
 																		<div class="text-gray-600">Company Name</div>
@@ -673,9 +674,9 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 																			<div class="fw-bold mt-1"><?php echo $get_advisor_last_employment->company_address . ', ' . $get_advisor_last_employment->city . ', ' . $get_advisor_last_employment->state . ', ' . $get_advisor_last_employment->zipcode; ?></div>
 																		</div>
 																	</div>
-																	<!--end::Card body-->
-																</div>
-															<?php } ?>
+																<?php } ?>
+																<!--end::Card body-->
+															</div>
 														</div>
 														<div class="col-xl-6 col-md-6 col-sm-12">
 															<div class="card mb-5 mb-xl-10" id="">
@@ -1279,7 +1280,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 							<div class="row mb-7">
 								<div class="col-md-4 fv-row">
 									<!--begin::Label-->
-									<label class="required fw-semibold fs-6 mb-2">State</label>
+									<label class="required fw-semibold fs-6 mb-2">Type</label>
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="type" id="type" data-control="select2" data-placeholder="Select a Type..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_address" required>
@@ -1452,7 +1453,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">Employment Status</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<select name="employe_status" id="employment_status" data-control="select2" data-placeholder="Select a Employment Status..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_employment" required>
+									<select name="emp_status" id="emp_status" data-control="select2" data-placeholder="Select a Employment Status..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_employment" required>
 										<option value="">Select Title</option>
 										<?php foreach (Settings()->get_employment_status_list() as $key => $employment_status_result) { ?>
 											<option value="<?php echo $key; ?>"><?php echo $employment_status_result; ?></option>
@@ -1465,7 +1466,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">Company Name</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="company_name" id="company_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Employment Name" required />
+									<input type="text" name="emp_company_name" id="emp_company_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Employment Name" required />
 									<!--end::Input-->
 								</div>
 							</div>
@@ -1475,7 +1476,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">Start Date</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="start_date" id="start_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Start Date" required />
+									<input type="text" name="emp_start_date" id="emp_start_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Start Date" required />
 									<!--end::Input-->
 								</div>
 								<div class="col-md-2 fv-row">
@@ -1483,7 +1484,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">End Date</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="end_date" id="end_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="End Date" required />
+									<input type="text" name="emp_end_date" id="emp_end_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="End Date" required />
 									<!--end::Input-->
 								</div>
 								<div class="col-md-8 fv-row">
@@ -1491,7 +1492,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">Company Street Address</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="company_address" id="company_address" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Company Street Address" required />
+									<input type="text" name="emp_company_address" id="emp_company_address" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Company Street Address" required />
 									<!--end::Input-->
 								</div>
 
@@ -1502,7 +1503,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class=" fw-semibold fs-6 mb-2">Apartment, suite, unit, building, floor, etc.</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="building" id="building" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Apartment, suite, unit, building, floor, etc." />
+									<input type="text" name="emp_building" id="emp_building" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Apartment, suite, unit, building, floor, etc." />
 									<!--end::Input-->
 								</div>
 								<div class="col-md-3 fv-row">
@@ -1510,7 +1511,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">City</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="city" id="city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
+									<input type="text" name="emp_city" id="emp_city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
 									<!--end::Input-->
 								</div>
 								<div class="col-md-3 fv-row">
@@ -1518,7 +1519,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">State</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<select name="state" id="state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_employment" required>
+									<select name="emp_state" id="emp_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_employment" required>
 										<option value="">Select State</option>
 										<?php foreach ($get_state_list as $state_result) { ?>
 											<option value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
@@ -1531,7 +1532,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">Zipcode</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="zipcode" id="zipcode" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Zipcode" required />
+									<input type="text" name="emp_zipcode" id="emp_zipcode" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Zipcode" required />
 									<!--end::Input-->
 								</div>
 							</div>
@@ -1553,7 +1554,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 
 										<!--begin::Col-->
 										<div class="col-lg-10 fv-row fv-plugins-icon-container">
-											<input type="text" name="ria" class="form-control form-control-lg form-control-solid" placeholder="Name">
+											<input type="text" name="ria" class="form-control form-control-lg form-control-solid" placeholder="RIA">
 										</div>
 										<!--end::Col-->
 									</div>
@@ -1568,7 +1569,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 
 										<!--begin::Col-->
 										<div class="col-lg-10 fv-row fv-plugins-icon-container">
-											<input type="text" name="bd" class="form-control form-control-lg form-control-solid" placeholder="Name">
+											<input type="text" name="bd" class="form-control form-control-lg form-control-solid" placeholder="BD">
 										</div>
 										<!--end::Col-->
 									</div>
@@ -1666,7 +1667,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 												<label class="fw-semibold fs-6 mb-2">Name</label>
 												<!--end::Label-->
 												<!--begin::Input-->
-												<input type="text" name="assistant_name" id="assistant_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Name" />
+												<input type="text" name="emp_assistant_name" id="emp_assistant_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Name" />
 												<!--end::Input-->
 											</div>
 											<!--end::Input wrapper-->
@@ -1676,7 +1677,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 												<label class="fw-semibold fs-6 mb-2">Phone</label>
 												<!--end::Label-->
 												<!--begin::Input-->
-												<input type="text" name="assistant_phone" id="assistant_phone" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Phone" />
+												<input type="text" name="emp_assistant_phone" id="emp_assistant_phone" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Phone" />
 												<!--end::Input-->
 											</div>
 											<!--end::Input wrapper-->
@@ -1686,7 +1687,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 												<label class="fw-semibold fs-6 mb-2">Email</label>
 												<!--end::Label-->
 												<!--begin::Input-->
-												<input type="text" name="assistant_email" id="assistant_email" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Email" />
+												<input type="text" name="emp_assistant_email" id="emp_assistant_email" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Email" />
 												<!--end::Input-->
 											</div>
 											<!--end::Input wrapper-->
@@ -1758,7 +1759,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 									<label class="required fw-semibold fs-6 mb-2">Date</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="date" id="activity_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Date" required />
+									<input type="text" name="date" id="activity_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Date" />
 									<!--end::Input-->
 								</div>
 								<div class="col-md-4 fv-row">

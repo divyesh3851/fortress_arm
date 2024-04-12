@@ -63,3 +63,17 @@ div#kt_app_sidebar {
 .mw-1300px {
     max-width: 1300px !important;
 }
+
+[data-bs-theme=light] {
+    --bs-text-gray-500: #071437 !important;
+    --bs-text-gray-600: #4B5675 !important;
+    --bs-border-color: #C4CADA !important;
+}
+
+.stepper.stepper-links .stepper-nav .stepper-item .stepper-title {
+    color: #071437 !important;
+}
+
+.stepper.stepper-links .stepper-nav .stepper-item.current .stepper-title {
+    color: #1B84FF !important;
+}

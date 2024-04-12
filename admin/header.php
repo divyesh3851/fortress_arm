@@ -56,7 +56,10 @@ $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniv
                 <!--begin::Menu wrapper-->
                 <div class="btn btn-icon btn-custom btn-color-white-600 btn-active-color-primary w-35px h-35px w-md-40px h-md-40px position-relative" data-bs-toggle="modal" data-bs-target="#kt_modal_upcoming_birthday_anniversary" title="Upcoming Birthday / Anniversary Advisor">
                     <i class="ki-outline ki-calendar fs-1"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger w-15px h-15px ms-n4 mt-3"><?php echo count($get_upcoming_birthday_anniversary_list); ?></span>
+                    <?php if (count($get_upcoming_birthday_anniversary_list) > 0) { ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger w-15px h-15px ms-n4 mt-3"><?php echo count($get_upcoming_birthday_anniversary_list); ?></span>
+                    <?php } ?>
+
                 </div>
                 <!--end::Menu wrapper-->
             </div>

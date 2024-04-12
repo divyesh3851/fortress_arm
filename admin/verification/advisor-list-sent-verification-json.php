@@ -4,11 +4,11 @@ require '../../config.php';
 // Fetch records 
 $data = array();
 
-$totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE is_verified = 0 AND send_verification = 0 AND status = 0');
+$totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE is_verified = 0 AND send_verification = 1 AND status = 0');
 
-$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE is_verified = 0 AND send_verification = 0 AND  status = 0');
+$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE is_verified = 1 AND send_verification = 0 AND  status = 0');
 
-$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE is_verified = 0 AND send_verification = 0 AND status = 0 ORDER BY id DESC');
+$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE is_verified = 0 AND send_verification = 1 AND status = 0 ORDER BY id DESC');
 
 foreach ($advisor_list as $advisor_result) {
 

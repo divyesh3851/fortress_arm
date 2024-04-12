@@ -60,7 +60,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'message') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'message') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/message/messages-list">
                         <span class="menu-icon">
                             <i class="las la-comment-dots fs-2"></i>
                         </span>
@@ -73,7 +73,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'doc_vault') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'doc_vault') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/document/document-vault">
                         <span class="menu-icon">
                             <i class="lab la-dropbox fs-2"></i>
                         </span>
@@ -86,7 +86,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'campaigns') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'campaigns') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/campaigns/list">
                         <span class="menu-icon">
                             <i class="las la-bullhorn fs-2"></i>
                         </span>
@@ -99,7 +99,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'newsletter') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'newsletter') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/newsletter">
                         <span class="menu-icon">
                             <i class="las la-envelope-open fs-2"></i>
                         </span>
@@ -112,7 +112,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'analytics') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'analytics') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/analytics/dashboard">
                         <span class="menu-icon">
                             <i class="lar la-chart-bar fs-2"></i>
                         </span>

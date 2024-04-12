@@ -151,6 +151,7 @@ $get_notes_list = Advisor()->get_note_list();
 
                                                                         <span class="">
                                                                             <a href="" class="badge badge-light-primary fw-bold me-auto px-4 py-3 note_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_note" note_id="<?php echo $note_result->id; ?>">Edit </a>
+                                                                            <span href="" class="badge badge-light-danger fw-bold me-auto px-4 py-3 cursor-pointer delete_note_modal" note_id="<?php echo $note_result->id; ?>"> Delete </span>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -305,6 +306,50 @@ $get_notes_list = Advisor()->get_note_list();
     <!--begin::Custom Javascript(used for this page only)-->
     <!--end::Custom Javascript-->
     <script>
+        $(document).on("click", ".delete_note_modal", function() {
+            var note_id = $(this).attr("note_id");
+            Swal.fire({
+                text: "Are you sure you want to delete ?",
+                icon: "warning",
+                showCancelButton: true,
+                buttonsStyling: false,
+                confirmButtonText: "Yes, delete!",
+                cancelButtonText: "No, cancel",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-danger",
+                    cancelButton: "btn fw-bold btn-active-light-primary"
+                }
+            }).then(function(result) {
+                if (result.value) {
+                    // Simulate delete request -- for demo purpose only
+                    Swal.fire({
+                        text: "Deleting Note",
+                        icon: "info",
+                        buttonsStyling: false,
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(function() {
+                        $.post(ajax_url, {
+                            action: 'delete_note',
+                            note_id: note_id
+                        }, function(result) {
+                            location.reload();
+                        });
+                    });
+                } else if (result.dismiss === 'cancel') {
+                    Swal.fire({
+                        text: customerName + " was not deleted.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-primary",
+                        }
+                    });
+                }
+            });
+        });
+
         $(document).on("click", ".note_modal", function() {
 
             var note_id = $(this).attr('note_id');

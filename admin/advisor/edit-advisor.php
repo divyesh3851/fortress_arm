@@ -89,7 +89,11 @@ $production_percentages = ($selected_advisor_data->production_percentages) ? exp
 
 $markets = ($selected_advisor_data->markets) ? explode(',', $selected_advisor_data->markets) : array();
 
-$get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advisor_data->id); ?>
+$get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advisor_data->id);
+
+$get_last_employment = Advisor()->get_advisor_last_employment($selected_advisor_data->id);
+
+$emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->assistant_contact) ? unserialize($get_last_employment->assistant_contact)  : ''; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -232,6 +236,11 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                     <h3 class="stepper-title">Production Info</h3>
                                                 </div>
                                                 <!--end::Step 5-->
+                                                <!--begin::Step 6-->
+                                                <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
+                                                    <h3 class="stepper-title">Employement</h3>
+                                                </div>
+                                                <!--end::Step 6-->
                                                 <!--begin::Step 6-->
                                                 <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <h3 class="stepper-title">Interests</h3>
@@ -951,7 +960,283 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!--begin::Step 6-->
+                                                <div data-kt-stepper-element="content">
+                                                    <div class="w-100">
+                                                        <!--begin::Input group-->
+                                                        <input type="hidden" name="employment_history_id" value="<?php echo (!empty($get_last_employment)) ? $get_last_employment->id : ''; ?>">
+                                                        <div class="row mb-7">
+                                                            <div class="col-md-4 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">Employment Status</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <select name="emp_status" id="emp_status" data-control="select2" data-placeholder="Select a Employment Status..." class="form-select form-select-solid">
+                                                                    <option value="">Select Title</option>
+                                                                    <?php foreach (Settings()->get_employment_status_list() as $key => $employment_status_result) { ?>
+                                                                        <option <?php echo (isset($get_last_employment) && $get_last_employment->employe_status == $key) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo $employment_status_result; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                                <!--end::Input-->
+                                                            </div>
+                                                            <div class="col-md-8 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">Company Name</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" name="emp_company_name" id="emp_company_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Employment Name" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->company_name : ''; ?>" />
+                                                                <!--end::Input-->
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-7">
+                                                            <div class="col-md-2 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">Start Date</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" name="emp_start_date" id="emp_start_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Start Date" value="<?php echo (isset($get_last_employment) && $get_last_employment->start_date) ? date('d, F Y', strtotime($get_last_employment->start_date)) : ''; ?>" />
+                                                                <!--end::Input-->
+                                                            </div>
+                                                            <div class="col-md-2 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">End Date</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" name="emp_end_date" id="emp_end_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="End Date" value="<?php echo (isset($get_last_employment) && $get_last_employment->end_date) ? date('d, F Y', strtotime($get_last_employment->end_date)) : ''; ?>" />
+                                                                <!--end::Input-->
+                                                            </div>
+                                                            <div class="col-md-8 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">Company Street Address</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" name="emp_company_address" id="emp_company_address" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Company Street Address" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->company_address : ''; ?>" />
+                                                                <!--end::Input-->
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row mb-7">
+                                                            <div class="col-md-4 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class=" fw-semibold fs-6 mb-2">Apartment, suite, unit, building, floor, etc.</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" name="emp_building" id="emp_building" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Apartment, suite, unit, building, floor, etc." value="<?php echo (isset($get_last_employment)) ? $get_last_employment->building : ''; ?>" />
+                                                                <!--end::Input-->
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">City</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" name="emp_city" id="emp_city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->city : ''; ?>" />
+                                                                <!--end::Input-->
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">State</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <select name="emp_state" id="emp_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty">
+                                                                    <option value="">Select State</option>
+                                                                    <?php foreach ($get_state_list as $state_result) { ?>
+                                                                        <option <?php echo (isset($get_last_employment) && $get_last_employment->state == $state_result) ? 'selected' : ''; ?> value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                                <!--end::Input-->
+                                                            </div>
+                                                            <div class="col-md-2 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-2">Zipcode</label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" name="emp_zipcode" id="emp_zipcode" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Zipcode" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->zipcode : ''; ?>" />
+                                                                <!--end::Input-->
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fw-semibold fs-6 mb-1">Types of Business</label>
+                                                                <!--end::Label-->
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-6">
+                                                            <div class="col-md-6 fv-row">
+                                                                <div class="row">
+                                                                    <!--begin::Label-->
+                                                                    <label class="col-lg-2 col-form-label fw-semibold fs-6 text-center">
+                                                                        <span class="">RIA</span>
+                                                                    </label>
+                                                                    <!--end::Label-->
+
+                                                                    <!--begin::Col-->
+                                                                    <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                                                        <input type="text" name="ria" class="form-control form-control-lg form-control-solid" placeholder="RIA" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->ria : ''; ?>">
+                                                                    </div>
+                                                                    <!--end::Col-->
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 fv-row">
+                                                                <div class="row">
+                                                                    <!--begin::Label-->
+                                                                    <label class="col-lg-2 col-form-label fw-semibold fs-6 text-center">
+                                                                        <span class="">BD</span>
+                                                                    </label>
+                                                                    <!--end::Label-->
+
+                                                                    <!--begin::Col-->
+                                                                    <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                                                        <input type="text" name="bd" class="form-control form-control-lg form-control-solid" placeholder="BD" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->bd : ''; ?>">
+                                                                    </div>
+                                                                    <!--end::Col-->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-6">
+                                                            <div class="col-md-6 fv-row">
+                                                                <div class="row">
+                                                                    <!--begin::Label-->
+                                                                    <label class="col-lg-2 col-form-label fw-semibold fs-6 text-center">
+                                                                        <span class="">GA</span>
+                                                                    </label>
+                                                                    <!--end::Label-->
+
+                                                                    <!--begin::Col-->
+                                                                    <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                                                        <input type="text" name="ga" class="form-control form-control-lg form-control-solid" placeholder="GA" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->ga : ''; ?>">
+                                                                    </div>
+                                                                    <!--end::Col-->
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 fv-row">
+                                                                <div class="row">
+                                                                    <!--begin::Label-->
+                                                                    <label class="col-lg-2 col-form-label fw-semibold fs-6 text-center">
+                                                                        <span class="">MGA</span>
+                                                                    </label>
+                                                                    <!--end::Label-->
+
+                                                                    <!--begin::Col-->
+                                                                    <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                                                        <input type="text" name="mga" class="form-control form-control-lg form-control-solid" placeholder="MGA" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->mga : ''; ?>">
+                                                                    </div>
+                                                                    <!--end::Col-->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-6">
+                                                            <div class="col-md-6 fv-row">
+                                                                <div class="row ">
+                                                                    <!--begin::Label-->
+                                                                    <label class="col-lg-2 col-form-label fw-semibold fs-6 text-center">
+                                                                        <span class="">PPGA</span>
+                                                                    </label>
+                                                                    <!--end::Label-->
+
+                                                                    <!--begin::Col-->
+                                                                    <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                                                        <input type="text" name="ppga" class="form-control form-control-lg form-control-solid" placeholder="PPGA" value="<?php echo (isset($get_last_employment)) ? $get_last_employment->ppga : ''; ?>">
+                                                                    </div>
+                                                                    <!--end::Col-->
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class=" fw-semibold fs-6 mb-2">What type of back office supports your company? </label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+
+                                                                <div class="d-flex">
+                                                                    <label class="form-check form-check-custom form-check-solid mt-3 office_support me-10">
+                                                                        <input class="form-check-input" type="radio" name="office_support" value="I have a full back office" <?php echo (isset($get_last_employment) && $get_last_employment->office_support == 'I have a full back office') ? 'checked' : ''; ?>>
+                                                                        <span class="form-check-label  text-gray-800">
+                                                                            I have a full back office
+                                                                        </span>
+                                                                    </label>
+                                                                    <label class="form-check form-check-custom form-check-solid mt-3 office_support">
+                                                                        <input class="form-check-input" type="radio" name="office_support" value="I do not have a full back office" <?php echo (isset($get_last_employment) && $get_last_employment->office_support == 'I do not have a full back office') ? 'checked' : ''; ?>>
+                                                                        <span class="form-check-label text-gray-800">
+                                                                            I do not have a full back office
+                                                                        </span>
+                                                                    </label>
+                                                                </div>
+                                                                <!--end::Input-->
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <!--end::Wrapper-->
+                                                            <div class="card card-flush">
+                                                                <!--begin::Card header-->
+                                                                <div class="card-header">
+                                                                    <div class="card-title">
+                                                                        <h2>Assistant Contact Information</h2>
+                                                                    </div>
+                                                                </div>
+                                                                <!--end::Card header-->
+
+                                                                <!--begin::Card body-->
+                                                                <div class="card-body pt-0">
+                                                                    <!--begin::Input group-->
+                                                                    <div class="row mb-4 mb-7">
+                                                                        <!--begin::Input wrapper-->
+                                                                        <div class="col-md-4 fv-row">
+                                                                            <!--begin::Label-->
+                                                                            <label class="fw-semibold fs-6 mb-2">Name</label>
+                                                                            <!--end::Label-->
+                                                                            <!--begin::Input-->
+                                                                            <input type="text" name="emp_assistant_name" id="emp_assistant_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Name" value="<?php echo (!empty($emp_assistant_contact)) ? $emp_assistant_contact['name'] : '' ?>" />
+                                                                            <!--end::Input-->
+                                                                        </div>
+                                                                        <!--end::Input wrapper-->
+                                                                        <!--begin::Input wrapper-->
+                                                                        <div class="col-md-4 fv-row">
+                                                                            <!--begin::Label-->
+                                                                            <label class="fw-semibold fs-6 mb-2">Phone</label>
+                                                                            <!--end::Label-->
+                                                                            <!--begin::Input-->
+                                                                            <input type="text" name="emp_assistant_phone" id="emp_assistant_phone" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Phone" value="<?php echo (!empty($emp_assistant_contact)) ? $emp_assistant_contact['phone'] : '' ?>" />
+                                                                            <!--end::Input-->
+                                                                        </div>
+                                                                        <!--end::Input wrapper-->
+                                                                        <!--begin::Input wrapper-->
+                                                                        <div class="col-md-4 fv-row">
+                                                                            <!--begin::Label-->
+                                                                            <label class="fw-semibold fs-6 mb-2">Email</label>
+                                                                            <!--end::Label-->
+                                                                            <!--begin::Input-->
+                                                                            <input type="text" name="emp_assistant_email" id="emp_assistant_email" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Email" value="<?php echo (!empty($emp_assistant_contact)) ? $emp_assistant_contact['email'] : '' ?>" />
+                                                                            <!--end::Input-->
+                                                                        </div>
+                                                                        <!--end::Input wrapper-->
+                                                                    </div>
+
+                                                                </div>
+                                                                <!--end::Card header-->
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-7">
+                                                            <div class="mb-0">
+                                                                <!--begin::Button-->
+                                                                <button type="submit" name="save_step" class="btn btn-primary" id="">
+
+                                                                    <!--begin::Indicator label-->
+                                                                    <span class="indicator-label"> Save </span>
+                                                                    <!--end::Indicator label-->
+
+                                                                    <!--begin::Indicator progress-->
+                                                                    <span class="indicator-progress">
+                                                                        Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                                    </span>
+                                                                    <!--end::Indicator progress-->
+                                                                </button>
+                                                                <!--end::Button-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <!--end::Step 6-->
+                                                <!--begin::Step 7-->
                                                 <div data-kt-stepper-element="content">
                                                     <div class="w-100">
                                                         <div class="row mb-7">
@@ -1107,7 +1392,7 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!--end::Step 6-->
+                                                <!--end::Step 7-->
 
                                                 <!--begin::Actions-->
                                                 <div class="d-flex flex-stack pt-15">

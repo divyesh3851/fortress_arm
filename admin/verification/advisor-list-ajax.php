@@ -9,12 +9,7 @@ class DataTableApi
         'name'      => true,
         'email'     => true,
         'mobile_no' => true,
-        'rating'    => true,
-        'status'    => true,
-        'city'      => true,
-        'state'     => true,
         'lead_source' => true,
-        'created_at' => true,
     ];
 
     public function __construct()
@@ -174,7 +169,7 @@ class DataTableApi
             //$item['CreditCardType'] = $item['CreditCardType'] === 'americanexpress' ? 'american-express' : $item['CreditCardType'];
 
             // reformat datetime 
-            $item['created_at'] = date('d M Y, g:i a', strtotime($item['created_at']));
+            //$item['created_at'] = date('d M Y, g:i a', strtotime($item['created_at']));
 
             return $item;
         }, $data);

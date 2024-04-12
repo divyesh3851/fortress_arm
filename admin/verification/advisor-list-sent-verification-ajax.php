@@ -7,11 +7,9 @@ class DataTableApi
     public $columnsDefault = [
         'record_id' => true,
         'name'      => true,
+        'email'     => true,
         'mobile_no' => true,
-        //'City'      => true,
-        'status'     => true,
-        'state'     => true,
-        'created_at' => true,
+        'lead_source' => true,
     ];
 
     public function __construct()
@@ -153,7 +151,7 @@ class DataTableApi
 
     public function getJsonDecode(): mixed
     {
-        return json_decode(file_get_contents(site_url() . '/admin/business/business-list-json.php?' . $_SERVER['QUERY_STRING']), true);
+        return json_decode(file_get_contents(site_url() . '/admin/verification/advisor-list-sent-verification-json.php'), true);
     }
 
     /**
@@ -171,7 +169,7 @@ class DataTableApi
             //$item['CreditCardType'] = $item['CreditCardType'] === 'americanexpress' ? 'american-express' : $item['CreditCardType'];
 
             // reformat datetime 
-            $item['created_at'] = date('d M Y, g:i a', strtotime($item['created_at']));
+            //$item['created_at'] = date('d M Y, g:i a', strtotime($item['created_at']));
 
             return $item;
         }, $data);

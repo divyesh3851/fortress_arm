@@ -11,9 +11,11 @@
         noCalendar: true,
         dateFormat: "H:i",
     });
+
     $('.flatpickr').flatpickr({
         enableTime: !1,
-        dateFormat: "d, M Y"
+        dateFormat: "d, M Y",
+        allowInput: true,
     });
 
     function change_ymd_to_dmy_text(date = '') {

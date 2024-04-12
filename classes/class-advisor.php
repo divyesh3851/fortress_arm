@@ -28,6 +28,8 @@ class Advisor
         add_action('wp_ajax_get_selected_note_data', array($this, 'get_selected_note_data'));
 
         add_action('wp_ajax_send_verification_mail', array($this, 'send_verification_mail'));
+
+        add_action('wp_ajax_delete_note', array($this, 'delete_note'));
     }
 
     public function update_address($advisor_id = '')
@@ -196,7 +198,7 @@ class Advisor
         $_SESSION['use_smtp'] = true;
         if (send_mail($email, $subject, $mail_body)) {
 
-            $wpdb->update("advisor", array("hash_key" => $hash_key), array("id" => sipost('advisor_id')));
+            $wpdb->update("advisor", array("hash_key" => $hash_key, 'send_verification' => 1), array("id" => sipost('advisor_id')));
 
             Admin()->create_mail_log(sipost("advisor_id"), $email, "advisor_complete_profile", "advisor");
 
@@ -276,6 +278,19 @@ class Advisor
         });
 
         return $upcoming_greeting;
+    }
+
+    public function delete_note($note_id = '')
+    {
+        global $wpdb;
+
+        $note_id = (sipost('note_id')) ? sipost('note_id') : $note_id;
+
+        if (!$note_id) {
+            return false;
+        }
+
+        return $wpdb->delete("advisor_notes", array("id" => $note_id));
     }
 
     public function get_selected_note_data($note_id = '')
@@ -738,33 +753,43 @@ class Advisor
             return false;
         }
 
-        if (!sipost('employe_status') || !sipost('company_name') || !sipost('start_date') || !sipost('end_date') || !sipost('company_address') || !sipost('city') || !sipost('state') || !sipost('zipcode')) {
+        if (!sipost('emp_status') || !sipost('emp_company_name') || !sipost('emp_start_date') || !sipost('emp_end_date') || !sipost('emp_company_address') || !sipost('emp_city') || !sipost('emp_state') || !sipost('emp_zipcode')) {
             return false;
         }
 
-        $start_date = (sipost('start_date')) ? strtotime(str_replace(',', '', sipost('start_date'))) : '';
+        $start_date = (sipost('emp_start_date')) ? strtotime(str_replace(',', '', sipost('emp_start_date'))) : '';
         $start_date = ($start_date) ? date('Y-m-d', $start_date) : '';
 
-        $end_date = (sipost('end_date')) ? strtotime(str_replace(',', '', sipost('end_date'))) : '';
+        $end_date = (sipost('emp_end_date')) ? strtotime(str_replace(',', '', sipost('emp_end_date'))) : '';
         $end_date = ($end_date) ? date('Y-m-d', $end_date) : '';
+
+        $assistant_info = array();
+        if (sipost('emp_assistant_name') || sipost('emp_assistant_phone') || sipost('emp_assistant_email')) {
+            $assistant_info = array(
+                'name'      => (sipost('emp_assistant_name')) ? sipost('emp_assistant_name') : '',
+                'phone'     => (sipost('emp_assistant_phone')) ? sipost('emp_assistant_phone') : '',
+                'email'     => (sipost('emp_assistant_email')) ? sipost('emp_assistant_email') : '',
+            );
+        }
 
         $employment_info = array(
             'advisor_id'        => $advisor_id,
-            'employe_status'    => sipost('employe_status'),
-            'company_name'      => ucwords(sipost('company_name')),
+            'employe_status'    => sipost('emp_status'),
+            'company_name'      => ucwords(sipost('emp_company_name')),
             'start_date'        => $start_date,
             'end_date'          => $end_date,
-            'company_address'   => sipost('company_address'),
-            'building'          => sipost('building'),
-            'city'              => sipost('city'),
-            'state'             => sipost('state'),
-            'zipcode'           => sipost('zipcode'),
+            'company_address'   => sipost('emp_company_address'),
+            'building'          => sipost('emp_building'),
+            'city'              => sipost('emp_city'),
+            'state'             => sipost('emp_state'),
+            'zipcode'           => sipost('emp_zipcode'),
             'ria'               => sipost('ria'),
             'bd'                => sipost('bd'),
             'ga'                => sipost('ga'),
             'mga'               => sipost('mga'),
             'ppga'              => sipost('ppga'),
             'office_support'    => sipost('office_support'),
+            'assistant_contact' => ($assistant_info) ? maybe_serialize($assistant_info) : '',
             'created_at'        => current_time('mysql')
         );
 
@@ -1018,6 +1043,55 @@ class Advisor
 
         $this->update_advisor_meta($advisor_id, 'note', sipost('note'));
 
+        /**** Save Employement ****/
+        if (sipost('emp_status') || sipost('emp_company_name') || sipost('emp_start_date') || sipost('emp_end_date') || sipost('emp_company_address') || sipost('emp_city') || sipost('emp_state') || sipost('emp_zipcode')) {
+
+            $start_date = (sipost('emp_start_date')) ? strtotime(str_replace(',', '', sipost('emp_start_date'))) : '';
+            $start_date = ($start_date) ? date('Y-m-d', $start_date) : '';
+
+            $end_date = (sipost('emp_end_date')) ? strtotime(str_replace(',', '', sipost('emp_end_date'))) : '';
+            $end_date = ($end_date) ? date('Y-m-d', $end_date) : '';
+
+            $assistant_info = array();
+            if (sipost('emp_assistant_name') || sipost('emp_assistant_phone') || sipost('emp_assistant_email')) {
+                $assistant_info = array(
+                    'name'      => (sipost('emp_assistant_name')) ? sipost('emp_assistant_name') : '',
+                    'phone'     => (sipost('emp_assistant_phone')) ? sipost('emp_assistant_phone') : '',
+                    'email'     => (sipost('emp_assistant_email')) ? sipost('emp_assistant_email') : '',
+                );
+            }
+
+            $employment_info = array(
+                'advisor_id'        => $advisor_id,
+                'employe_status'    => sipost('emp_status'),
+                'company_name'      => ucwords(sipost('emp_company_name')),
+                'start_date'        => $start_date,
+                'end_date'          => $end_date,
+                'company_address'   => sipost('emp_company_address'),
+                'building'          => sipost('emp_building'),
+                'city'              => sipost('emp_city'),
+                'state'             => sipost('emp_state'),
+                'zipcode'           => sipost('emp_zipcode'),
+                'ria'               => sipost('ria'),
+                'bd'                => sipost('bd'),
+                'ga'                => sipost('ga'),
+                'mga'               => sipost('mga'),
+                'ppga'              => sipost('ppga'),
+                'office_support'    => sipost('office_support'),
+                'assistant_contact' => ($assistant_info) ? maybe_serialize($assistant_info) : '',
+            );
+
+            if (sipost('employment_history_id')) {
+                $employment_info['updated_at'] = current_time('mysql');
+                $wpdb->update("employment", $employment_info, array("id" => sipost('employment_history_id')));
+            } else {
+                $employment_info['created_at'] = current_time('mysql');
+                $wpdb->insert("employment", $employment_info);
+            }
+        }
+        /**** End Save Employement ****/
+
+        /**** Save Interest ****/
         $check_interest = $wpdb->get_row("SELECT id FROM interest WHERE advisor_id = " . $advisor_id);
 
         $life_insurance     = (sipost('life_insurance')) ? implode(',', sipost('life_insurance')) : '';
@@ -1026,9 +1100,9 @@ class Advisor
         $critical_illness   = (sipost('critical_illness')) ? implode(',', sipost('critical_illness')) : '';
 
         $interest_info = array(
-            'advisor_id'    => $advisor_id,
-            'life_insurance' => $life_insurance,
-            'annuities'     => $annuities,
+            'advisor_id'        => $advisor_id,
+            'life_insurance'    => $life_insurance,
+            'annuities'         => $annuities,
             'long_term_care_insurance' => $long_term_care_insurance,
             'critical_illness'  => $critical_illness,
             'disability_income' => sipost('disability_income'),
@@ -1042,6 +1116,7 @@ class Advisor
             $interest_info['created_at'] = current_time('mysql');
             $wpdb->insert("interest", $interest_info);
         }
+        /**** End Save Interest ****/
 
         if ($_FILES['advisor_profile'] && $_FILES['advisor_profile']['error'] == 0) {
 
@@ -1225,7 +1300,7 @@ class Advisor
     {
         global $wpdb;
 
-        return $wpdb->get_results("SELECT id,first_name,middle_name,last_name,gender,email,mobile_no,city,state,zipcode,birth_date FROM advisor WHERE status = 0 ORDER BY id DESC");
+        return $wpdb->get_results("SELECT id,first_name,middle_name,last_name,gender,email,mobile_no,city,state,birth_date FROM advisor WHERE status = 0 ORDER BY id DESC");
     }
 
     public function get_selected_advisor_general_details($advisor_id = '')
@@ -1235,7 +1310,7 @@ class Advisor
             return false;
         }
 
-        return $wpdb->get_row("SELECT id,first_name,middle_name,last_name,gender,email,mobile_no,city,state,zipcode,birth_date FROM advisor WHERE id = " . $advisor_id  . " ORDER BY id DESC");
+        return $wpdb->get_row("SELECT id,first_name,middle_name,last_name,gender,email,mobile_no,city,state,birth_date FROM advisor WHERE id = " . $advisor_id  . " ORDER BY id DESC");
     }
 
     // Checked Currenty Advisor Login or Not If Not Then Redirect Login page
