@@ -1,14 +1,14 @@
 <?php require '../../config.php';
 $page_name = 'message';
 $sub_page_name = 'messages-list';
-Admin()->check_login();
+Advisor()->check_advisor_login();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/advisor/head.php'; ?>
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -43,12 +43,12 @@ Admin()->check_login();
         <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
             <!--begin::Header-->
-            <?php require SITE_DIR . '/admin/header.php'; ?>
+            <?php require SITE_DIR . '/advisor/header.php'; ?>
             <!--end::Header-->
             <!--begin::Wrapper-->
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <!--begin::Sidebar-->
-                <?php require SITE_DIR . '/admin/sidebar.php'; ?>
+                <?php require SITE_DIR . '/advisor/sidebar.php'; ?>
                 <!--end::Sidebar-->
                 <!--begin::Main-->
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -540,12 +540,12 @@ Admin()->check_login();
                     </div>
                     <!--end::Content wrapper-->
                     <!--begin::Footer-->
-                    <?php require SITE_DIR . '/admin/footer.php'; ?>
+                    <?php require SITE_DIR . '/advisor/footer.php'; ?>
                     <!--end::Footer-->
                 </div>
                 <!--end:::Main-->
                 <!--begin::aside-->
-                <?php require SITE_DIR . '/admin/right_sidebar.php'; ?>
+                <?php require SITE_DIR . '/advisor/right_sidebar.php'; ?>
                 <!--end::aside-->
             </div>
             <!--end::Wrapper-->
@@ -566,7 +566,7 @@ Admin()->check_login();
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/advisor/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>

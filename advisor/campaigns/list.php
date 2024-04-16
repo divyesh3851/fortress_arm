@@ -1,14 +1,14 @@
 <?php require '../../config.php';
 $page_name = 'campaigns';
 $sub_page_name = 'campaigns-list';
-Admin()->check_login();
+Advisor()->check_advisor_login();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/advisor/head.php'; ?>
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -43,12 +43,12 @@ Admin()->check_login();
         <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
             <!--begin::Header-->
-            <?php require SITE_DIR . '/admin/header.php'; ?>
+            <?php require SITE_DIR . '/advisor/header.php'; ?>
             <!--end::Header-->
             <!--begin::Wrapper-->
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <!--begin::Sidebar-->
-                <?php require SITE_DIR . '/admin/sidebar.php'; ?>
+                <?php require SITE_DIR . '/advisor/sidebar.php'; ?>
                 <!--end::Sidebar-->
                 <!--begin::Main-->
                 <!--begin::Main-->
@@ -87,7 +87,7 @@ Admin()->check_login();
                                     <!--begin::Col-->
                                     <div class="col-md-6 col-xl-4">
                                         <!--begin::Card-->
-                                        <a href="<?php echo site_url(); ?>/admin/campaigns/single/1" class="card border-hover-primary">
+                                        <a href="<?php echo site_url(); ?>/advisor/campaigns/single/1" class="card border-hover-primary">
                                             <!--begin::Card header-->
                                             <div class="card-header border-0 pt-9">
                                                 <!--begin::Card Title-->
@@ -163,7 +163,7 @@ Admin()->check_login();
                                     <!--begin::Col-->
                                     <div class="col-md-6 col-xl-4">
                                         <!--begin::Card-->
-                                        <a href="<?php echo site_url(); ?>/admin/campaigns/single/2" class="card border-hover-primary">
+                                        <a href="<?php echo site_url(); ?>/advisor/campaigns/single/2" class="card border-hover-primary">
                                             <!--begin::Card header-->
                                             <div class="card-header border-0 pt-9">
                                                 <!--begin::Card Title-->
@@ -234,7 +234,7 @@ Admin()->check_login();
                                     <!--begin::Col-->
                                     <div class="col-md-6 col-xl-4">
                                         <!--begin::Card-->
-                                        <a href="<?php echo site_url(); ?>/admin/campaigns/single/3" class="card border-hover-primary">
+                                        <a href="<?php echo site_url(); ?>/advisor/campaigns/single/3" class="card border-hover-primary">
                                             <!--begin::Card header-->
                                             <div class="card-header border-0 pt-9">
                                                 <!--begin::Card Title-->
@@ -310,7 +310,7 @@ Admin()->check_login();
                                     <!--begin::Col-->
                                     <div class="col-md-6 col-xl-4">
                                         <!--begin::Card-->
-                                        <a href="<?php echo site_url(); ?>/admin/campaigns/single/4" class="card border-hover-primary">
+                                        <a href="<?php echo site_url(); ?>/advisor/campaigns/single/4" class="card border-hover-primary">
                                             <!--begin::Card header-->
                                             <div class="card-header border-0 pt-9">
                                                 <!--begin::Card Title-->
@@ -381,7 +381,7 @@ Admin()->check_login();
                                     <!--begin::Col-->
                                     <div class="col-md-6 col-xl-4">
                                         <!--begin::Card-->
-                                        <a href="<?php echo site_url(); ?>/admin/campaigns/single/5" class="card border-hover-primary">
+                                        <a href="<?php echo site_url(); ?>/advisor/campaigns/single/5" class="card border-hover-primary">
                                             <!--begin::Card header-->
                                             <div class="card-header border-0 pt-9">
                                                 <!--begin::Card Title-->
@@ -457,7 +457,7 @@ Admin()->check_login();
                                     <!--begin::Col-->
                                     <div class="col-md-6 col-xl-4">
                                         <!--begin::Card-->
-                                        <a href="<?php echo site_url(); ?>/admin/campaigns/single/6" class="card border-hover-primary">
+                                        <a href="<?php echo site_url(); ?>/advisor/campaigns/single/6" class="card border-hover-primary">
                                             <!--begin::Card header-->
                                             <div class="card-header border-0 pt-9">
                                                 <!--begin::Card Title-->
@@ -1122,13 +1122,13 @@ Admin()->check_login();
                     </div>
                     <!--end::Content wrapper-->
                     <!--begin::Footer-->
-                    <?php require SITE_DIR . '/admin/footer.php'; ?>
+                    <?php require SITE_DIR . '/advisor/footer.php'; ?>
                     <!--end::Footer-->
                 </div>
                 <!--end:::Main-->
                 <!--end:::Main-->
                 <!--begin::aside-->
-                <?php require SITE_DIR . '/admin/right_sidebar.php'; ?>
+                <?php require SITE_DIR . '/advisor/right_sidebar.php'; ?>
                 <!--end::aside-->
             </div>
             <!--end::Wrapper-->
@@ -1149,7 +1149,7 @@ Admin()->check_login();
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/advisor/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
 </body>
 <!--end::Body-->

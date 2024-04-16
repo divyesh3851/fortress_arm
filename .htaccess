@@ -5,15 +5,29 @@ Options -MultiViews
 	RewriteEngine on
 
 	RewriteRule ^admin/dashboard/?$ admin/dashboard.php [NC,L]
+	RewriteRule ^advisor/dashboard/?$ advisor/dashboard.php [NC,L]
+
 	RewriteRule ^admin/profile?$ admin/profile.php [NC,L]
+	RewriteRule ^advisor/profile?$ advisor/profile.php [NC,L]
+
 	RewriteRule ^admin/logout?$ admin/logout.php [NC,L]
+	RewriteRule ^advisor/logout?$ advisor/logout.php [NC,L]
+
 	RewriteRule ^admin/login?$ admin/index.php [NC,L]
+	RewriteRule ^advisor/login?$ advisor/index.php [NC,L]
+
 	RewriteRule ^admin/advisor/advisor-list?$ admin/advisor/advisor-list.php [NC,L]
+	RewriteRule ^advisor/advisor-list?$ advisor/advisor-list.php [NC,L]
+
 	RewriteRule ^admin/advisor/add-advisor?$ admin/advisor/advisor.php [NC,L]
 
 	RewriteRule ^admin/advisor/edit-advisor?$ admin/advisor/edit_advisor.php [NC,L]
 	RewriteRule ^admin/advisor/edit-advisor/([^/]+)$ admin/advisor/edit-advisor.php?advisor_id=$1 [NC,L]
 	RewriteRule ^admin/advisor/view-advisor/([^/]+)$ admin/advisor/view-advisor.php?advisor_id=$1 [NC,L]
+
+	RewriteRule ^advisor/edit-advisor?$ advisor/edit_advisor.php [NC,L]
+	RewriteRule ^advisor/edit-advisor/([^/]+)$ advisor/edit-advisor.php?advisor_id=$1 [NC,L]
+	RewriteRule ^advisor/view-advisor/([^/]+)$ advisor/view-advisor.php?advisor_id=$1 [NC,L]
 
 	RewriteRule ^admin/settings/designation-list?$ admin/settings/designation-list.php [NC,L]
 	RewriteRule ^admin/settings/licenses-type-list?$ admin/settings/licenses-type-list.php [NC,L]
@@ -23,13 +37,7 @@ Options -MultiViews
 	RewriteRule ^admin/settings/carrier-list?$ admin/settings/carrier-list.php [NC,L]
 	RewriteRule ^admin/settings/premium-volume-list?$ admin/settings/premium-volume-list.php [NC,L]
 	RewriteRule ^admin/settings/production-percentage-list?$ admin/settings/production-percentage-list.php [NC,L]
-	RewriteRule ^admin/settings/market-list?$ admin/settings/market-list.php [NC,L]
-
-	RewriteRule ^admin/business/business-list?$ admin/business/business-list.php [NC,L]
-	RewriteRule ^admin/business/add-business?$ admin/business/business.php [NC,L]
-
-	RewriteRule ^admin/business/edit-business?$ admin/business/edit_business.php [NC,L]
-	RewriteRule ^admin/business/edit-business/([^/]+)$ admin/business/edit-business.php?business_id=$1 [NC,L]
+	RewriteRule ^admin/settings/market-list?$ admin/settings/market-list.php [NC,L] 
 
 	RewriteRule ^admin/admin_user/list?$ admin/admin_user/list.php [NC,L]
 	RewriteRule ^admin/activity/activity-list/?$ admin/activity/activity-list.php [NC,L]
@@ -41,6 +49,10 @@ Options -MultiViews
 	RewriteRule ^admin/verification/view-advisor/([^/]+)$ admin/verification/view-advisor.php?advisor_id=$1 [NC,L]
 	RewriteRule ^complete-profile/([^/]+)$ complete-profile.php?key=$1 [NC,L]
 
+	RewriteRule ^advisor/verification/advisor-list?$ advisor/verification/advisor-list.php [NC,L]  
+	RewriteRule ^advisor/verification/edit-advisor/([^/]+)$ advisor/verification/edit-advisor.php?advisor_id=$1 [NC,L]
+	RewriteRule ^advisor/verification/view-advisor/([^/]+)$ advisor/verification/view-advisor.php?advisor_id=$1 [NC,L]
+
 	RewriteRule ^admin/message/messages-list?$ admin/message/messages-list.php [NC,L]
 	RewriteRule ^admin/document/document-vault?$ admin/document/document-vault.php [NC,L]
 	RewriteRule ^admin/newsletter?$ admin/newsletter.php [NC,L]
@@ -48,4 +60,14 @@ Options -MultiViews
 	RewriteRule ^admin/analytics/dashboard?$ admin/analytics/dashboard.php [NC,L]
 	RewriteRule ^admin/campaigns/list?$ admin/campaigns/list.php [NC,L]
 	RewriteRule ^admin/campaigns/single/([^/]+)$ admin/campaigns/single.php?id=$1 [NC,L] 
+
+
+	RewriteRule ^advisor/notes/?$ advisor/notes.php [NC,L]
+	RewriteRule ^advisor/message/messages-list?$ advisor/message/messages-list.php [NC,L]
+	RewriteRule ^advisor/document/document-vault?$ advisor/document/document-vault.php [NC,L]
+	RewriteRule ^advisor/newsletter?$ advisor/newsletter.php [NC,L]
+	RewriteRule ^advisor/newsletter/([^/]+)$ advisor/newsletter.php?id=$1 [NC,L]
+	RewriteRule ^advisor/analytics/dashboard?$ advisor/analytics/dashboard.php [NC,L]
+	RewriteRule ^advisor/campaigns/list?$ advisor/campaigns/list.php [NC,L]
+	RewriteRule ^advisor/campaigns/single/([^/]+)$ advisor/campaigns/single.php?id=$1 [NC,L] 
 </IfModule>

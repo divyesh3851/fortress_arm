@@ -216,8 +216,10 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (IS_ADMIN) {
+        if (isset($_SESSION['fbs_admin_id']) && IS_ADMIN) {
             $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
+        } else if (isset($_SESSION['fbs_advisor_id'])) {
+            $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'];
         }
 
         return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,birth_date FROM advisor WHERE DATE_FORMAT(birth_date, '%m-%d') BETWEEN DATE_FORMAT(CURDATE(), '%m-%d') 
@@ -229,8 +231,10 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (IS_ADMIN) {
+        if (isset($_SESSION['fbs_admin_id']) && IS_ADMIN) {
             $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
+        } else if (isset($_SESSION['fbs_advisor_id'])) {
+            $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'];
         }
 
         return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,anniversary_date FROM advisor WHERE DATE_FORMAT(anniversary_date, '%m-%d') BETWEEN DATE_FORMAT(CURDATE(), '%m-%d') 
@@ -459,11 +463,18 @@ class Advisor
         die();
     }
 
-    public function get_note_list()
+    public function get_note_list($advisor_id = '')
     {
         global $wpdb;
 
-        return $wpdb->get_results("SELECT * FROM advisor_notes ORDER BY id DESC");
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        $WHERE = '';
+        if ($advisor_id) {
+            $WHERE = ' WHERE advisor_id = ' . $advisor_id;
+        }
+
+        return $wpdb->get_results("SELECT * FROM advisor_notes " . $WHERE . " ORDER BY id DESC");
     }
 
     public function update_advisor_note()
@@ -1179,6 +1190,13 @@ class Advisor
 
         $markets = (!empty(sipost('markets'))) ? implode(',', sipost('markets')) : '';
 
+        $created_by = '';
+        if (isset($_SESSION['fbs_advisor_id'])) {
+            $created_by = $_SESSION['fbs_advisor_id'];
+        } else if ($_SESSION['fbs_admin_id']) {
+            $created_by = $_SESSION['fbs_admin_id'];
+        }
+
         $advisor_info = array(
             "prefix"            => sipost("prefix"),
             "preferred_name"    => $preferred_name,
@@ -1209,7 +1227,8 @@ class Advisor
             "anniversary_date"  => $anniversary_date,
             "lead_owner"        => sipost('lead_owner'),
             "rating"            => sipost('rating'),
-            "created_at"        => current_time('mysql')
+            "created_at"        => current_time('mysql'),
+            "created_by"        => $created_by
         );
 
         $wpdb->insert("advisor", $advisor_info);
@@ -1313,27 +1332,7 @@ class Advisor
         return $wpdb->get_row("SELECT id,first_name,middle_name,last_name,gender,email,mobile_no,city,state,birth_date FROM advisor WHERE id = " . $advisor_id  . " ORDER BY id DESC");
     }
 
-    // Checked Currenty Advisor Login or Not If Not Then Redirect Login page
-    public function check_login()
-    {
-
-        if (!$_SESSION || !$_SESSION['is_fbs_advisor_logged_id'] || !$_SESSION['fbs_advisor_id']) {
-
-            if (wp_doing_ajax()) {
-
-                $error = new WP_Error('not_logged_in', 'User is not logged in.');
-                wp_send_json_error($error);
-            }
-
-            wp_redirect(admin_url('index.php'));
-            exit;
-        }
-
-        return true;
-    }
-
-
-    // Get All Information About Current Loged Advisor
+    // Get All Information About Current Loged Admin
     public function get_login_advisor_info($advisor_id = '')
     {
 
@@ -1349,11 +1348,56 @@ class Advisor
     }
 
 
+    // Checked Currenty Advisor Login or Not If Not Then Redirect Login page
+    public function check_advisor_login()
+    {
+
+        if (!$_SESSION || !$_SESSION['is_fbs_advisor_login'] || !$_SESSION['fbs_advisor_id']) {
+
+            if (wp_doing_ajax()) {
+
+                $error = new WP_Error('not_logged_in', 'User is not logged in.');
+                wp_send_json_error($error);
+            }
+
+            wp_redirect(site_url('advisor/index.php'));
+            exit;
+        }
+
+        return true;
+    }
+
+
     // Checked Admin Available or Not If Available then make login process
     public function login($user_name, $password, $remember_login = false)
     {
 
         global $wpdb;
+
+        $advisor_data = $wpdb->get_row("SELECT id, email, mobile_no, password FROM advisor WHERE ( LOWER(email) = '" . trim(strtolower($user_name)) . "' ) AND status = 0 AND is_verified = 1");
+
+        if ($advisor_data) {
+
+            if ($advisor_data->password === md5($password . AUTH_SALT)) {
+
+                if ($remember_login) {
+                    @setcookie('fbs_advisor_mail', $advisor_data->email, time() + (86400 * 10), '/'); // 86400 = 1 day
+                } else {
+                    if (isset($_COOKIE['fbs_advisor_mail'])) {
+                        @setcookie('fbs_advisor_mail', '', time() - 3600, '/');
+                    }
+                }
+
+                $_SESSION['is_fbs_advisor_login']   = true;
+                $_SESSION['fbs_advisor_id']             = $advisor_data->id;
+
+                return 'success';
+            } else {
+                return 'password_wrong';
+            }
+        }
+
+        return 'email_not_found';
     }
 
 
@@ -1373,7 +1417,7 @@ class Advisor
         }
 
         unset($_SESSION['fbs_advisor_id']);
-        unset($_SESSION['is_fbs_advisor_logged_id']);
+        unset($_SESSION['is_fbs_advisor_login']);
         session_unset();
         session_destroy();
 

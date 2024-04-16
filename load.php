@@ -13,7 +13,7 @@ require_once SITE_DIR . '/classes/class-admin.php';
 
 require_once SITE_DIR . '/classes/class-advisor.php';
 
-require_once SITE_DIR . '/classes/class-business.php';
+//require_once SITE_DIR . '/classes/class-business.php';
 
 // Define Admin Vars
 $admin_user = Admin()->get_login_admin_info();
