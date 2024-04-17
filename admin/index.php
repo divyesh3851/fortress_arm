@@ -2,7 +2,7 @@
 $page_name = 'login';
 
 // Checked User Already Login Or Not
-if (isset($_SESSION) && isset($_SESSION['is_fbs_admin_logged_id']) && isset($_SESSION['fbs_admin_id'])) {
+if (isset($_SESSION) && isset($_SESSION['is_fbs_admin_login']) && isset($_SESSION['fbs_admin_id'])) {
 
     wp_redirect(admin_url('dashboard'));
     exit;

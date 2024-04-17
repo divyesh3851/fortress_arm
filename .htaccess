@@ -70,4 +70,6 @@ Options -MultiViews
 	RewriteRule ^advisor/analytics/dashboard?$ advisor/analytics/dashboard.php [NC,L]
 	RewriteRule ^advisor/campaigns/list?$ advisor/campaigns/list.php [NC,L]
 	RewriteRule ^advisor/campaigns/single/([^/]+)$ advisor/campaigns/single.php?id=$1 [NC,L] 
+
+	RewriteRule ^admin/settings/mail-setting?$ admin/settings/mail-setting.php [NC,L]
 </IfModule>

@@ -300,29 +300,78 @@ function description_excerpt($description, $length)
 function send_mail($to, $subject, $body, $attachments = array(), $mail_from = '')
 {
 
-	$sender_name  = SITE_TITLE;
-	$sender_email = 'info@fortressbrokeragesolution.com';
-	$return_email = 'info@fortressbrokeragesolution.com';
-	$headers = 'From: ' . $sender_name . ' <' . $sender_email . '>' . "\r\n";
+	$mail_method  = (get_option('mail_method')) ? get_option('mail_method') : 'smtp';
 
-	$headers .= 'Reply-To: ' . $return_email . '' . "\r\n";
-	$headers .= 'Return-Path: ' . $return_email . "\r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
-	$headers .= "Content-type: text/html; charset: utf8\r\n";
-	$headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
-	$headers .= "X-Priority: 1 (Highest)\n";
-	$headers .= "X-MSMail-Priority: High\n";
-	$headers .= "Importance: High\n";
+	if ($mail_method == 'sendgrid' && get_option('sendgrid_api_key')) {
 
-	if (is_array($to)) {
-		foreach ($to as $recipient) {
-			wp_mail($recipient, $subject, $body, $headers, $attachments);
+		require 'vendor/autoload.php';
+
+		$email = new \SendGrid\Mail\Mail();
+
+		// Replace the email address and name with your verified sender
+		$email->setFrom('info@fortressbrokerage.com', 'Fortress Brokerage');
+		$email->setSubject($subject);
+		// Replace the email address and name with your recipient
+		if (is_array($to)) {
+			foreach ($to as $to_email) {
+				$email->addTo($to_email, '');
+			}
+		} else {
+			$email->addTo($to, '');
+		}
+
+		$email->addContent(
+			'text/html',
+			$body
+		);
+
+		foreach ($attachments as $filePath) {
+
+			$fileContent = file_get_contents($filePath);
+
+			// Create an attachment object
+			$attachment = new \SendGrid\Mail\Attachment();
+			$attachment->setContent(base64_encode($fileContent));
+			$attachment->setType(mime_content_type($filePath)); // Auto-detect MIME type
+			$attachment->setFilename(basename($filePath)); // Set the filename
+
+			// Add the attachment to the email
+			$email->addAttachment($attachment);
+		}
+
+		$sendgrid = new \SendGrid(get_option('sendgrid_api_key'));
+		try {
+			$response = $sendgrid->send($email);
+			return true;
+		} catch (Exception $e) {
+			return false;
 		}
 	} else {
-		wp_mail($to, $subject, $body, $headers, $attachments);
+		$sender_name  = SITE_TITLE;
+		$sender_email = 'info@fortressbrokeragesolution.com';
+		$return_email = 'info@fortressbrokeragesolution.com';
+		$headers = 'From: ' . $sender_name . ' <' . $sender_email . '>' . "\r\n";
+
+		$headers .= 'Reply-To: ' . $return_email . '' . "\r\n";
+		$headers .= 'Return-Path: ' . $return_email . "\r\n";
+		$headers .= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset: utf8\r\n";
+		$headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
+		$headers .= "X-Priority: 1 (Highest)\n";
+		$headers .= "X-MSMail-Priority: High\n";
+		$headers .= "Importance: High\n";
+
+		if (is_array($to)) {
+			foreach ($to as $recipient) {
+				wp_mail($recipient, $subject, $body, $headers, $attachments);
+			}
+			return true;
+		} else {
+			return wp_mail($to, $subject, $body, $headers, $attachments);
+		}
 	}
 
-	return true;
+	return false;
 }
 
 

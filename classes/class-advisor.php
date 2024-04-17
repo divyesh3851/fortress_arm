@@ -1193,7 +1193,7 @@ class Advisor
         $created_by = '';
         if (isset($_SESSION['fbs_advisor_id'])) {
             $created_by = $_SESSION['fbs_advisor_id'];
-        } else if ($_SESSION['fbs_admin_id']) {
+        } else if (isset($_SESSION['fbs_admin_id'])) {
             $created_by = $_SESSION['fbs_admin_id'];
         }
 
@@ -1418,8 +1418,6 @@ class Advisor
 
         unset($_SESSION['fbs_advisor_id']);
         unset($_SESSION['is_fbs_advisor_login']);
-        session_unset();
-        session_destroy();
 
         return true;
     }

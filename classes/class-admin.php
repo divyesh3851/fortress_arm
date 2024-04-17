@@ -180,7 +180,7 @@ class Admin
     public function check_login()
     {
 
-        if (!$_SESSION || !$_SESSION['is_fbs_admin_logged_id'] || !$_SESSION['fbs_admin_id']) {
+        if (!$_SESSION || !$_SESSION['is_fbs_admin_login'] || !$_SESSION['fbs_admin_id']) {
 
             if (wp_doing_ajax()) {
 
@@ -188,7 +188,7 @@ class Admin
                 wp_send_json_error($error);
             }
 
-            wp_redirect(admin_url('index.php'));
+            wp_redirect(admin_url('login'));
             exit;
         }
 
@@ -232,7 +232,7 @@ class Admin
                     }
                 }
 
-                $_SESSION['is_fbs_admin_logged_id'] = true;
+                $_SESSION['is_fbs_admin_login'] = true;
                 $_SESSION['fbs_admin_id']           = $admin_data->id;
                 $_SESSION['fbs_role_id']            = $admin_data->role_id;
 
@@ -262,9 +262,7 @@ class Admin
         }
 
         unset($_SESSION['fbs_admin_id']);
-        unset($_SESSION['is_fbs_admin_logged_id']);
-        session_unset();
-        session_destroy();
+        unset($_SESSION['is_fbs_admin_login']);
 
         return true;
     }

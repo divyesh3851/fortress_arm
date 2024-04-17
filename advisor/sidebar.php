@@ -108,20 +108,6 @@
                     <!--end:Menu link-->
                 </div>
                 <!--end:Menu item-->
-
-                <!--begin:Menu item-->
-                <div class="menu-item">
-                    <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'activity') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/advisor/activity/activity-list/">
-                        <span class="menu-icon">
-                            <i class="las la-project-diagram fs-2"></i>
-                        </span>
-                        <span class="menu-title">Activities</span>
-                    </a>
-                    <!--end:Menu link-->
-                </div>
-                <!--end:Menu item-->
-
             </div>
             <!--end::Sidebar menu-->
         </div>
