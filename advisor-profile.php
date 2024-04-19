@@ -25,7 +25,7 @@ if (isset($_POST['save_advisor']) || isset($_POST['save_step'])) {
         $_SESSION['process_fail'] = true;
     }
 
-    wp_redirect(site_url() . '/complete-profile/' . siget('key'));
+    wp_redirect(site_url() . '/advisor-profile/' . siget('key'));
     exit;
 }
 

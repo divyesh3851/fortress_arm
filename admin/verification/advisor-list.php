@@ -2,7 +2,11 @@
 $page_name = 'verification';
 $sub_page_name = 'verification-list';
 Admin()->check_login();
-
+// page permition for admin user
+if (Admin()->check_for_page_access("advisor", true)) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
 if (sipost('first_name') || sipost('last_name') || sipost('email')) {
 
     $response = Advisor()->add_advisor();

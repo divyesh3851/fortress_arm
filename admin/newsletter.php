@@ -2,6 +2,12 @@
 $page_name = 'newsletter';
 $sub_page_name = '';
 Admin()->check_login();
+
+// page permition for admin user
+if (Admin()->check_for_page_access("newsletter", true)) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

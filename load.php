@@ -20,11 +20,7 @@ $admin_user = Admin()->get_login_admin_info();
 
 define('ADMIN_USER_ID', $admin_user ? $admin_user->id : '');
 
-if ($admin_user && $admin_user->role_id == 0) {
-    define('IS_ADMIN', 0); // is master admin
-} else if ($admin_user && $admin_user->role_id == 1) {
-    define('IS_ADMIN', 1); // is sub admin
-}
+define('IS_ADMIN', $admin_user ? $admin_user->is_master : '');
 
 define('CURRENT_USER_NAME', $admin_user ? $admin_user->first_name . ' ' . $admin_user->last_name : '');
 

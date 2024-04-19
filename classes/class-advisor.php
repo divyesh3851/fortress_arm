@@ -216,7 +216,7 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (isset($_SESSION['fbs_admin_id']) && IS_ADMIN) {
+        if (isset($_SESSION['fbs_admin_id'])) {
             $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
         } else if (isset($_SESSION['fbs_advisor_id'])) {
             $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'];
@@ -231,7 +231,7 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (isset($_SESSION['fbs_admin_id']) && IS_ADMIN) {
+        if (isset($_SESSION['fbs_admin_id'])) {
             $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
         } else if (isset($_SESSION['fbs_advisor_id'])) {
             $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'];
@@ -1307,6 +1307,7 @@ class Advisor
 
         return false;
     }
+
 
     public function get_advisor_list()
     {

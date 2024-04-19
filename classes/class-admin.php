@@ -14,6 +14,168 @@ class Admin
         add_action('wp_ajax_get_selected_admin_user_data', array($this, 'get_selected_admin_user_data'));
 
         add_action('wp_ajax_admin_user_delete', array($this, 'admin_user_delete'));
+
+        add_action('wp_ajax_get_all_admin_user_list_role_wise', array($this, 'get_all_admin_user_list_role_wise'));
+    }
+
+    public function get_all_admin_user_list_role_wise($role_id = '', $status = 0)
+    {
+
+        global $wpdb;
+
+        $role_id = (sipost('role_id')) ? sipost('role_id') : $role_id;
+
+        if (!$role_id) {
+            return false;
+        }
+
+        $user_list = $wpdb->get_results($wpdb->prepare('SELECT id, first_name, last_name, email, mobile_no FROM admin WHERE role_id = %d AND status = %d ORDER BY id DESC', $role_id, $status));
+
+        if (sipost('is_ajax')) {
+            echo json_encode($user_list);
+            die();
+        } else {
+            return $user_list;
+        }
+    }
+
+    public function check_for_page_access($page_access, $status = false)
+    {
+
+        global $wpdb;
+
+        $admin_role_info = Admin()->get_login_admin_info();
+
+        $all_page_access = ($admin_role_info->role_id) ? Admin()->get_selected_role_data($admin_role_info->role_id)->all_page_access : '';
+
+        if ($status == true) {
+
+            // for admin 
+            if (IS_ADMIN) {
+                return false;
+            }
+
+            // for access all pages
+            if ($all_page_access == 'yes') {
+                return false;
+            }
+
+            // check page allow or not in page open
+            if ($admin_role_info->role_id && strpos(Admin()->get_selected_role_data($admin_role_info->role_id)->page_access, $page_access) === false) {
+                return true;
+            }
+
+            // allow
+            return false;
+        } else {
+
+            // for admin 
+            if (IS_ADMIN) {
+                return true;
+            }
+
+            // check page menu allow or not in menu bar
+            if ($all_page_access == 'yes' || $admin_role_info->role_id == 0 || strpos(Admin()->get_selected_role_data($admin_role_info->role_id)->page_access, $page_access) !== $status) {
+
+                return true;
+            }
+
+            // not allow
+            return false;
+        }
+    }
+
+    public function get_selected_role_data($role_id)
+    {
+
+        global $wpdb;
+
+        if (!$role_id) {
+            return false;
+        }
+
+        return $wpdb->get_row($wpdb->prepare('SELECT * FROM admin_role WHERE role_id = %d ', $role_id));
+    }
+
+    public function update_role($role_data = array())
+    {
+
+        global $wpdb;
+
+        $check_role_type = $wpdb->get_row($wpdb->prepare("SELECT role_id FROM admin_role WHERE role_name = '%s' AND role_id != %d", sipost('role_name'), sipost('role_id')));
+
+        if (!$check_role_type) {
+
+            $page_access = (sipost('page_access')) ? implode(',', sipost('page_access')) : '';
+
+            $role_data = array(
+                'role_name'          => sipost('role_name'),
+                'all_page_access'    => sipost('all_page_access'),
+                'export_data_access' => sipost('export_data_access'),
+                'page_access'        => $page_access,
+                'updated_at'         => current_time('mysql'),
+            );
+
+            $wpdb->update('admin_role', $role_data, array('role_id' => sipost('role_id')));
+
+            Admin()->create_track_log_activity($_SESSION['fbs_admin_id'], sipost('role_id'), 'role update', 'role_update', '', '', 'role has been updated', 'admin');
+
+            return true;
+        }
+
+        if ($check_role_type->role_id) {
+
+            return 'duplicate';
+        }
+
+        return false;
+    }
+
+    public function add_role()
+    {
+        global $wpdb;
+
+        $check_role_type = $wpdb->get_row($wpdb->prepare("SELECT role_id FROM admin_role WHERE  role_name = '%s' ", sipost('role_name')));
+
+        if (!$check_role_type) {
+
+            $page_access = (sipost('page_access')) ? implode(',', sipost('page_access')) : '';
+
+            $role_data = array(
+                'role_name'          => sipost('role_name'),
+                'all_page_access'    => sipost('all_page_access'),
+                'export_data_access' => sipost('export_data_access'),
+                'page_access'        => $page_access,
+                'created_at'         => current_time('mysql'),
+            );
+
+            $wpdb->insert('admin_role', $role_data);
+            $last_id = $wpdb->insert_id;
+
+            if ($last_id) {
+
+                Admin()->create_track_log_activity($_SESSION['fbs_admin_id'], $last_id, 'role add', 'role_add', '', '', 'role has been added', 'admin');
+
+                return true;
+            }
+
+            return false;
+        }
+
+        if ($check_role_type->role_id) {
+
+            return 'duplicate';
+        }
+
+        return false;
+    }
+
+    public function get_all_admin_role_list()
+    {
+
+        global $wpdb;
+
+        return $wpdb->get_results('SELECT * FROM admin_role ORDER BY `role_id` DESC');
     }
 
     public function admin_user_delete($id)
@@ -53,7 +215,7 @@ class Admin
     {
         global $wpdb;
 
-        if (!sipost('id') || !sipost('first_name') || !sipost('last_name') || !sipost('email')) {
+        if (!sipost('id') || !sipost('first_name') || !sipost('last_name') || !sipost('email') || !sipost('role_id')) {
             return false;
         }
 
@@ -72,7 +234,8 @@ class Admin
             'last_name'     => $last_name,
             'email'         => $email,
             'mobile_no'     => sipost('mobile_no'),
-            'password'      => sipost('password'),
+            'password'      => md5(sipost('password') . AUTH_SALT),
+            'role_id'       => sipost('role_id'),
             'updated_at'    => current_time('mysql')
         );
 
@@ -83,7 +246,7 @@ class Admin
     {
         global $wpdb;
 
-        if (!sipost('first_name') || !sipost('last_name') || !sipost('email') || !sipost('password')) {
+        if (!sipost('first_name') || !sipost('last_name') || !sipost('email') || !sipost('password') || !sipost('role_id')) {
             return false;
         }
 
@@ -102,8 +265,8 @@ class Admin
             'last_name'     => $last_name,
             'email'         => $email,
             'mobile_no'     => sipost('mobile_no'),
-            'password'      => sipost('password'),
-            'role_id'       => 1,
+            'password'      => md5(sipost('password') . AUTH_SALT),
+            'role_id'       => sipost('role_id'),
             'is_active'     => 1,
             'created_at'    => current_time('mysql')
         );

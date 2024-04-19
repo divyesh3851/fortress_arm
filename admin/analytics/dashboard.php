@@ -1,7 +1,14 @@
 <?php require '../../config.php';
 $page_name = 'analytics';
 $sub_page_name = '';
-Admin()->check_login(); ?>
+Admin()->check_login();
+
+// page permition for admin user
+if (Admin()->check_for_page_access("analytics", true)) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->

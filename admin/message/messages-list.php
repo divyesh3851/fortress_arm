@@ -2,6 +2,12 @@
 $page_name = 'message';
 $sub_page_name = 'messages-list';
 Admin()->check_login();
+
+// page permition for admin user
+if (Admin()->check_for_page_access("messages", true)) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

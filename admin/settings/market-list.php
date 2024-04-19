@@ -3,6 +3,11 @@ $page_name = 'settings';
 $sub_page_name = 'market-list';
 Admin()->check_login();
 
+// page permition for admin user
+if (Admin()->check_for_page_access("settings", true)) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
 if (isset($_POST['save_market'])) {
 
     if (!empty(sipost('id'))) {

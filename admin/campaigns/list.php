@@ -2,6 +2,11 @@
 $page_name = 'campaigns';
 $sub_page_name = 'campaigns-list';
 Admin()->check_login();
+// page permition for admin user
+if (Admin()->check_for_page_access("campaigns", true)) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

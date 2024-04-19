@@ -3,11 +3,6 @@ require '../../config.php';
 
 // Fetch records 
 $data = array();
-/*
-$AND = '';
-if (IS_ADMIN) {
-    $AND = ' AND logged_id = ' . $_SESSION['fbs_admin_id'];
-}*/
 
 $totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM track_log WHERE status = 0 AND logged_id = 1 GROUP BY user_id');
 

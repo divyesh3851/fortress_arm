@@ -1,18 +1,14 @@
 <?php require '../../config.php';
-$page_name = 'settings';
-$sub_page_name = 'lead-source-list';
+$page_name = 'user_management';
+$sub_page_name = 'roles';
 Admin()->check_login();
-// page permition for admin user
-if (Admin()->check_for_page_access("settings", true)) {
-    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
-    die();
-}
-if (isset($_POST['save_lead_source'])) {
+
+if (isset($_POST['save_user'])) {
 
     if (!empty(sipost('id'))) {
-        $response = Settings()->update_lead_source();
+        $response = Admin()->update_admin_user();
     } else {
-        $response = Settings()->add_lead_source();
+        $response = Admin()->add_admin_user();
     }
 
     if ($response == 1) {
@@ -23,7 +19,7 @@ if (isset($_POST['save_lead_source'])) {
         $_SESSION['process_fail'] = true;
     }
 
-    wp_redirect(site_url() . '/admin/settings/lead-source-list');
+    wp_redirect(site_url() . '/admin/admin-user/list');
     exit;
 }
 ?>
@@ -88,7 +84,7 @@ if (isset($_POST['save_lead_source'])) {
                                     <!--begin::Page title-->
                                     <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
                                         <!--begin::Title-->
-                                        <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Lead Source List</h1>
+                                        <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Role List</h1>
                                         <!--end::Title-->
                                     </div>
                                     <!--end::Page title-->
@@ -110,7 +106,7 @@ if (isset($_POST['save_lead_source'])) {
                                     <div class="alert alert-success d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-success">The lead source has been save successfully.</h4>
+                                            <h4 class="mb-1 text-success">The role has been save successfully.</h4>
                                         </div>
                                     </div>
                                 <?php }
@@ -120,7 +116,7 @@ if (isset($_POST['save_lead_source'])) {
                                     <div class="alert alert-danger d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-danger">The lead source has been already exist.</h4>
+                                            <h4 class="mb-1 text-danger">The role has been already exist.</h4>
                                         </div>
                                     </div>
                                 <?php }
@@ -130,7 +126,7 @@ if (isset($_POST['save_lead_source'])) {
                                     <div class="alert alert-danger d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-danger">The lead source has been save failed.</h4>
+                                            <h4 class="mb-1 text-danger">The role has been save failed.</h4>
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -144,7 +140,7 @@ if (isset($_POST['save_lead_source'])) {
                                             <!--begin::Search-->
                                             <div class="d-flex align-items-center position-relative my-1">
                                                 <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span class="path1"></span><span class="path2"></span></i>
-                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Lead Source" />
+                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search User" />
                                             </div>
                                             <!--end::Search-->
                                         </div>
@@ -154,12 +150,12 @@ if (isset($_POST['save_lead_source'])) {
                                             <!--begin::Toolbar-->
                                             <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
 
-                                                <!--begin::Add Lead Source-->
-                                                <button type="button" class="btn btn-primary lead_source_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_lead_source" title="Add Lead Source">
+                                                <!--begin::Add User-->
+                                                <a href="<?php echo site_url(); ?>/admin/admin-user/role" class="btn btn-primary" title="Add Role">
                                                     <i class="ki-duotone ki-plus fs-2"></i>
-                                                    Add Lead Source
-                                                </button>
-                                                <!--end::Add Lead Source-->
+                                                    Add Role
+                                                </a>
+                                                <!--end::Add User-->
 
                                             </div>
                                             <!--end::Toolbar-->
@@ -186,8 +182,11 @@ if (isset($_POST['save_lead_source'])) {
                                                             <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
                                                         </div>
                                                     </th>
-                                                    <th>Type</th>
-                                                    <th class="text-end min-w-100px">Actions</th>
+                                                    <th>Role Name</th>
+                                                    <th>Users</th>
+                                                    <th>All Page Access</th>
+                                                    <th>Data Export Access</th>
+                                                    <th class="text-start min-w-100px">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="text-gray-600 fw-semibold">
@@ -220,15 +219,15 @@ if (isset($_POST['save_lead_source'])) {
     <!--end::App-->
 
     <!--begin::Modal - View Users-->
-    <div class="modal fade" id="kt_modal_lead_source" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="kt_modal_user" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
-        <div class="modal-dialog mw-700px p-9">
+        <div class="modal-dialog modal-dialog-centered mw-700px p-9">
             <!--begin::Modal content-->
             <div class="modal-content modal-rounded">
                 <!--begin::Modal header-->
-                <div class="modal-header py-7 d-flex justify-content-between">
+                <div class="modal-header py-5 d-flex justify-content-between">
                     <!--begin::Modal title-->
-                    <h2>Lead Source</h2>
+                    <h2>User</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
                     <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -238,30 +237,61 @@ if (isset($_POST['save_lead_source'])) {
                 </div>
                 <!--begin::Modal header-->
                 <!--begin::Modal body-->
-                <div class="modal-body scroll-y m-5">
+                <div class="modal-body  m-2">
                     <!--begin::Form-->
                     <form id="kt_modal_add_user_form" class="form" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="id" id="id" class="is_empty">
-                        <!--begin::Scroll-->
-                        <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
-
-                            <!--begin::Input group-->
-                            <div class="row mb-7">
-                                <div class="col-md-12 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="required fw-semibold fs-6 mb-2">Lead Source</label>
-                                    <!--end::Label-->
-                                    <!--begin::Input-->
-                                    <input type="text" name="lead_source" id="lead_source" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Lead Source" required />
-                                    <!--end::Input-->
-                                </div>
+                        <!--begin::Input group-->
+                        <div class="row mb-7">
+                            <div class="col-md-6 fv-row">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">First Name</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <input type="text" name="first_name" id="first_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="First Name" required />
+                                <!--end::Input-->
                             </div>
-                            <!--end::Input group-->
+                            <div class="col-md-6 fv-row">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">Last Name</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <input type="text" name="last_name" id="last_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Last Name" required />
+                                <!--end::Input-->
+                            </div>
                         </div>
-                        <!--end::Scroll-->
+                        <div class="row mb-7">
+                            <div class="col-md-6 fv-row">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">Email</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <input type="email" name="email" id="email" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Email" autocomplete="off" required />
+                                <!--end::Input-->
+                            </div>
+                            <div class="col-md-6 fv-row">
+                                <!--begin::Label-->
+                                <label class="fw-semibold fs-6 mb-2">Mobile No</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <input type="text" name="mobile_no" id="mobile_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Mobile No" />
+                                <!--end::Input-->
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <div class="col-md-6 fv-row">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">Password</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <input type="password" name="password" id="password" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Password" autocomplete="off" required />
+                                <!--end::Input-->
+                            </div>
+                        </div>
+                        <!--end::Input group-->
                         <!--begin::Actions-->
                         <div class="text-center pt-10">
-                            <button type="submit" name="save_lead_source" id="save_lead_source" class="btn btn-primary" data-kt-users-modal-action="submit">
+                            <button type="submit" name="save_user" id="save_user" class="btn btn-primary" data-kt-users-modal-action="submit">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -276,6 +306,40 @@ if (isset($_POST['save_lead_source'])) {
         </div>
     </div>
     <!--end::Modal - View Users-->
+
+    <!--begin::Modal - Show Role Users-->
+    <div class="modal fade" id="show_role_user" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered mw-800px p-9">
+            <div class="modal-content modal-rounded">
+                <div class="modal-header py-5 d-flex justify-content-between">
+                    <!--begin::Modal title-->
+                    <h2>Users</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <div class="modal-body m-2 pt-1">
+                    <div class="table-responsive">
+                        <table id="kt_datatable_zero_configuration" class="table table-row-bordered gy-5">
+                            <thead>
+                                <tr class="fw-semibold fs-6">
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - Show Role Users-->
 
     <!--begin::Scrolltop-->
     <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
@@ -295,6 +359,37 @@ if (isset($_POST['save_lead_source'])) {
     <!--end::Vendors Javascript-->
     <!--end::Javascript-->
     <script>
+        $(document).on("click", ".show_role_user", function() {
+
+            var role_id = $(this).attr('id');
+
+            $("#kt_datatable_zero_configuration tbody").html('');
+
+            if (!id)
+                return false;
+
+            $.post(ajax_url, {
+                action: 'get_all_admin_user_list_role_wise',
+                role_id: role_id,
+                is_ajax: true,
+            }, function(result) {
+                var results = JSON.parse(result);
+                if (results) {
+                    for (var i = 0; i < results.length; i++) {
+                        $("#kt_datatable_zero_configuration tbody").append('<tr><td>' + results[i].first_name + ' ' + results[i].last_name + '</td><td>' + results[i].email + '</td><td>' + results[i].mobile_no + '</td></tr>');
+                    }
+
+                }
+
+                $("#kt_datatable_zero_configuration").DataTable({
+                    pageLength: 10,
+                    destroy: true,
+                });
+
+            });
+
+        });
+
         "use strict";
 
         // Class definition
@@ -320,13 +415,22 @@ if (isset($_POST['save_lead_source'])) {
                         className: 'row-selected'
                     },
                     ajax: {
-                        url: "<?php echo site_url(); ?>/admin/settings/lead-source-list-ajax.php",
+                        url: "<?php echo site_url(); ?>/admin/admin_user/role-list-ajax.php",
                     },
                     columns: [{
                             data: 'record_id'
                         },
                         {
-                            data: 'type'
+                            data: 'role_name'
+                        },
+                        {
+                            data: 'users'
+                        },
+                        {
+                            data: 'all_page_access'
+                        },
+                        {
+                            data: 'export_data_access'
                         },
                         {
                             data: null
@@ -350,40 +454,25 @@ if (isset($_POST['save_lead_source'])) {
                             targets: -1,
                             data: null,
                             orderable: false,
-                            className: 'text-end',
+                            className: 'text-start',
                             render: function(data, type, row) {
-                                return `
-                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-                                Actions
-                                <span class="svg-icon fs-5 m-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                                            <path d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z" fill="currentColor" fill-rule="nonzero" transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)"></path>
-                                        </g>
-                                    </svg>
-                                </span>
-                            </a>
-                            <!--begin::Menu-->
-                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3"> 
-                                    <a href="#" id="${data.record_id}" class="menu-link px-3 lead_source_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_lead_source" data-kt-docs-table-filter="edit_row">
-                                        Edit
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
+                                return `<div class="d-flex">    
+                                            <a href="<?php echo site_url(); ?>/admin/admin-user/role/${data.record_id}" id="${data.record_id}" class="user_modal" >
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-user-edit fs-2 text-primary"></i>
+                                                    </div>
+                                                </div> 
+                                            </a> 
 
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row" id="${data.record_id}">
-                                        Delete
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
-                            </div>
-                            <!--end::Menu-->
-                        `;
+                                            <a href="#" data-kt-docs-table-filter="delete_row" id="${data.record_id}">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-trash-alt fs-2 text-primary"></i>
+                                                    </div>
+                                                </div> 
+                                            </a>  
+                                        </div>`;
                             },
                         },
                     ],
@@ -449,7 +538,7 @@ if (isset($_POST['save_lead_source'])) {
                                     timer: 2000
                                 }).then(function() {
                                     $.post(ajax_url, {
-                                        action: 'lead_source_delete',
+                                        action: 'admin_user_delete',
                                         id: id
                                     }, function(result) {
 
@@ -635,7 +724,7 @@ if (isset($_POST['save_lead_source'])) {
         });
 
 
-        $(document).on("click", ".lead_source_modal", function() {
+        $(document).on("click", ".user_modal", function() {
 
             var id = $(this).attr('id');
 
@@ -645,11 +734,15 @@ if (isset($_POST['save_lead_source'])) {
 
             $("textarea.is_empty").html("");
 
+            $("#password").attr("required", true);
+
             if (!id)
                 return false;
 
+            $("#password").removeAttr("required");
+
             $.post(ajax_url, {
-                action: 'get_selected_lead_source_data',
+                action: 'get_selected_admin_user_data',
                 id: id,
                 is_ajax: true,
             }, function(result) {
@@ -659,7 +752,10 @@ if (isset($_POST['save_lead_source'])) {
                 if (results) {
 
                     $("#id").val(id);
-                    $("#lead_source").val(results.lead_source_info.type);
+                    $("#first_name").val(results.first_name);
+                    $("#last_name").val(results.last_name);
+                    $("#email").val(results.email);
+                    $("#mobile_no").val(results.mobile_no);
 
                 }
 

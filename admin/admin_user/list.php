@@ -1,7 +1,13 @@
 <?php require '../../config.php';
-$page_name = 'user';
-$sub_page_name = '';
+$page_name = 'user_management';
+$sub_page_name = 'user';
 Admin()->check_login();
+
+// page permition for admin user
+if (!IS_ADMIN) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
 
 if (isset($_POST['save_user'])) {
 
@@ -19,9 +25,11 @@ if (isset($_POST['save_user'])) {
         $_SESSION['process_fail'] = true;
     }
 
-    wp_redirect(site_url() . '/admin/admin_user/list');
+    wp_redirect(site_url() . '/admin/admin-user/list');
     exit;
 }
+
+$get_all_admin_role_list = Admin()->get_all_admin_role_list();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -185,7 +193,7 @@ if (isset($_POST['save_user'])) {
                                                     <th>Name</th>
                                                     <th>Email</th>
                                                     <th>Mobile No</th>
-                                                    <th class="text-end min-w-100px">Actions</th>
+                                                    <th class="text-start min-w-100px">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="text-gray-600 fw-semibold">
@@ -284,6 +292,19 @@ if (isset($_POST['save_user'])) {
                                 <!--end::Label-->
                                 <!--begin::Input-->
                                 <input type="password" name="password" id="password" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Password" autocomplete="off" required />
+                                <!--end::Input-->
+                            </div>
+                            <div class="col-md-6 fv-row">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">Role</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select name="role_id" id="role_id" data-control="select2" data-placeholder="Select a Role ..." class="form-select form-select-solid is_empty" required>
+                                    <option value="">Select Role</option>
+                                    <?php foreach ($get_all_admin_role_list as $key => $role_result) { ?>
+                                        <option value="<?php echo $role_result->role_id; ?>"><?php echo $role_result->role_name; ?></option>
+                                    <?php } ?>
+                                </select>
                                 <!--end::Input-->
                             </div>
                         </div>
@@ -385,40 +406,25 @@ if (isset($_POST['save_user'])) {
                             targets: -1,
                             data: null,
                             orderable: false,
-                            className: 'text-end',
+                            className: 'text-start',
                             render: function(data, type, row) {
-                                return `
-                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-                                Actions
-                                <span class="svg-icon fs-5 m-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                                            <path d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z" fill="currentColor" fill-rule="nonzero" transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)"></path>
-                                        </g>
-                                    </svg>
-                                </span>
-                            </a>
-                            <!--begin::Menu-->
-                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3"> 
-                                    <a href="#" id="${data.record_id}" class="menu-link px-3 user_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_user" data-kt-docs-table-filter="edit_row">
-                                        Edit
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
+                                return `<div class="d-flex">    
+                                            <a href="#" id="${data.record_id}" class="user_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_user" data-kt-docs-table-filter="edit_row">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-user-edit fs-2 text-primary"></i>
+                                                    </div>
+                                                </div> 
+                                            </a> 
 
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row" id="${data.record_id}">
-                                        Delete
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
-                            </div>
-                            <!--end::Menu-->
-                        `;
+                                            <a href="#" data-kt-docs-table-filter="delete_row" id="${data.record_id}">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-trash-alt fs-2 text-primary"></i>
+                                                    </div>
+                                                </div> 
+                                            </a>  
+                                        </div>`;
                             },
                         },
                     ],
@@ -702,6 +708,7 @@ if (isset($_POST['save_user'])) {
                     $("#last_name").val(results.last_name);
                     $("#email").val(results.email);
                     $("#mobile_no").val(results.mobile_no);
+                    $("#role_id").val(results.role_id).trigger("change");
 
                 }
 

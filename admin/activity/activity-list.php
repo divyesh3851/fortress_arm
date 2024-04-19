@@ -2,6 +2,11 @@
 $page_name = 'activity';
 $sub_page_name = 'activity-list';
 Admin()->check_login();
+// page permition for admin user
+if (Admin()->check_for_page_access("activities", true)) {
+    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
+    die();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

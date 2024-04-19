@@ -39,7 +39,11 @@ Options -MultiViews
 	RewriteRule ^admin/settings/production-percentage-list?$ admin/settings/production-percentage-list.php [NC,L]
 	RewriteRule ^admin/settings/market-list?$ admin/settings/market-list.php [NC,L] 
 
-	RewriteRule ^admin/admin_user/list?$ admin/admin_user/list.php [NC,L]
+	RewriteRule ^admin/admin-user/list?$ admin/admin_user/list.php [NC,L]
+	RewriteRule ^admin/admin-user/role-list?$ admin/admin_user/role-list.php [NC,L]
+	RewriteRule ^admin/admin-user/role?$ admin/admin_user/role.php [NC,L]
+	RewriteRule ^admin/admin-user/role/([^/]+)$ admin/admin_user/role.php?role_id=$1 [NC,L]
+
 	RewriteRule ^admin/activity/activity-list/?$ admin/activity/activity-list.php [NC,L]
 	RewriteRule ^admin/activity/view-activity/([^/]+)$ admin/activity/view-activity.php?advisor_id=$1 [NC,L]
 	RewriteRule ^admin/notes/?$ admin/notes.php [NC,L]
@@ -47,7 +51,7 @@ Options -MultiViews
   	RewriteRule ^admin/verification/advisor-list?$ admin/verification/advisor-list.php [NC,L]  
 	RewriteRule ^admin/verification/edit-advisor/([^/]+)$ admin/verification/edit-advisor.php?advisor_id=$1 [NC,L]
 	RewriteRule ^admin/verification/view-advisor/([^/]+)$ admin/verification/view-advisor.php?advisor_id=$1 [NC,L]
-	RewriteRule ^complete-profile/([^/]+)$ complete-profile.php?key=$1 [NC,L]
+	RewriteRule ^advisor-profile/([^/]+)$ advisor-profile.php?key=$1 [NC,L]
 
 	RewriteRule ^advisor/verification/advisor-list?$ advisor/verification/advisor-list.php [NC,L]  
 	RewriteRule ^advisor/verification/edit-advisor/([^/]+)$ advisor/verification/edit-advisor.php?advisor_id=$1 [NC,L]
