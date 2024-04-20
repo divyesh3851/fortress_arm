@@ -25,7 +25,9 @@ if (sipost('first_name') || sipost('last_name') || sipost('email')) {
 
 $get_state_list = Settings()->get_state_list();
 
-$get_lead_source_list = Settings()->get_lead_source_list(); ?>
+$get_lead_source_list = Settings()->get_lead_source_list();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->

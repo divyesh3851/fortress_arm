@@ -78,7 +78,7 @@ $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniv
 
                 </div>
                 <!--begin::User account menu-->
-                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-300px" data-kt-menu="true">
+                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-400px" data-kt-menu="true">
                     <!--begin::Menu item-->
                     <div class="menu-item px-3">
                         <div class="menu-content d-flex align-items-center px-3">
@@ -109,6 +109,11 @@ $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniv
                     <!--begin::Menu separator-->
                     <div class="separator my-2"></div>
                     <!--end::Menu separator-->
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-5">
+                        <a href="<?php echo site_url(); ?>/admin/profile" class="menu-link px-5">Profile</a>
+                    </div>
+                    <!--end::Menu item-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
                         <a href="<?php echo site_url(); ?>/admin/logout" class="menu-link px-5">Log Out</a>

@@ -4,11 +4,16 @@ require '../../config.php';
 // Fetch records 
 $data = array();
 
-$totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE status = 0');
+$AND = '';
+if (siget('user_type')) {
+    $AND = ' AND created_by = ' . siget('fbs_admin_id') . ' AND created_by_type = "admin" ';
+}
 
-$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE status = 0');
+$totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE status = 0 ' . $AND);
 
-$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 ORDER BY id DESC');
+$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE status = 0 ' . $AND);
+
+$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 ' . $AND . ' ORDER BY id DESC');
 
 foreach ($advisor_list as $advisor_result) {
 

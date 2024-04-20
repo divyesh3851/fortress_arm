@@ -16,6 +16,26 @@ class Admin
         add_action('wp_ajax_admin_user_delete', array($this, 'admin_user_delete'));
 
         add_action('wp_ajax_get_all_admin_user_list_role_wise', array($this, 'get_all_admin_user_list_role_wise'));
+
+        add_action('wp_ajax_admin_role_delete', array($this, 'admin_role_delete'));
+    }
+
+    public function admin_role_delete($role_id = '')
+    {
+
+        global $wpdb;
+
+        $role_id = isset($_POST['role_id']) ? $_POST['role_id'] : $role_id;
+
+        if (!$role_id) {
+            return false;
+        }
+
+        $wpdb->delete('admin_role', array('role_id' => $role_id));
+
+        Admin()->create_track_log_activity($_SESSION['fbs_admin_id'], sipost('role_id'), 'role delete', 'role_delete', '', '', 'role has been delete', 'admin');
+
+        return true;
     }
 
     public function get_all_admin_user_list_role_wise($role_id = '', $status = 0)
@@ -211,6 +231,59 @@ class Admin
         }
     }
 
+    public function update_login_admin_profile($admin_id = '')
+    {
+        global $wpdb;
+
+        $admin_id = (sipost('admin_id')) ? sipost('admin_id') : $admin_id;
+
+        if (!$admin_id || !sipost('first_name') || !sipost('last_name') || !sipost('email')) {
+            return false;
+        }
+
+        $first_name = ucwords(sipost('first_name'));
+        $last_name  = ucwords(sipost('last_name'));
+        $email      = strtolower(sipost('email'));
+
+        $check = $wpdb->get_var("SELECT id FROM admin WHERE email = '" . $email . "' AND id != " . $admin_id . " AND status = 0");
+
+        if ($check) {
+            return "duplicate";
+        }
+
+        $user_info  = array(
+            'first_name'    => $first_name,
+            'last_name'     => $last_name,
+            'email'         => $email,
+            'mobile_no'     => sipost('mobile_no'),
+            'state'         => sipost('state'),
+            'updated_at'    => current_time('mysql')
+        );
+
+        if (sipost('password')) {
+            $user_info['password'] = md5(sipost('password') . AUTH_SALT);
+        }
+
+        if ($_FILES['profile_img'] && $_FILES['profile_img']['error'] == 0) {
+
+            $file_name  = $_FILES['profile_img']['name'];
+
+            $file_tmp   = $_FILES['profile_img']['tmp_name'];
+
+            $file_type  = $_FILES['profile_img']['type'];
+
+            $ext        = strtolower(end(explode('.', $file_name)));
+
+            $new_file_name    = time() . rand(111, 999) . "." . $ext;
+
+            if (move_uploaded_file($file_tmp, SITE_DIR . '/uploads/admin/' . $new_file_name)) {
+                $this->update_admin_meta($admin_id, 'profile_img', $new_file_name);
+            }
+        }
+
+        return $wpdb->update("admin", $user_info, array('id' => $admin_id));
+    }
+
     public function update_admin_user()
     {
         global $wpdb;
@@ -235,9 +308,27 @@ class Admin
             'email'         => $email,
             'mobile_no'     => sipost('mobile_no'),
             'password'      => md5(sipost('password') . AUTH_SALT),
+            'state'         => sipost('state'),
             'role_id'       => sipost('role_id'),
             'updated_at'    => current_time('mysql')
         );
+
+        if ($_FILES['profile_img'] && $_FILES['profile_img']['error'] == 0) {
+
+            $file_name  = $_FILES['profile_img']['name'];
+
+            $file_tmp   = $_FILES['profile_img']['tmp_name'];
+
+            $file_type  = $_FILES['profile_img']['type'];
+
+            $ext        = strtolower(end(explode('.', $file_name)));
+
+            $new_file_name    = time() . rand(111, 999) . "." . $ext;
+
+            if (move_uploaded_file($file_tmp, SITE_DIR . '/uploads/admin/' . $new_file_name)) {
+                $this->update_admin_meta(sipost('id'), 'profile_img', $new_file_name);
+            }
+        }
 
         return $wpdb->update("admin", $user_info, array('id' => sipost('id')));
     }
@@ -268,10 +359,34 @@ class Admin
             'password'      => md5(sipost('password') . AUTH_SALT),
             'role_id'       => sipost('role_id'),
             'is_active'     => 1,
+            'state'         => sipost('state'),
             'created_at'    => current_time('mysql')
         );
 
-        return $wpdb->insert("admin", $user_info);
+        $wpdb->insert("admin", $user_info);
+        $last_id = $wpdb->insert_id;
+
+        if ($last_id) {
+
+            if ($_FILES['profile_img'] && $_FILES['profile_img']['error'] == 0) {
+
+                $file_name  = $_FILES['profile_img']['name'];
+
+                $file_tmp   = $_FILES['profile_img']['tmp_name'];
+
+                $file_type  = $_FILES['profile_img']['type'];
+
+                $ext        = strtolower(end(explode('.', $file_name)));
+
+                $new_file_name    = time() . rand(111, 999) . "." . $ext;
+
+                if (move_uploaded_file($file_tmp, SITE_DIR . '/uploads/admin/' . $new_file_name)) {
+                    $this->update_admin_meta($last_id, 'profile_img', $new_file_name);
+                }
+            }
+
+            return true;
+        }
     }
 
     public function get_track_log($form_id = '')

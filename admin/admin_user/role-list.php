@@ -538,8 +538,8 @@ if (isset($_POST['save_user'])) {
                                     timer: 2000
                                 }).then(function() {
                                     $.post(ajax_url, {
-                                        action: 'admin_user_delete',
-                                        id: id
+                                        action: 'admin_role_delete',
+                                        role_id: id
                                     }, function(result) {
 
                                     });

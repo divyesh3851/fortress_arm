@@ -32,6 +32,30 @@ class Advisor
         add_action('wp_ajax_delete_note', array($this, 'delete_note'));
     }
 
+    public function count_total_verified_advisor()
+    {
+        global $wpdb;
+
+        $AND = '';
+        if (!IS_ADMIN) {
+            $AND = ' AND created_by = ' . $_SESSION['fbs_admin_id'];
+        }
+
+        return $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE status = 0 AND is_verified = 1 " . $AND);
+    }
+
+    public function count_total_advisor()
+    {
+        global $wpdb;
+
+        $AND = '';
+        if (!IS_ADMIN) {
+            $AND = ' AND created_by = ' . $_SESSION['fbs_admin_id'];
+        }
+
+        return $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE status = 0 " . $AND);
+    }
+
     public function update_address($advisor_id = '')
     {
         global $wpdb;
@@ -216,10 +240,10 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (isset($_SESSION['fbs_admin_id'])) {
-            $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
+        if (isset($_SESSION['fbs_admin_id']) && !IS_ADMIN) {
+            $AND = " AND created_by = " . $_SESSION['fbs_admin_id'] . " AND created_by_type = 'admin' ";
         } else if (isset($_SESSION['fbs_advisor_id'])) {
-            $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'];
+            $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'] . " AND created_by_type = 'advisor' ";
         }
 
         return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,birth_date FROM advisor WHERE DATE_FORMAT(birth_date, '%m-%d') BETWEEN DATE_FORMAT(CURDATE(), '%m-%d') 
@@ -231,10 +255,10 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (isset($_SESSION['fbs_admin_id'])) {
-            $AND = " AND created_by = " . $_SESSION['fbs_admin_id'];
+        if (isset($_SESSION['fbs_admin_id']) && !IS_ADMIN) {
+            $AND = " AND created_by = " . $_SESSION['fbs_admin_id'] . " AND created_by_type = 'admin' ";
         } else if (isset($_SESSION['fbs_advisor_id'])) {
-            $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'];
+            $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'] . " AND created_by_type = 'advisor' ";
         }
 
         return $wpdb->get_results("SELECT id, prefix, first_name, last_name, email, mobile_no,anniversary_date FROM advisor WHERE DATE_FORMAT(anniversary_date, '%m-%d') BETWEEN DATE_FORMAT(CURDATE(), '%m-%d') 
@@ -1193,8 +1217,10 @@ class Advisor
         $created_by = '';
         if (isset($_SESSION['fbs_advisor_id'])) {
             $created_by = $_SESSION['fbs_advisor_id'];
+            $created_by_type = 'advisor';
         } else if (isset($_SESSION['fbs_admin_id'])) {
             $created_by = $_SESSION['fbs_admin_id'];
+            $created_by_type = 'admin';
         }
 
         $advisor_info = array(
@@ -1228,7 +1254,8 @@ class Advisor
             "lead_owner"        => sipost('lead_owner'),
             "rating"            => sipost('rating'),
             "created_at"        => current_time('mysql'),
-            "created_by"        => $created_by
+            "created_by"        => $created_by,
+            "created_by_type"   => $created_by_type
         );
 
         $wpdb->insert("advisor", $advisor_info);

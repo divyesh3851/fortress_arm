@@ -3,11 +3,11 @@ require '../config.php';
 
 // Fetch records 
 $data = array();
-$totalRecords = $wpdb->get_var('SELECT COUNT(*) FROM advisor WHERE status = 0 AND created_by = "' . siget('fbs_advisor_id') . '"');
+$totalRecords = $wpdb->get_var('SELECT COUNT(*) FROM advisor WHERE status = 0 AND created_by = "' . siget('fbs_advisor_id') . '" AND created_by_type = "advisor" ');
 
-$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT(*) FROM advisor WHERE status = 0 AND created_by = "' . siget('fbs_advisor_id') . '"');
+$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT(*) FROM advisor WHERE status = 0 AND created_by = "' . siget('fbs_advisor_id') . '" AND created_by_type = "advisor"  ');
 
-$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 AND created_by = "' . siget('fbs_advisor_id') . '" ORDER BY id DESC');
+$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 AND created_by = "' . siget('fbs_advisor_id') . '" AND created_by_type = "advisor"  ORDER BY id DESC');
 
 foreach ($advisor_list as $advisor_result) {
 

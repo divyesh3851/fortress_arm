@@ -156,7 +156,12 @@ class DataTableApi
 
     public function getJsonDecode(): mixed
     {
-        return json_decode(file_get_contents(site_url() . '/admin/advisor/advisor-list-json.php'), true);
+        $admin = '';
+        if (!IS_ADMIN) {
+            $admin = 'admin';
+        }
+
+        return json_decode(file_get_contents(site_url() . '/admin/advisor/advisor-list-json.php?fbs_admin_id=' . $_SESSION['fbs_admin_id'] . '&user_type=' . $admin), true);
     }
 
     /**
