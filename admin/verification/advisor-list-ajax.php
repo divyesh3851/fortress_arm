@@ -10,6 +10,7 @@ class DataTableApi
         'email'     => true,
         'mobile_no' => true,
         'lead_source' => true,
+        'send_verification' => true,
     ];
 
     public function __construct()
@@ -156,7 +157,7 @@ class DataTableApi
             $admin = 'admin';
         }
 
-        return json_decode(file_get_contents(site_url() . '/admin/verification/advisor-list-json.php?fbs_admin_id=' . $_SESSION['fbs_admin_id'] . '&user_type=' . $admin), true);
+        return json_decode(file_get_contents(site_url() . '/admin/verification/advisor-list-json.php?fbs_arm_admin_id=' . $_SESSION['fbs_arm_admin_id'] . '&user_type=' . $admin), true);
     }
 
     /**

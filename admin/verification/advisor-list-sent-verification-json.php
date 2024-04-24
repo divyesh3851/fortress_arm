@@ -6,15 +6,10 @@ $data = array();
 
 $AND = '';
 if (siget('user_type')) {
-    $AND = ' AND created_by = ' . siget('fbs_admin_id') . ' AND created_by_type = "admin" ';
+    $AND = ' AND created_by = ' . siget('fbs_arm_admin_id') . ' AND created_by_type = "admin" ';
 }
 
-
-$totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE is_verified = 0 AND send_verification = 1 AND status = 0 ' . $AND);
-
-$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE is_verified = 1 AND send_verification = 0 AND  status = 0 ' . $AND);
-
-$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE is_verified = 0 AND send_verification = 1 AND status = 0 ' . $AND . ' ORDER BY id DESC');
+$advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 AND ( prefix = "" OR preferred_name = "" OR first_name = "" OR last_name = "" OR COALESCE(birth_date, "0000-00-00") = "0000-00-00"  OR gender = "" OR advisor_status = "" OR city = "" OR state = "" OR marital_status = "" ) ' . $AND . ' ORDER BY id DESC');
 
 foreach ($advisor_list as $advisor_result) {
 

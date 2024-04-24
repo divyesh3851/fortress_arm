@@ -1,28 +1,28 @@
 <?php require '../config.php';
 $page_name = 'profile';
 $sub_page_name = '';
-Admin()->check_login();
+Advisor()->check_advisor_login();
 
 if (isset($_POST['save_profile'])) {
 
-    $response = Admin()->update_login_admin_profile($_SESSION['fbs_arm_admin_id']);
+    $response = Advisor()->update_login_advisor_profile($_SESSION['fbs_advisor_id']);
 
     if ($response) {
         $_SESSION['process_success'] = true;
-        wp_redirect(site_url() . '/admin/profile');
+        wp_redirect(site_url() . '/advisor/profile');
         die();
     }
 }
 
-$get_login_admin_info = Admin()->get_login_admin_info($_SESSION['fbs_arm_admin_id']);
-$admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile_img');
+$get_login_admin_info = Advisor()->get_login_advisor_info($_SESSION['fbs_advisor_id']);
+$admin_profile_img = Advisor()->get_advisor_meta($get_login_admin_info->id, 'profile_img');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/advisor/head.php'; ?>
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -57,12 +57,12 @@ $admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile
         <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
             <!--begin::Header-->
-            <?php require SITE_DIR . '/admin/header.php'; ?>
+            <?php require SITE_DIR . '/advisor/header.php'; ?>
             <!--end::Header-->
             <!--begin::Wrapper-->
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <!--begin::Sidebar-->
-                <?php require SITE_DIR . '/admin/sidebar.php'; ?>
+                <?php require SITE_DIR . '/advisor/sidebar.php'; ?>
                 <!--end::Sidebar-->
                 <!--begin::Main-->
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -113,9 +113,9 @@ $admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile
                                             <div class="me-7 mb-4">
                                                 <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
                                                     <?php if ($admin_profile_img) { ?>
-                                                        <img src="<?php echo site_url(); ?>/uploads/admin/<?php echo $admin_profile_img; ?>" alt="profile_image" />
+                                                        <img src="<?php echo site_url(); ?>/uploads/advisor/<?php echo $admin_profile_img; ?>" alt="profile_image" />
                                                     <?php } else { ?>
-                                                        <img src="<?php echo site_url(); ?>/uploads/admin/blank.png" alt="profile_image" />
+                                                        <img src="<?php echo site_url(); ?>/uploads/advisor/blank.png" alt="profile_image" />
                                                     <?php } ?>
 
                                                     <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px"></div>
@@ -170,7 +170,7 @@ $admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile
                                                                 </div>
                                                                 <!--end::Number-->
                                                                 <!--begin::Label-->
-                                                                <div class="fw-semibold fs-6 text-gray-500">Advisor</div>
+                                                                <div class="fw-semibold fs-6 text-gray-500">Client</div>
                                                                 <!--end::Label-->
                                                             </div>
                                                             <!--end::Stat-->
@@ -225,17 +225,17 @@ $admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile
                                         <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
                                             <!--begin::Nav item-->
                                             <li class="nav-item mt-2">
-                                                <a class="nav-link text-active-primary ms-0 me-10 py-5 <?php echo (siget('tab') == 'overview' || siget('tab') == '') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/profile/overview">Overview</a>
+                                                <a class="nav-link text-active-primary ms-0 me-10 py-5 <?php echo (siget('tab') == 'overview' || siget('tab') == '') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/advisor/profile/overview">Overview</a>
                                             </li>
                                             <!--end::Nav item-->
                                             <!--begin::Nav item-->
                                             <li class="nav-item mt-2">
-                                                <a class="nav-link text-active-primary ms-0 me-10 py-5 <?php echo (siget('tab') == 'settings') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/profile/settings">Settings</a>
+                                                <a class="nav-link text-active-primary ms-0 me-10 py-5 <?php echo (siget('tab') == 'settings') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/advisor/profile/settings">Settings</a>
                                             </li>
                                             <!--end::Nav item-->
                                             <!--begin::Nav item-->
                                             <li class="nav-item mt-2">
-                                                <a class="nav-link text-active-primary ms-0 me-10 py-5 <?php echo (siget('tab') == 'logs') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/profile/logs">Logs</a>
+                                                <a class="nav-link text-active-primary ms-0 me-10 py-5 <?php echo (siget('tab') == 'logs') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/advisor/profile/logs">Logs</a>
                                             </li>
                                             <!--end::Nav item-->
                                         </ul>
@@ -938,9 +938,9 @@ $admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile
                                                             <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('<?php echo site_url(); ?>/assets/media/svg/avatars/blank.svg')">
                                                                 <!--begin::Preview existing avatar-->
                                                                 <?php if ($admin_profile_img) { ?>
-                                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url(<?php echo site_url(); ?>/uploads/admin/<?php echo $admin_profile_img; ?>)"></div>
+                                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url(<?php echo site_url(); ?>/uploads/advisor/<?php echo $admin_profile_img; ?>)"></div>
                                                                 <?php } else { ?>
-                                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url(<?php echo site_url(); ?>/uploads/admin/blank.png)"></div>
+                                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url(<?php echo site_url(); ?>/uploads/advisor/blank.png)"></div>
                                                                 <?php } ?>
 
                                                                 <!--end::Preview existing avatar-->
@@ -1136,12 +1136,12 @@ $admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile
                     </div>
                     <!--end::Content wrapper-->
                     <!--begin::Footer-->
-                    <?php require SITE_DIR . '/admin/footer.php'; ?>
+                    <?php require SITE_DIR . '/advisor/footer.php'; ?>
                     <!--end::Footer-->
                 </div>
                 <!--end:::Main-->
                 <!--begin::aside-->
-                <?php require SITE_DIR . '/admin/right_sidebar.php'; ?>
+                <?php require SITE_DIR . '/advisor/right_sidebar.php'; ?>
                 <!--end::aside-->
             </div>
             <!--end::Wrapper-->
@@ -1162,7 +1162,7 @@ $admin_profile_img = Admin()->get_admin_meta($get_login_admin_info->id, 'profile
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/advisor/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>

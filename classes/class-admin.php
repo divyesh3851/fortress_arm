@@ -33,7 +33,7 @@ class Admin
 
         $wpdb->delete('admin_role', array('role_id' => $role_id));
 
-        Admin()->create_track_log_activity($_SESSION['fbs_admin_id'], sipost('role_id'), 'role delete', 'role_delete', '', '', 'role has been delete', 'admin');
+        Admin()->create_track_log_activity($_SESSION['fbs_arm_admin_id'], sipost('role_id'), 'role delete', 'role_delete', '', '', 'role has been delete', 'admin');
 
         return true;
     }
@@ -138,7 +138,7 @@ class Admin
 
             $wpdb->update('admin_role', $role_data, array('role_id' => sipost('role_id')));
 
-            Admin()->create_track_log_activity($_SESSION['fbs_admin_id'], sipost('role_id'), 'role update', 'role_update', '', '', 'role has been updated', 'admin');
+            Admin()->create_track_log_activity($_SESSION['fbs_arm_admin_id'], sipost('role_id'), 'role update', 'role_update', '', '', 'role has been updated', 'admin');
 
             return true;
         }
@@ -174,7 +174,7 @@ class Admin
 
             if ($last_id) {
 
-                Admin()->create_track_log_activity($_SESSION['fbs_admin_id'], $last_id, 'role add', 'role_add', '', '', 'role has been added', 'admin');
+                Admin()->create_track_log_activity($_SESSION['fbs_arm_admin_id'], $last_id, 'role add', 'role_add', '', '', 'role has been added', 'admin');
 
                 return true;
             }
@@ -443,7 +443,7 @@ class Admin
         global $wpdb;
 
         $mail_log_info = array(
-            "logged_id"     => $_SESSION['fbs_admin_id'],
+            "logged_id"     => $_SESSION['fbs_arm_admin_id'],
             "user_id"       => $user_id,
             "email"         => $email,
             "mail_type"     => $mail_type,
@@ -458,7 +458,7 @@ class Admin
     public function check_login()
     {
 
-        if (!$_SESSION || !$_SESSION['is_fbs_admin_login'] || !$_SESSION['fbs_admin_id']) {
+        if (!$_SESSION || !$_SESSION['is_fbs_arm_admin_login'] || !$_SESSION['fbs_arm_admin_id']) {
 
             if (wp_doing_ajax()) {
 
@@ -480,7 +480,7 @@ class Admin
 
         global $wpdb;
 
-        $admin_id = (isset($_SESSION['fbs_admin_id'])) ? $_SESSION['fbs_admin_id'] : $admin_id;
+        $admin_id = (isset($_SESSION['fbs_arm_admin_id'])) ? $_SESSION['fbs_arm_admin_id'] : $admin_id;
 
         if (!$admin_id) {
             return array();
@@ -510,9 +510,9 @@ class Admin
                     }
                 }
 
-                $_SESSION['is_fbs_admin_login'] = true;
-                $_SESSION['fbs_admin_id']           = $admin_data->id;
-                $_SESSION['fbs_role_id']            = $admin_data->role_id;
+                $_SESSION['is_fbs_arm_admin_login'] = true;
+                $_SESSION['fbs_arm_admin_id']           = $admin_data->id;
+                $_SESSION['fbs_arm_role_id']            = $admin_data->role_id;
 
                 return 'success';
             } else {
@@ -539,8 +539,9 @@ class Admin
             @session_start();
         }
 
-        unset($_SESSION['fbs_admin_id']);
-        unset($_SESSION['is_fbs_admin_login']);
+        unset($_SESSION['fbs_arm_admin_id']);
+        unset($_SESSION['is_fbs_arm_admin_login']);
+        unset($_SESSION['fbs_arm_role_id']);
 
         return true;
     }

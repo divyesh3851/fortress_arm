@@ -156,7 +156,7 @@ class DataTableApi
             $admin = 'admin';
         }
 
-        return json_decode(file_get_contents(site_url() . '/admin/verification/advisor-list-sent-verification-json.php?fbs_admin_id=' . $_SESSION['fbs_admin_id'] . '&user_type=' . $admin), true);
+        return json_decode(file_get_contents(site_url() . '/admin/verification/advisor-list-sent-verification-json.php?fbs_arm_admin_id=' . $_SESSION['fbs_arm_admin_id'] . '&user_type=' . $admin), true);
     }
 
     /**

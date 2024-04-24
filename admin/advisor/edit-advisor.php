@@ -256,8 +256,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                     <!--begin::Wrapper-->
                                                     <div class="w-100">
                                                         <div class="row mb-7">
-                                                            <!--begin::Input group-->
-                                                            <div class="fv-row col-md-3 mb-7">
+                                                            <div class="fv-row col-md-2 mb-7">
                                                                 <!--begin::Label-->
                                                                 <label class="d-block fw-semibold fs-6 mb-5">Profile Image</label>
                                                                 <!--end::Label-->
@@ -309,90 +308,93 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
                                                                 <!--end::Hint-->
                                                             </div>
+                                                            <div class="col-md-10 fv-row">
+                                                                <div class="row mb-7">
+                                                                    <div class="fv-row col-md-3 mb-7">
+                                                                        <!--begin::Label-->
+                                                                        <label class="required fw-semibold fs-6 mb-2">Title</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid" required>
+                                                                            <option value="">Select Title</option>
+                                                                            <?php foreach (Settings()->get_name_prefix_list() as $prefix_result) { ?>
+                                                                                <option <?php echo ($selected_advisor_data->prefix ==  $prefix_result) ? 'selected' : '';  ?> value="<?php echo $prefix_result; ?>"><?php echo $prefix_result; ?></option>
+                                                                            <?php } ?>
+                                                                        </select>
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="fv-row col-md-3 mb-7">
+                                                                        <!--begin::Label-->
+                                                                        <label class="required fw-semibold fs-6 mb-2">Preferred Name</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="preferred_name" id="preferred_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Preferred Name" value="<?php echo $selected_advisor_data->preferred_name; ?>" required />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="fv-row col-md-3 mb-7">
+                                                                        <!--begin::Label-->
+                                                                        <label class="fw-semibold fs-6 mb-2">License #</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="license_no" id="license_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="License No" value="<?php echo $selected_advisor_data->license_no; ?>" />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="fv-row col-md-3 mb-7">
+                                                                        <!--begin::Label-->
+                                                                        <label class="fw-semibold fs-6 mb-2">NPN #</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="npn_no" id="npn_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="NPN No" value="<?php echo $selected_advisor_data->npn_no; ?>" />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-7">
+                                                                    <div class="col-md-3 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class="required fw-semibold fs-6 mb-2">First Name</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="first_name" id="first_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="First Name" value="<?php echo $selected_advisor_data->first_name; ?>" required />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="col-md-3 fv-row">
+                                                                        <div class="middle_name_field" style="display: <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, "no_middle_name")) ? 'none' : ''; ?>;">
+                                                                            <!--begin::Label-->
+                                                                            <label class="fw-semibold fs-6 mb-2">Middle Name</label>
+                                                                            <!--end::Label-->
+                                                                            <!--begin::Input-->
+                                                                            <input type="text" name="middle_name" id="middle_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Middle Name" value="<?php echo $selected_advisor_data->middle_name; ?>" />
+                                                                            <!--end::Input-->
+                                                                        </div>
+                                                                        <label class="form-check form-check-custom form-check-solid no_middle_name_checkbox <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, "no_middle_name")) ? 'mt-8' : 'mt-3'; ?>">
+                                                                            <input class="form-check-input" type="checkbox" name="no_middle_name" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, "no_middle_name")) ? 'checked' : ''; ?>>
+                                                                            <span class="form-check-label text-gray-600">
+                                                                                No Middle Name
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-3 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class="required fw-semibold fs-6 mb-2">Last Name</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="last_name" id="last_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Last Name" value="<?php echo $selected_advisor_data->last_name; ?>" required />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="col-md-3 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class="fw-semibold fs-6 mb-2">Company Name</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="company_name" id="company_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Company Name" value="<?php echo $selected_advisor_data->company_name; ?>" />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--begin::Input group-->
                                                         </div>
                                                         <!--end::Input group-->
-                                                        <!--begin::Input group-->
-                                                        <div class="row mb-7">
-                                                            <div class="col-md-2 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Title</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid" required>
-                                                                    <option value="">Select Title</option>
-                                                                    <?php foreach (Settings()->get_name_prefix_list() as $prefix_result) { ?>
-                                                                        <option <?php echo ($selected_advisor_data->prefix ==  $prefix_result) ? 'selected' : '';  ?> value="<?php echo $prefix_result; ?>"><?php echo $prefix_result; ?></option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="col-md-4 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Preferred Name</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" name="preferred_name" id="preferred_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Preferred Name" value="<?php echo $selected_advisor_data->preferred_name; ?>" required />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="col-md-3 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="fw-semibold fs-6 mb-2">License #</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" name="license_no" id="license_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="License No" value="<?php echo $selected_advisor_data->license_no; ?>" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="col-md-3 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="fw-semibold fs-6 mb-2">NPN #</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" name="npn_no" id="npn_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="NPN No" value="<?php echo $selected_advisor_data->npn_no; ?>" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-7">
-                                                            <div class="col-md-3 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">First Name</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" name="first_name" id="first_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="First Name" value="<?php echo $selected_advisor_data->first_name; ?>" required />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="col-md-3 fv-row">
-                                                                <div class="middle_name_field" style="display: <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, "no_middle_name")) ? 'none' : ''; ?>;">
-                                                                    <!--begin::Label-->
-                                                                    <label class="fw-semibold fs-6 mb-2">Middle Name</label>
-                                                                    <!--end::Label-->
-                                                                    <!--begin::Input-->
-                                                                    <input type="text" name="middle_name" id="middle_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Middle Name" value="<?php echo $selected_advisor_data->middle_name; ?>" />
-                                                                    <!--end::Input-->
-                                                                </div>
-                                                                <label class="form-check form-check-custom form-check-solid no_middle_name_checkbox <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, "no_middle_name")) ? 'mt-8' : 'mt-3'; ?>">
-                                                                    <input class="form-check-input" type="checkbox" name="no_middle_name" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, "no_middle_name")) ? 'checked' : ''; ?>>
-                                                                    <span class="form-check-label text-gray-600">
-                                                                        No Middle Name
-                                                                    </span>
-                                                                </label>
-                                                            </div>
-                                                            <div class="col-md-3 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Last Name</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" name="last_name" id="last_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Last Name" value="<?php echo $selected_advisor_data->last_name; ?>" required />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="col-md-3 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="fw-semibold fs-6 mb-2">Company Name</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" name="company_name" id="company_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Company Name" value="<?php echo $selected_advisor_data->company_name; ?>" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                        </div>
+
                                                         <div class="row mb-7">
 
                                                             <div class="col-md-3 fv-row">
@@ -573,9 +575,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <div class="card-body pt-0">
                                                                     <div class="row mb-4">
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Email Opt Out</label>
-                                                                            <!--end::Label-->
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
                                                                                     <i class="bi bi-envelope fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
@@ -585,9 +584,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         </div>
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Facebok URL</label>
-                                                                            <!--end::Label-->
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
                                                                                     <i class="bi bi-facebook fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
@@ -598,9 +594,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                     </div>
                                                                     <div class="row mb-4">
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">LinkedIn URL</label>
-                                                                            <!--end::Label-->
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
                                                                                     <i class="bi bi-linkedin fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
@@ -612,9 +605,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <!--end::Input wrapper-->
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Youtube URL</label>
-                                                                            <!--end::Label-->
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
                                                                                     <i class="bi bi-youtube fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
@@ -627,9 +617,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                     <div class="row mb-4">
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Twitter URL</label>
-                                                                            <!--end::Label-->
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
                                                                                     <i class="bi bi-twitter fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
@@ -1248,15 +1235,20 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                         </h3>
                                                         <div class="row mb-7">
                                                             <?php
-                                                            foreach ($get_interest_life_insurance_list as $key => $life_insurance_result) { ?>
-                                                                <div class="col-md-4 fv-row">
+                                                            foreach ($get_interest_life_insurance_list as $key => $life_insurance_result) {
+                                                                if (strlen($life_insurance_result) > 40) {
+                                                                    $class = "col-md-6";
+                                                                } else {
+                                                                    $class = "col-md-3";
+                                                                } ?>
+                                                                <div class="<?php echo $class; ?> fv-row">
                                                                     <!--begin::Option-->
                                                                     <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                         <!--begin::Input-->
                                                                         <input class="form-check-input me-3" type="checkbox" name="life_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_life_insurance)) ? 'checked' : ''; ?> />
                                                                         <!--end::Input-->
                                                                         <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
+                                                                        <span class="form-label d-flex flex-column align-items-start">
                                                                             <span class="fw-bold fs-5 mb-0"><?php echo $life_insurance_result; ?></span>
                                                                         </span>
                                                                         <!--end::Label-->
@@ -1274,14 +1266,14 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                         <div class="row mb-7">
                                                             <?php
                                                             foreach ($get_interest_annuities_list as $key => $annuities_result) { ?>
-                                                                <div class="col-md-4 fv-row">
+                                                                <div class="col-md-3 fv-row">
                                                                     <!--begin::Option-->
                                                                     <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                         <!--begin::Input-->
                                                                         <input class="form-check-input me-3" type="checkbox" name="annuities[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_annuities)) ? 'checked' : ''; ?> />
                                                                         <!--end::Input-->
                                                                         <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
+                                                                        <span class="form-label d-flex flex-column align-items-start">
                                                                             <span class="fw-bold fs-5 mb-0"><?php echo $annuities_result; ?></span>
                                                                         </span>
                                                                         <!--end::Label-->
@@ -1299,14 +1291,14 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                         <div class="row mb-7">
                                                             <?php
                                                             foreach ($get_interest_long_term_care_insurance_list as $key => $long_term_care_result) { ?>
-                                                                <div class="col-md-4 fv-row">
+                                                                <div class="col-md-3 fv-row">
                                                                     <!--begin::Option-->
                                                                     <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                         <!--begin::Input-->
                                                                         <input class="form-check-input me-3" type="checkbox" name="long_term_care_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_long_term_care_insurance)) ? 'checked' : ''; ?> />
                                                                         <!--end::Input-->
                                                                         <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
+                                                                        <span class="form-label d-flex flex-column align-items-start">
                                                                             <span class="fw-bold fs-5 mb-0"><?php echo $long_term_care_result; ?></span>
                                                                         </span>
                                                                         <!--end::Label-->
@@ -1324,14 +1316,14 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                         <div class="row mb-7">
                                                             <?php
                                                             foreach ($get_interest_critical_illness_list as $key => $critical_illness_result) { ?>
-                                                                <div class="col-md-4 fv-row">
+                                                                <div class="col-md-3 fv-row">
                                                                     <!--begin::Option-->
                                                                     <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                         <!--begin::Input-->
                                                                         <input class="form-check-input me-3" type="checkbox" name="critical_illness[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_critical_illness)) ? 'checked' : ''; ?> />
                                                                         <!--end::Input-->
                                                                         <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
+                                                                        <span class="form-label d-flex flex-column align-items-start">
                                                                             <span class="fw-bold fs-5 mb-0"><?php echo $critical_illness_result; ?></span>
                                                                         </span>
                                                                         <!--end::Label-->

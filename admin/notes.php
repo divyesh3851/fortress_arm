@@ -264,10 +264,10 @@ $get_notes_list = Advisor()->get_note_list();
                             </div>
                             <div class="row mt-10">
                                 <!--begin::Label-->
-                                <label class="fw-semibold fs-6 mb-2">Note Label</label>
+                                <label class="required fw-semibold fs-6 mb-2">Note Label</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="text" name="label" id="label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Label" value="" />
+                                <input type="text" name="label" id="label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Label" value="" required />
                                 <!--end::Input-->
                             </div>
                             <div class="row mt-10">

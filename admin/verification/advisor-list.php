@@ -748,8 +748,16 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             orderable: false,
                             className: 'text-start',
                             render: function(data, type, row) {
-                                return `<div class="d-flex">  
-                                            <span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" id="send_verification_mail_btn_${data.record_id}" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Send Mail">Send Mail</span>
+
+                                let send_btn = '';
+                                if (data.send_verification == 1) {
+                                    send_btn = `<a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" target="_blank" class="badge badge-light-info flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer" title="Send Mail">Complete Now</a>`;
+                                } else {
+                                    send_btn = `<span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" id="send_verification_mail_btn_${data.record_id}" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Send Mail">Send Mail</span>`;
+                                }
+
+                                return `<div class="d-flex">
+                                            ${send_btn}
                                             <a href="tel:${data.mobile_no}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">
@@ -1137,7 +1145,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             className: 'text-start',
                             render: function(data, type, row) {
                                 return `<div class="d-flex">  
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" class="badge badge-light-info flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer" title="Complete Now">Complete Now</a>
+                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" target="_blank" class="badge badge-light-info flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer" title="Complete Now">Complete Now</a>
                                             <a href="tel:${data.mobile_no}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">
@@ -1475,6 +1483,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
 
                 $("#send_mail_btn .indicator-label").show();
                 $("#send_mail_btn .indicator-progress").hide();
+                $("#kt_modal_send_verification_mail_form p.text-success").html('');
 
                 if (results.status) {
                     $('#kt_modal_send_verification_mail_form')[0].reset();

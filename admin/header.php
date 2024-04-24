@@ -1,5 +1,5 @@
 <?php
-$profile_img = Admin()->get_admin_meta($_SESSION['fbs_admin_id'], 'profile_img');
+$profile_img = Admin()->get_admin_meta($_SESSION['fbs_arm_admin_id'], 'profile_img');
 $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniversary_list();
 ?>
 <div id="kt_app_header" class="app-header d-flex flex-column flex-stack">
@@ -96,7 +96,7 @@ $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniv
                             <div class="d-flex flex-column">
                                 <div class="fw-bold d-flex align-items-center fs-5">
                                     <?php
-                                    $get_login_admin_info = Admin()->get_login_admin_info($_SESSION['fbs_admin_id']);
+                                    $get_login_admin_info = Admin()->get_login_admin_info($_SESSION['fbs_arm_admin_id']);
                                     echo $get_login_admin_info->first_name . ' ' . $get_login_admin_info->last_name;
                                     ?>
                                 </div>

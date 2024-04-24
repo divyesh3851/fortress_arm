@@ -6,7 +6,7 @@ $data = array();
 
 $AND = '';
 if (siget('user_type')) {
-    $AND = ' AND created_by = ' . siget('fbs_admin_id') . ' AND created_by_type = "admin" ';
+    $AND = ' AND created_by = ' . siget('fbs_arm_admin_id') . ' AND created_by_type = "admin" ';
 }
 
 $totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE status = 0 ' . $AND);

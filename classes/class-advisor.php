@@ -30,6 +30,47 @@ class Advisor
         add_action('wp_ajax_send_verification_mail', array($this, 'send_verification_mail'));
 
         add_action('wp_ajax_delete_note', array($this, 'delete_note'));
+
+        add_action('wp_ajax_get_selected_activity_data', array($this, 'get_selected_activity_data'));
+    }
+
+    public function profile_completion_percentage($advisor_id)
+    {
+        global $wpdb;
+
+        $advisor_info = $this->get_selected_advisor_data($advisor_id);
+
+        // Sample user data
+        $user_data = array(
+            'prefix'            => $advisor_info->prefix,
+            'preferred_name'    => $advisor_info->preferred_name,
+            'first_name'        => $advisor_info->first_name,
+            'last_name'         => $advisor_info->last_name,
+            'birth_date'        => $advisor_info->birth_date,
+            'gender'            => $advisor_info->gender,
+            'advisor_status'    => $advisor_info->advisor_status,
+            'city'              => $advisor_info->city,
+            'state'             => $advisor_info->state,
+            'marital_status'    => $advisor_info->marital_status,
+        );
+
+        // Define the required fields for a complete profile
+        $requiredFields = array('prefix', 'preferred_name', 'first_name', 'last_name', 'birth_date', 'gender', 'advisor_status', 'city', 'state', 'marital_status'); // Example required fields
+
+        // Calculate profile completion percentage
+        $totalFields = count($requiredFields);
+        $completedFields = 0;
+
+        foreach ($requiredFields as $field) {
+            if (isset($userData[$field]) && !empty($userData[$field])) {
+                $completedFields++;
+            }
+        }
+
+        $profileCompletionPercentage = ($completedFields / $totalFields) * 100;
+
+        // Display the profile completion percentage
+        return round($profileCompletionPercentage, 2);
     }
 
     public function count_total_verified_advisor()
@@ -38,7 +79,11 @@ class Advisor
 
         $AND = '';
         if (!IS_ADMIN) {
-            $AND = ' AND created_by = ' . $_SESSION['fbs_admin_id'];
+            if (isset($_SESSION['fbs_arm_admin_id'])) {
+                $AND = ' AND created_by = ' . $_SESSION['fbs_arm_admin_id'];
+            } else if (isset($_SESSION['fbs_advisor_id'])) {
+                $AND = ' AND created_by = ' . $_SESSION['fbs_advisor_id'];
+            }
         }
 
         return $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE status = 0 AND is_verified = 1 " . $AND);
@@ -50,7 +95,11 @@ class Advisor
 
         $AND = '';
         if (!IS_ADMIN) {
-            $AND = ' AND created_by = ' . $_SESSION['fbs_admin_id'];
+            if (isset($_SESSION['fbs_arm_admin_id'])) {
+                $AND = ' AND created_by = ' . $_SESSION['fbs_arm_admin_id'];
+            } else if (isset($_SESSION['fbs_advisor_id'])) {
+                $AND = ' AND created_by = ' . $_SESSION['fbs_advisor_id'];
+            }
         }
 
         return $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE status = 0 " . $AND);
@@ -240,8 +289,8 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (isset($_SESSION['fbs_admin_id']) && !IS_ADMIN) {
-            $AND = " AND created_by = " . $_SESSION['fbs_admin_id'] . " AND created_by_type = 'admin' ";
+        if (isset($_SESSION['fbs_arm_admin_id']) && !IS_ADMIN) {
+            $AND = " AND created_by = " . $_SESSION['fbs_arm_admin_id'] . " AND created_by_type = 'admin' ";
         } else if (isset($_SESSION['fbs_advisor_id'])) {
             $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'] . " AND created_by_type = 'advisor' ";
         }
@@ -255,8 +304,8 @@ class Advisor
         global $wpdb;
 
         $AND = '';
-        if (isset($_SESSION['fbs_admin_id']) && !IS_ADMIN) {
-            $AND = " AND created_by = " . $_SESSION['fbs_admin_id'] . " AND created_by_type = 'admin' ";
+        if (isset($_SESSION['fbs_arm_admin_id']) && !IS_ADMIN) {
+            $AND = " AND created_by = " . $_SESSION['fbs_arm_admin_id'] . " AND created_by_type = 'admin' ";
         } else if (isset($_SESSION['fbs_advisor_id'])) {
             $AND = " AND created_by = " . $_SESSION['fbs_advisor_id'] . " AND created_by_type = 'advisor' ";
         }
@@ -386,9 +435,67 @@ class Advisor
         return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND user_id = " . $advisor_id . " ORDER BY activity_date ASC LIMIT 0,5");
     }
 
+    public function get_selected_activity_data($activity_id = '')
+    {
+        global $wpdb;
+
+        $activity_id = (sipost('activity_id')) ? sipost('activity_id') : $activity_id;
+
+        if (!$activity_id) {
+            return false;
+        }
+
+        $activity_info = $wpdb->get_row("SELECT * FROM activity WHERE id = " . $activity_id);
+
+        if (sipost('is_ajax') == true) {
+            if ($activity_info) {
+                echo json_encode(array("status" => true, "activity_info" => $activity_info));
+            } else {
+                echo json_encode(array("status" => false));
+            }
+        } else {
+            return $activity_info;
+        }
+        die();
+    }
+
+    public function update_activity($advisor_id)
+    {
+        global $wpdb;
+
+        if (!sipost('title') || !sipost('date')) {
+            return false;
+        }
+
+        $activity_date = (sipost('date')) ? strtotime(str_replace(',', '', sipost('date'))) : '';
+        $activity_date = ($activity_date) ? date('Y-m-d', $activity_date) : '';
+
+        $activity_info = array(
+            'title'         => sipost('title'),
+            'activity_date' => $activity_date,
+            'start_time'    => sipost('start_time'),
+            'end_time'      => sipost('end_time'),
+            'type'          => sipost('type'),
+            'location'      => sipost('location'),
+            'note'          => sipost('note'),
+            'created_at'    => current_time('mysql')
+        );
+
+        if ($wpdb->update("activity", $activity_info, array('id' => sipost('activity_id')))) {
+
+            Admin()->create_track_log_activity($advisor_id, sipost('activity_id'), 'activity update', 'activity_update', $activity_info, '', 'Activity has been updated', 'advisor');
+
+            return true;
+        }
+    }
+
     public function add_activity($advisor_id)
     {
         global $wpdb;
+
+        if (!sipost('title') || !sipost('date')) {
+            return false;
+        }
 
         $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
 
@@ -967,7 +1074,7 @@ class Advisor
             "middle_name"       => $middle_name,
             "last_name"         => ucwords(sipost("last_name")),
             "gender"            => sipost("gender"),
-            "contact_type"      => sipost("contact_type"),
+            "contact_type"      => (sipost("contact_type")) ? sipost("contact_type") : 'Mobile',
             "email"             => $email,
             "mobile_no"         => sipost("mobile_no"),
             "company_name"      => sipost("company_name"),
@@ -1218,8 +1325,8 @@ class Advisor
         if (isset($_SESSION['fbs_advisor_id'])) {
             $created_by = $_SESSION['fbs_advisor_id'];
             $created_by_type = 'advisor';
-        } else if (isset($_SESSION['fbs_admin_id'])) {
-            $created_by = $_SESSION['fbs_admin_id'];
+        } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $created_by = $_SESSION['fbs_arm_admin_id'];
             $created_by_type = 'admin';
         }
 
@@ -1232,7 +1339,7 @@ class Advisor
             "middle_name"       => $middle_name,
             "last_name"         => ucwords(sipost("last_name")),
             "gender"            => sipost("gender"),
-            "contact_type"      => sipost("contact_type"),
+            "contact_type"      => (sipost("contact_type")) ? sipost("contact_type") : 'Mobile',
             "email"             => $email,
             "mobile_no"         => sipost("mobile_no"),
             "company_name"      => sipost("company_name"),
@@ -1359,6 +1466,60 @@ class Advisor
 
         return $wpdb->get_row("SELECT id,first_name,middle_name,last_name,gender,email,mobile_no,city,state,birth_date FROM advisor WHERE id = " . $advisor_id  . " ORDER BY id DESC");
     }
+
+    public function update_login_advisor_profile($advisor_id = '')
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        if (!$advisor_id || !sipost('first_name') || !sipost('last_name') || !sipost('email')) {
+            return false;
+        }
+
+        $first_name = ucwords(sipost('first_name'));
+        $last_name  = ucwords(sipost('last_name'));
+        $email      = strtolower(sipost('email'));
+
+        $check = $wpdb->get_var("SELECT id FROM advisor WHERE email = '" . $email . "' AND id != " . $advisor_id . " AND status = 0");
+
+        if ($check) {
+            return "duplicate";
+        }
+
+        $user_info  = array(
+            'first_name'    => $first_name,
+            'last_name'     => $last_name,
+            'email'         => $email,
+            'mobile_no'     => sipost('mobile_no'),
+            'state'         => sipost('state'),
+            'updated_at'    => current_time('mysql')
+        );
+
+        if (sipost('password')) {
+            $user_info['password'] = md5(sipost('password') . AUTH_SALT);
+        }
+
+        if ($_FILES['profile_img'] && $_FILES['profile_img']['error'] == 0) {
+
+            $file_name  = $_FILES['profile_img']['name'];
+
+            $file_tmp   = $_FILES['profile_img']['tmp_name'];
+
+            $file_type  = $_FILES['profile_img']['type'];
+
+            $ext        = strtolower(end(explode('.', $file_name)));
+
+            $new_file_name    = time() . rand(111, 999) . "." . $ext;
+
+            if (move_uploaded_file($file_tmp, SITE_DIR . '/uploads/advisor/' . $new_file_name)) {
+                $this->update_advisor_meta($advisor_id, 'profile_img', $new_file_name);
+            }
+        }
+
+        return $wpdb->update("advisor", $user_info, array('id' => $advisor_id));
+    }
+
 
     // Get All Information About Current Loged Admin
     public function get_login_advisor_info($advisor_id = '')

@@ -10,6 +10,7 @@ Options -MultiViews
 	RewriteRule ^admin/profile?$ admin/profile.php [NC,L]
 	RewriteRule ^admin/profile/([^/]+)$ admin/profile.php?tab=$1 [NC,L]
 	RewriteRule ^advisor/profile?$ advisor/profile.php [NC,L]
+	RewriteRule ^advisor/profile/([^/]+)$ advisor/profile.php?tab=$1 [NC,L]
 
 	RewriteRule ^admin/logout?$ admin/logout.php [NC,L]
 	RewriteRule ^advisor/logout?$ advisor/logout.php [NC,L]

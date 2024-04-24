@@ -112,6 +112,11 @@ $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniv
                     <!--end::Menu separator-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
+                        <a href="<?php echo site_url(); ?>/advisor/profile" class="menu-link px-5">Profile</a>
+                    </div>
+                    <!--end::Menu item-->
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-5">
                         <a href="<?php echo site_url(); ?>/advisor/logout" class="menu-link px-5">Log Out</a>
                     </div>
                     <!--end::Menu item-->

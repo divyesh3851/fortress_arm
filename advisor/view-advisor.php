@@ -66,7 +66,11 @@ if (isset($_POST['save_address'])) {
 
 if (isset($_POST['save_activity'])) {
 
-	$response = Advisor()->add_activity($selected_advisor_data->id);
+	if (sipost('activity_id')) {
+		$response = Advisor()->update_activity($selected_advisor_data->id);
+	} else {
+		$response = Advisor()->add_activity($selected_advisor_data->id);
+	}
 
 	if ($response == 1) {
 		$_SESSION['process_activity_success'] = true;
@@ -74,6 +78,25 @@ if (isset($_POST['save_activity'])) {
 		$_SESSION['process_activity_duplicate'] = true;
 	} else {
 		$_SESSION['process_activity_fail'] = true;
+	}
+
+	wp_redirect(site_url() . '/advisor/view-advisor/' . siget('advisor_id'));
+	exit;
+}
+
+if (isset($_POST['save_note'])) {
+
+	if (sipost('note_id')) {
+		$response = Advisor()->update_advisor_note();
+	} else {
+		$response = Advisor()->add_advisor_note();
+	}
+
+
+	if ($response == 1) {
+		$_SESSION['note_process_success'] = true;
+	} else {
+		$_SESSION['note_process_fail'] = true;
 	}
 
 	wp_redirect(site_url() . '/advisor/view-advisor/' . siget('advisor_id'));
@@ -119,6 +142,8 @@ $get_advisor_upcoming_activity_list = Advisor()->get_advisor_upcoming_activity($
 $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected_advisor_data->id);
 
 $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_advisor_data->id); // 1 Resident
+
+$get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 
 ?>
 <!DOCTYPE html>
@@ -843,7 +868,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 															</div>
 															<!--end::Card title-->
 															<!--begin::Action-->
-															<a href="" class=" align-self-center" data-bs-toggle="modal" data-bs-target="#kt_modal_activity_add" id="activity_add" advisor_id="<?php echo $selected_advisor_data->id; ?>"><i class="bi bi-plus-circle text-primary fs-2x"></i>
+															<a href="" class=" align-self-center activity_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_activity" advisor_id="<?php echo $selected_advisor_data->id; ?>"><i class="bi bi-plus-circle text-primary fs-2x"></i>
 															</a>
 															<!--end::Action-->
 														</div>
@@ -871,6 +896,15 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 																	<!--begin:::Tab pane-->
 																	<div class="tab-pane fade show active" id="kt_ecommerce_customer_overview" role="tabpanel">
 																		<?php foreach ($get_advisor_upcoming_activity_list as $activity_result) { ?>
+																			<div class="fs-5">
+																				<b><?php echo $activity_result->title; ?></b>
+																				<span class="activity_modal cursor-pointer" data-bs-toggle="modal" data-bs-target="#kt_modal_activity" advisor_id="<?php echo $selected_advisor_data->id; ?>" activity_id="<?php echo $activity_result->id; ?>">
+																					<i class="ki-duotone ki-pencil">
+																						<span class="path1"></span>
+																						<span class="path2"></span>
+																					</i>
+																				</span>
+																			</div>
 																			<div class="">
 																				<?php echo $activity_result->note; ?>
 																			</div>
@@ -904,6 +938,51 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 																	<!--end:::Tab pane-->
 																</div>
 																<!--end:::Tab content-->
+															</div>
+															<!--end::Content-->
+														</div>
+													</div>
+													<div class="card mb-5 mb-xl-10" id="">
+														<!--begin::Card header-->
+														<div class="card-header p-5 pt-0 pb-0">
+															<!--begin::Card title-->
+															<div class="card-title">
+																<i class="ki-duotone ki-pencil">
+																	<span class="path1"></span>
+																	<span class="path2"></span>
+																</i>
+																<h3 class="fw-bold p-2 pt-0 pb-0">
+																	Notes
+																</h3>
+															</div>
+															<!--end::Card title-->
+															<!--begin::Action-->
+															<a href="" class="note_modal align-self-center" data-bs-toggle="modal" data-bs-target="#kt_modal_note" id="note_add" advisor_id="<?php echo $selected_advisor_data->id; ?>"><i class="bi bi-plus-circle text-primary fs-2x"></i>
+															</a>
+															<!--end::Action-->
+														</div>
+														<!--begin::Card body-->
+														<div class="card-body p-5 scroll h-300px px-5">
+															<!--begin::Content-->
+															<div class="flex-lg-row-fluid">
+																<?php foreach ($get_advisor_note_list as $note_result) { ?>
+																	<div class="fs-5">
+																		<b><?php echo $note_result->label; ?></b>
+																		<span class="note_modal cursor-pointer" data-bs-toggle="modal" data-bs-target="#kt_modal_note" id="note_add" advisor_id="<?php echo $selected_advisor_data->id; ?>" note_id="<?php echo $note_result->id; ?>">
+																			<i class="ki-duotone ki-pencil">
+																				<span class="path1"></span>
+																				<span class="path2"></span>
+																			</i>
+																		</span>
+																	</div>
+																	<div class="">
+																		<?php echo $note_result->note; ?>
+																	</div>
+																	<div class="meta mt-2">
+																		<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($note_result->created_at)); ?></span>
+																	</div>
+																	<div class="separator separator-dashed mb-6 mt-5"></div>
+																<?php } ?>
 															</div>
 															<!--end::Content-->
 														</div>
@@ -1720,7 +1799,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 	<!--end::Modals-->
 
 	<!--begin::Modal - Edit Profile -->
-	<div class="modal fade" id="kt_modal_activity_add" tabindex="-1" aria-hidden="true">
+	<div class="modal fade" id="kt_modal_activity" tabindex="-1" aria-hidden="true">
 		<!--begin::Modal dialog-->
 		<div class="modal-dialog modal-dialog-centered mw-850px">
 			<!--begin::Modal content-->
@@ -1740,6 +1819,7 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 				<!--begin::Modal body-->
 				<div class="modal-body scroll-y m-2">
 					<form class="" id="activity_form" method="post" enctype="multipart/form-data">
+						<input type="hidden" name="activity_id" id="activity_id" value="">
 						<div class="w-100">
 							<!--begin::Input group-->
 							<div class="row mb-7">
@@ -1817,6 +1897,75 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 
 								<!--begin::Button-->
 								<button type="submit" class="btn btn-primary" id="save_activity" name="save_activity">
+									<span class="indicator-label">
+										Save
+									</span>
+									<span class="indicator-progress">
+										Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+									</span>
+								</button>
+								<!--end::Button-->
+							</div>
+						</div>
+					</form>
+				</div>
+				<!--begin::Modal body-->
+			</div>
+		</div>
+		<!--end::Modal - Edit Profile-->
+	</div>
+	<!--end::Modals-->
+
+	<!--begin::Modal - Add Note Modal -->
+	<div class="modal fade" id="kt_modal_note" tabindex="-1" aria-hidden="true">
+		<!--begin::Modal dialog-->
+		<div class="modal-dialog modal-dialog-centered mw-650px">
+			<!--begin::Modal content-->
+			<div class="modal-content modal-rounded">
+				<!--begin::Modal header-->
+				<div class="modal-header py-5 d-flex justify-content-between">
+					<!--begin::Modal title-->
+					<h2>Note</h2>
+					<!--end::Modal title-->
+					<!--begin::Close-->
+					<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+						<i class="ki-outline ki-cross fs-1"></i>
+					</div>
+					<!--end::Close-->
+				</div>
+				<!--begin::Modal header-->
+				<!--begin::Modal body-->
+				<div class="modal-body scroll-y m-2">
+					<form class="" id="" method="post" enctype="multipart/form-data">
+						<input type="hidden" class="is_empty" name="note_id" id="note_id">
+						<div class="w-100">
+							<!--begin::Input group-->
+							<div class="">
+								<!--begin::Input-->
+								<input type="hidden" name="advisor_id" id="advisor_id" value="<?php echo $selected_advisor_data->id; ?>" class="form-select form-select-solid" required>
+								<!--end::Input-->
+							</div>
+							<div class="row">
+								<!--begin::Label-->
+								<label class="required fw-semibold fs-6 mb-2">Note Label</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<input type="text" name="label" id="label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Label" value="" required />
+								<!--end::Input-->
+							</div>
+							<div class="row mt-10">
+								<!--begin::Label-->
+								<label class="required fw-semibold fs-6 mb-2">Note</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<textarea type="text" name="note" id="note" class="form-control form-control-solid is_empty" rows="5" placeholder="Write Note" required /></textarea>
+								<!--end::Input-->
+							</div>
+
+							<div class="d-flex justify-content-end align-items-center mt-12">
+
+								<!--begin::Button-->
+								<button type="submit" class="btn btn-primary" id="save_note" name="save_note">
 									<span class="indicator-label">
 										Save
 									</span>
@@ -1970,6 +2119,76 @@ $get_advisor_default_address = Advisor()->get_advisor_default_address($selected_
 					$("#address_state").val(results.address_info.state).trigger("change");
 					$("#address_zipcode").val(results.address_info.zipcode);
 
+				}
+
+			});
+		});
+
+		$(document).on("click", ".activity_modal", function() {
+
+			var activity_id = $(this).attr('activity_id');
+
+			var advisor_id = $(this).attr('advisor_id');
+
+			$(".is_empty").val("");
+
+			$("select.is_empty").val(null).trigger("change");
+
+			$("textarea.is_empty").html("");
+
+			if (!activity_id)
+				return false;
+
+			$.post(ajax_url, {
+				action: 'get_selected_activity_data',
+				activity_id: activity_id,
+				is_ajax: true,
+			}, function(result) {
+
+				var results = JSON.parse(result);
+
+				if (results) {
+					$("#activity_id").val(results.activity_info.id);
+					$("#activity_title").val(results.activity_info.title);
+					$("#activity_date").val(change_ymd_to_dmy_text(results.activity_info.activity_date));
+					$("#activity_start_time").val(results.activity_info.start_time);
+					$("#activity_end_time").val(results.activity_info.end_time);
+					$("#activity_type").val(results.activity_info.type).trigger("change");
+					$("#activity_location").val(results.activity_info.location);
+					$("#activity_note").val(results.activity_info.note);
+				}
+
+			});
+		});
+
+		$(document).on("click", ".note_modal", function() {
+
+			var note_id = $(this).attr('note_id');
+
+			var advisor_id = $(this).attr('advisor_id');
+
+			$(".is_empty").val("");
+
+			$("select.is_empty").val(null).trigger("change");
+
+			$("textarea.is_empty").html("");
+
+			if (!note_id)
+				return false;
+
+			$.post(ajax_url, {
+				action: 'get_selected_note_data',
+				note_id: note_id,
+				is_ajax: true,
+			}, function(result) {
+
+				var results = JSON.parse(result);
+
+				if (results) {
+					$("#note_id").val(results.note_info.id);
+					$("#advisor_id").val(results.note_info.advisor_id).trigger("change");
+					$("#label").val(results.note_info.label);
+					$("#note").val(results.note_info.note);
 				}
 
 			});
