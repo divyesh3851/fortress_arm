@@ -1,5 +1,7 @@
 {
     "require": {
-        "sendgrid/sendgrid": "^8.1"
+        "sendgrid/sendgrid": "^8.1",
+        "phpoffice/phpspreadsheet": "^2.0",
+        "mpdf/mpdf": "^8.2"
     }
 }

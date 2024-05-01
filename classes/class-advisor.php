@@ -34,6 +34,52 @@ class Advisor
         add_action('wp_ajax_get_selected_activity_data', array($this, 'get_selected_activity_data'));
     }
 
+    public function get_advisor_records_between_two_dates($start_date = '', $end_date = '', $advisor_status = array())
+    {
+        global $wpdb;
+
+        $AND = '';
+        if (isset($_SESSION['fbs_advisor_id'])) {
+            $AND = ' AND created_by = "' . $_SESSION['fbs_advisor_id'] . '" AND created_by_type = "advisor"';
+        } else {
+            if (!IS_ADMIN) {
+                $AND = ' AND created_by = ' . siget('fbs_arm_admin_id') . ' AND created_by_type = "admin" ';
+            }
+        }
+
+        if ($start_date && $end_date && $advisor_status) {
+
+            $advisor_status = implode(',', array_map('intval', $advisor_status));
+
+            $advisor_list = $wpdb->get_results("SELECT first_name, last_name, email, mobile_no, city, state, created_at FROM advisor WHERE DATE(created_at) >= '" . $start_date . "' AND DATE(created_at) <= '" . $end_date . "' AND advisor_status IN ($advisor_status) AND status = 0 " . $AND);
+        } else if (($start_date || $end_date) && $advisor_status) {
+
+            $start_date = ($start_date) ? $start_date : date('Y-m-d');
+
+            $end_date   = ($end_date) ? $end_date : date('Y-m-d');
+
+            $advisor_status = implode(',', array_map('intval', $advisor_status));
+
+            $advisor_list = $wpdb->get_results("SELECT first_name, last_name, email, mobile_no, city, state, created_at FROM advisor WHERE DATE(created_at) >= '" . $end_date . "' AND DATE(created_at) <= '" . $end_date . "' AND advisor_status IN ($advisor_status) AND status = 0 " . $AND);
+        } else if ($start_date && $end_date) {
+
+            $start_date = ($start_date) ? $start_date : date('Y-m-d');
+
+            $end_date   = ($end_date) ? $end_date : date('Y-m-d');
+
+            $advisor_list = $wpdb->get_results("SELECT first_name, last_name, email, mobile_no, city, state, created_at FROM advisor WHERE DATE(created_at) >= '" . $start_date . "' AND DATE(created_at) <= '" . $end_date . "' AND  status = 0 " . $AND);
+        } else if ($advisor_status) {
+
+            $advisor_status = implode(',', array_map('intval', $advisor_status));
+
+            $advisor_list = $wpdb->get_results("SELECT first_name, last_name, email, mobile_no, city, state, created_at FROM advisor WHERE advisor_status IN ($advisor_status) AND status = 0 " . $AND);
+        } else {
+            $advisor_list = $wpdb->get_results("SELECT first_name, last_name, email, mobile_no, city, state, created_at FROM advisor WHERE status = 0 " . $AND);
+        }
+
+        return $advisor_list;
+    }
+
     public function profile_completion_percentage($advisor_id)
     {
         global $wpdb;

@@ -1227,112 +1227,96 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                             <h3 class="fw-bold m-0">What is the agent's current interest in selling in the industry?
                                                             </h3>
                                                         </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Life Insurance
-                                                        </h3>
                                                         <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_life_insurance_list as $key => $life_insurance_result) {
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Life Insurance
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_life_insurance_list as $key => $life_insurance_result) { ?>
 
-                                                                if (strlen($life_insurance_result) > 40) {
-                                                                    $class = "col-md-6";
-                                                                } else {
-                                                                    $class = "col-md-3";
-                                                                } ?>
-
-                                                                <div class="<?php echo $class; ?> fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="life_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_life_insurance)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $life_insurance_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Annuities
-                                                        </h3>
-                                                        <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_annuities_list as $key => $annuities_result) { ?>
-                                                                <div class="col-md-3 fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="annuities[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_annuities)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $annuities_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Long-Term Care Insurance
-                                                        </h3>
-                                                        <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_long_term_care_insurance_list as $key => $long_term_care_result) { ?>
-                                                                <div class="col-md-3 fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="long_term_care_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_long_term_care_insurance)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $long_term_care_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Critical Illness
-                                                        </h3>
-                                                        <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_critical_illness_list as $key => $critical_illness_result) { ?>
-                                                                <div class="col-md-3 fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="critical_illness[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_critical_illness)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $critical_illness_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
+                                                                    <div class="fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="checkbox" name="life_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_life_insurance)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $life_insurance_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Annuities
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_annuities_list as $key => $annuities_result) { ?>
+                                                                    <div class=" fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="checkbox" name="annuities[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_annuities)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $annuities_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Long-Term Care Insurance
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_long_term_care_insurance_list as $key => $long_term_care_result) { ?>
+                                                                    <div class="fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="checkbox" name="long_term_care_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_long_term_care_insurance)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $long_term_care_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Critical Illness
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_critical_illness_list as $key => $critical_illness_result) { ?>
+                                                                    <div class="fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="checkbox" name="critical_illness[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_critical_illness)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $critical_illness_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
                                                         </div>
                                                         <div class="row mb-7">
                                                             <!--begin::Input wrapper-->

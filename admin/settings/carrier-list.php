@@ -3,6 +3,8 @@ $page_name = 'settings';
 $sub_page_name = 'carrier-list';
 Admin()->check_login();
 
+require SITE_DIR . '/vendor/autoload.php';
+
 // page permition for admin user
 if (Admin()->check_for_page_access("settings", true)) {
     wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
@@ -27,6 +29,118 @@ if (isset($_POST['save_carrier'])) {
 
     wp_redirect(site_url() . '/admin/settings/carrier-list');
     exit;
+}
+
+if (isset($_POST['carrier_export_submit'])) {
+
+    $format = (sipost('format')) ? sipost('format') : '';
+
+    if (!$format) {
+        return false;
+    }
+
+    $get_carrier_list = Settings()->get_carrier_list();
+
+    if ($format == 'excel') {
+
+        $spreadsheet    = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+        $sheet    = $spreadsheet->getActiveSheet();
+
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+
+        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->applyFromArray($styleArray);
+
+        // Set the value of header cell 
+        $column         = 1;
+
+        //$highestRow = $sheet->getHighestRow();
+
+        $highestRow     = 1;
+
+        $headings       =  array("No", "Name");
+
+        foreach ($headings as $key  => $heading) {
+
+            $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
+            $sheet->setCellValue($highestColumn . $highestRow, $heading);
+            $column++;
+        }
+
+        $i = 1;
+
+        foreach ($get_carrier_list as $result) {
+
+            $fields     = array($i, $result->name);
+
+            $column         = 1;
+            $highestRow     = $sheet->getHighestRow();
+            $highestRow     = $highestRow + 1;
+
+            foreach ($fields as $column_value) {
+
+                $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
+                $sheet->setCellValue($highestColumn . $highestRow, $column_value);
+                $column++;
+            }
+
+            $i++;
+        }
+
+        $filename    = "Carrier List - " . date('m-d-Y') . ".csv";
+
+        // Output an .xlsx file  
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        header('Content-Encoding: UTF-8');
+        header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        $writer->save('php://output');
+        die();
+        exit;
+    } else if ($format == 'pdf') {
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4', 'margin_left' => '5', 'margin_right' => '5', 'margin_top' => '10', 'margin_bottom' => '10', 'margin_header' => '5', 'margin_footer' => '5', 'defaultheaderline' => 0, 'defaulfooterline' => 0]);
+        $html = '<html> 
+                    <body>
+                        <div class="col-md-12">
+                            <p class="category" style="text-align:center; font-size: 18px;">
+                                <b>Carrier List</b>
+                            </p>	
+                            <table class="table" width="100%" border="1" cellpadding="4" style="border-collapse: collapse; text-align:left; font-size:13px;">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th align="left">Name</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>';
+        $j = 1;
+        foreach ($get_carrier_list as $result) {
+            $html .= "<tr>
+                        <td>" . $j . "</td>
+                        <td>" . $result->name . "</td>
+                    </tr>";
+            $j++;
+        }
+
+        $html .= '</tbody>
+                            </table>
+                        </div>
+                    </body>
+                 </html>';
+
+        $stylesheet = file_get_contents(site_url() . '/assets/css/pdf.css'); // external css
+
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->WriteHTML($html);
+
+        $path = "Carrier List - " . date('Y_m_d') . ".pdf";
+
+        $mpdf->Output($path, 'D');
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -156,6 +270,11 @@ if (isset($_POST['save_carrier'])) {
                                             <!--begin::Toolbar-->
                                             <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
 
+                                                <!--begin::Export-->
+                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_export_modal">
+                                                    <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
+                                                <!--end::Export-->
+
                                                 <!--begin::Add carrier-->
                                                 <button type="button" class="btn btn-primary carrier_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_carrier" title="Add Carrier">
                                                     <i class="ki-duotone ki-plus fs-2"></i>
@@ -284,6 +403,62 @@ if (isset($_POST['save_carrier'])) {
         <i class="ki-outline ki-arrow-up"></i>
     </div>
     <!--end::Scrolltop-->
+
+    <!--begin::Modal - Adjust Balance-->
+    <div class="modal fade" id="kt_export_modal" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header">
+                    <!--begin::Modal title-->
+                    <h2 class="fw-bold">Export Carrier</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div id="kt_export_close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y mx-5 mx-xl-10 my-7">
+                    <!--begin::Form-->
+                    <form id="" class="form" method="post">
+                        <!--begin::Input group-->
+                        <div class="fv-row mb-10">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-semibold form-label mb-5">Select Export Format:</label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select data-control="select2" data-placeholder="Select a format" data-hide-search="true" name="format" class="form-select form-select-solid">
+                                <option value="excel">Excel</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Actions-->
+                        <div class="text-center">
+                            <button type="reset" id="carrier_export_cancel" class="btn btn-light me-3">Discard</button>
+                            <button type="submit" id="carrier_export_submit" name="carrier_export_submit" class="btn btn-primary">
+                                <span class="indicator-label">Submit</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal - New Card-->
 
     <!--begin::Javascript-->
     <script>

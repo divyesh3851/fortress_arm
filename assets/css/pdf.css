@@ -1,0 +1,115 @@
+/* custome css */
+
+.col-md-12 {
+	width: 100%;
+}
+
+.col-md-8 {
+	width: 68.33333333%;
+	float: left;
+}
+
+.col-md-7 {
+	width: 58.33333333%;
+	float: left;
+}
+
+.col-md-6 {
+	width: 50%;
+	float: left;
+}
+
+.col-sm-5 {
+	width: 41.66666667%;
+	float: left;
+}
+
+.col-md-5 {
+	width: 41.66666667%;
+	float: left;
+}
+
+.col-md-4 {
+	width: 33.33%;
+	float: left;
+}
+
+.col-md-3 {
+	width: 25%;
+	float: left;
+}
+
+.col-md-2 {
+	width: 20%;
+	float: left;
+}
+
+.col-md-offset-2 {
+	margin-left: 10%;
+}
+
+.col-md-offset-4 {
+	margin-left: 20%;
+}
+
+.col-md-offset-5 {
+	margin-left: 30%;
+}
+
+.col-md-offset-6 {
+	margin-left: 40%;
+}
+
+.col-md-offset-7 {
+	margin-left: 50%;
+}
+
+.col-md-offset-8 {
+	margin-left: 60%;
+}
+
+
+.padding-sm {
+	padding: 0px 5px !important;
+}
+
+.mp-0 {
+	margin: 0px;
+	padding: 0px;
+}
+
+.pdf_main_body {
+	margin-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border: 1px solid #000;
+
+
+}
+
+h1 {
+	font-weight: 300;
+	margin: 30px 0 15px;
+}
+
+
+.custome-hr {
+	border-style: solid;
+	border-color: #000;
+	border-width: 1px 0 0 0;
+	border-radius: 20px;
+	margin-top: 17px;
+	margin-bottom: 0px;
+}
+
+.clearfix {
+	clear: both;
+}
+
+.table thead tr th {
+	color: #000;
+}
+
+.table td {
+	color: #000;
+}

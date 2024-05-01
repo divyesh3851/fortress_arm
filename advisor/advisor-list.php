@@ -3,6 +3,8 @@ $page_name = 'advisor';
 $sub_page_name = 'advisor-list';
 Advisor()->check_advisor_login();
 
+require SITE_DIR . '/vendor/autoload.php';
+
 if (sipost('first_name') || sipost('last_name') || sipost('email')) {
 
     $response = Advisor()->add_advisor();
@@ -18,6 +20,149 @@ if (sipost('first_name') || sipost('last_name') || sipost('email')) {
     wp_redirect(site_url() . '/advisor/advisor-list');
     exit;
 }
+
+if (isset($_POST['advisor_export_submit'])) {
+
+    $format = (sipost('format')) ? sipost('format') : '';
+
+    if (!$format) {
+        return false;
+    }
+
+    $start_date = '';
+    $end_date   = '';
+
+    if (sipost('date_range')) {
+
+        $date_range = (sipost('date_range')) ? sipost('date_range') : '';
+
+        list($start_date, $end_date) = explode(" - ", $date_range);
+
+        $start_date = date("Y-m-d", strtotime($start_date));
+
+        $end_date   = date("Y-m-d", strtotime($end_date));
+    }
+
+    $get_advisor_list = Advisor()->get_advisor_records_between_two_dates($start_date, $end_date, sipost('advisor_status'));
+
+    if ($format == 'excel') {
+
+        $spreadsheet    = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+        $sheet    = $spreadsheet->getActiveSheet();
+
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+
+        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->applyFromArray($styleArray);
+
+        // Set the value of header cell 
+        $column         = 1;
+
+        //$highestRow = $sheet->getHighestRow();
+
+        $highestRow     = 1;
+
+        $headings       =  array("No", "Name", "Email", "Mobile No", "City", "State", "Date");
+
+        foreach ($headings as $key  => $heading) {
+
+            $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
+            $sheet->setCellValue($highestColumn . $highestRow, $heading);
+            $column++;
+        }
+
+        $i = 1;
+
+        foreach ($get_advisor_list as $advisor_result) {
+
+            $created_at = date("m/d/Y", strtotime($advisor_result->created_at));
+
+            $fields     = array($i, $advisor_result->first_name . ' ' . $advisor_result->last_name, $advisor_result->email, $advisor_result->mobile_no, $advisor_result->city, $advisor_result->state, $created_at);
+
+            $column         = 1;
+            $highestRow     = $sheet->getHighestRow();
+            $highestRow     = $highestRow + 1;
+
+            foreach ($fields as $column_value) {
+
+                $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
+                $sheet->setCellValue($highestColumn . $highestRow, $column_value);
+                $column++;
+            }
+
+            $i++;
+        }
+
+        $filename    = "Advisor List - " . date('m-d-Y') . ".csv";
+
+        // Output an .xlsx file  
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        header('Content-Encoding: UTF-8');
+        header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        $writer->save('php://output');
+        die();
+        exit;
+    } else if ($format == 'pdf') {
+
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4', 'margin_left' => '5', 'margin_right' => '5', 'margin_top' => '10', 'margin_bottom' => '10', 'margin_header' => '5', 'margin_footer' => '5', 'defaultheaderline' => 0, 'defaulfooterline' => 0]);
+        $html = '<html> 
+                    <body>
+                        <div class="col-md-12">
+                            <p class="category" style="text-align:center; font-size: 18px;">
+                                <b>Advisor List</b>
+                            </p>	
+                            <table class="table" width="100%" border="1" cellpadding="4" style="border-collapse: collapse; text-align:left; font-size:13px;">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Name</th>
+                                        <th>Email</th> 
+                                        <th>Mobile No</th>
+                                        <th>City</th> 
+                                        <th>State</th>    
+                                        <th>Date</th>   
+                                    </tr>
+                                </thead>
+                                <tbody>';
+        $j = 1;
+        foreach ($get_advisor_list as $advisor_result) {
+
+            $created_at = date("m/d/Y", strtotime($advisor_result->created_at));
+
+            $html .= "<tr>
+                        <td>" . $j . "</td>
+                        <td>" . $advisor_result->first_name . " " . $advisor_result->last_name . "</td>
+                        <td>" . $advisor_result->email . "</td>
+                        <td>" . $advisor_result->mobile_no . "</td>
+                        <td>" . $advisor_result->city . "</td>
+                        <td>" . $advisor_result->state . "</td>
+                        <td>" . $created_at . "</td> 
+                    </tr>";
+            $j++;
+        }
+
+        $html .= '</tbody>
+                            </table>
+                        </div>
+                    </body>
+                 </html>';
+
+        $stylesheet = file_get_contents(site_url() . '/assets/css/pdf.css'); // external css
+
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->WriteHTML($html);
+
+        $path = "Advisor List - " . date('Y_m_d') . ".pdf";
+
+        $mpdf->Output($path, 'D');
+    }
+}
+
 
 $get_state_list = Settings()->get_state_list();
 
@@ -209,6 +354,10 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                                                 </div>
                                                 <!--end::Menu 1-->
                                                 <!--end::Filter-->
+                                                <!--begin::Export-->
+                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_advisor_export_modal">
+                                                    <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
+                                                <!--end::Export-->
                                                 <button type="button" class="btn btn-primary advisor_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_advisor" title="Add Advisor">
                                                     <i class="ki-duotone ki-plus fs-2"></i>
                                                     Add Advisor
@@ -444,6 +593,91 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
     </div>
     <!--end::Modal - Advisor -->
 
+    <!--begin::Modal - Adjust Balance-->
+    <div class="modal fade" id="kt_advisor_export_modal" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header">
+                    <!--begin::Modal title-->
+                    <h2 class="fw-bold">Export Advisor</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div id="kt_advisor_export_close" class="btn btn-icon btn-sm btn-active-icon-primary">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y mx-5 mx-xl-10 my-7">
+                    <!--begin::Form-->
+                    <form id="" class="form" method="post">
+                        <!--begin::Input group-->
+                        <div class="fv-row mb-10">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-semibold form-label mb-5">Select Export Format:</label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select data-control="select2" data-placeholder="Select a format" data-hide-search="true" name="format" class="form-select form-select-solid">
+                                <option value="excell">Excel</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row mb-10">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-semibold form-label mb-5">Select Date Range:</label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input class="form-control form-control-solid" name="date_range" placeholder="Pick date range" id="kt_daterangepicker_4" />
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Row-->
+                        <div class="row fv-row mb-15">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-semibold form-label mb-5">Advisor Status:</label>
+                            <!--end::Label-->
+                            <!--begin::Radio group-->
+                            <div class="d-flex flex-column">
+                                <?php foreach (Settings()->get_advisor_status_list() as $key => $status_result) { ?>
+                                    <!--begin::Radio button-->
+                                    <label class="form-check form-check-custom form-check-sm form-check-solid mb-3">
+                                        <input class="form-check-input" type="checkbox" value="<?php echo $key ?>" name="advisor_status[]" />
+                                        <span class="form-check-label text-gray-600 fw-semibold"><?php echo $status_result ?></span>
+                                    </label>
+                                    <!--end::Radio button-->
+                                <?php } ?>
+                            </div>
+                            <!--end::Input group-->
+                        </div>
+                        <!--end::Row-->
+                        <!--begin::Actions-->
+                        <div class="text-center">
+                            <button type="reset" id="advisor_export_cancel" class="btn btn-light me-3">Discard</button>
+                            <button type="submit" id="advisor_export_submit" name="advisor_export_submit" class="btn btn-primary">
+                                <span class="indicator-label">Submit</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal - New Card-->
+
     <!--begin::Javascript-->
     <script>
         var hostUrl = "assets/";
@@ -456,6 +690,28 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
     <!--end::Vendors Javascript-->
     <!--end::Javascript-->
     <script>
+        var start = moment().subtract(29, "days");
+        var end = moment();
+
+        function cb(start, end) {
+            $("#kt_daterangepicker_4").html(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
+        }
+
+        $("#kt_daterangepicker_4").daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                "Today": [moment(), moment()],
+                "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                "Last 7 Days": [moment().subtract(6, "days"), moment()],
+                "Last 30 Days": [moment().subtract(29, "days"), moment()],
+                "This Month": [moment().startOf("month"), moment().endOf("month")],
+                "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+            }
+        }, cb);
+
+        cb(start, end);
+
         "use strict";
 
         // Class definition
