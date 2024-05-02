@@ -77,3 +77,7 @@ div#kt_app_sidebar {
 .stepper.stepper-links .stepper-nav .stepper-item.current .stepper-title {
     color: #1B84FF !important;
 }
+
+.w_20 {
+    width: 20% !important;
+}

@@ -4,10 +4,6 @@ require '../../config.php';
 // Fetch records 
 $data = array();
 
-$totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM track_log WHERE status = 0 AND logged_id = 1 GROUP BY user_id');
-
-$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT( * ) FROM track_log WHERE status = 0 AND logged_id = 1 GROUP BY user_id');
-
 $activity_list   = $wpdb->get_results('SELECT * FROM track_log WHERE status = 0 AND logged_id = 1 GROUP BY user_id ORDER BY id DESC');
 
 foreach ($activity_list as $activity_result) {
@@ -31,7 +27,7 @@ foreach ($activity_list as $activity_result) {
             </div>
             <!--begin::User details-->';
 
-    $action_date = date("F d,Y", strtotime($activity_result->action_date));
+    $action_date = date("m/d/Y", strtotime($activity_result->action_date));
 
     $data[] = array(
         'record_id'     => $activity_result->id,

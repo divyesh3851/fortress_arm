@@ -97,7 +97,7 @@ if (isset($_POST['advisor_export_submit'])) {
             $i++;
         }
 
-        $filename    = "Advisor List - " . date('m-d-Y') . ".csv";
+        $filename    = "Advisor List - " . date('Y_m_d') . ".csv";
 
         // Output an .xlsx file  
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);

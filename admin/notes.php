@@ -152,7 +152,7 @@ $get_notes_list = Advisor()->get_note_list();
                                                             <div class="flex-grow-1">
                                                                 <!--begin::Info-->
                                                                 <div class="d-flex align-items-center pe-2 mb-5">
-                                                                    <span class="text-muted fw-bold fs-5 flex-grow-1"><?php echo date('F d, Y H:i:s', strtotime($note_result->created_at)); ?></span>
+                                                                    <span class="text-muted fw-bold fs-5 flex-grow-1"><?php echo date('m/d/Y', strtotime($note_result->created_at)); ?></span>
                                                                     <div class="symbol symbol-50px">
 
                                                                         <span class="">

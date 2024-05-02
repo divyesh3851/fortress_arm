@@ -137,6 +137,8 @@ $personal_interest = ($selected_advisor_data->personal_interest) ? implode(",", 
 
 $financial_interest = ($selected_advisor_data->financial_interest) ? implode(",", (unserialize($selected_advisor_data->financial_interest))) : '';
 
+$business_interest = ($selected_advisor_data->business_interest) ? implode(",", (unserialize($selected_advisor_data->business_interest))) : '';
+
 $get_advisor_upcoming_activity_list = Advisor()->get_advisor_upcoming_activity($selected_advisor_data->id);
 
 $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected_advisor_data->id);
@@ -404,23 +406,9 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 													<a href="#" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1"><?php echo $selected_advisor_data->prefix . '. ' . $selected_advisor_data->first_name . ' ' . $selected_advisor_data->last_name; ?></a>
 													<!--end::Name-->
 
-													<div class="text-gray-600 mb-2">Advisor Since <?php echo date("m-d-Y", strtotime($selected_advisor_data->created_at)); ?></div>
-													<div class="rating mb-5">
-														<div class="rating-label checked">
-															<i class="ki-duotone ki-star fs-6"></i>
-														</div>
-														<div class="rating-label checked">
-															<i class="ki-duotone ki-star fs-6"></i>
-														</div>
-														<div class="rating-label checked">
-															<i class="ki-duotone ki-star fs-6"></i>
-														</div>
-														<div class="rating-label checked">
-															<i class="ki-duotone ki-star fs-6"></i>
-														</div>
-														<div class="rating-label checked">
-															<i class="ki-duotone ki-star fs-6"></i>
-														</div>
+													<div class="text-gray-600 mb-2">Contact Added On : <?php echo date("m/d/Y", strtotime($selected_advisor_data->created_at)); ?></div>
+													<div class=" mb-5">
+														<?php echo Settings()->show_ration_star($selected_advisor_data->rating); ?>
 													</div>
 
 													<!--begin::Position-->
@@ -435,7 +423,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 													<!--end::Position-->
 													<div class="d-flex flex-wrap flex-center">
 														<!--begin::Stats-->
-														<a href="tel:<?php echo $selected_advisor_data->mobile_no; ?>">
+														<a href="tel:<?php echo $selected_advisor_data->mobile_no; ?>" data-bs-toggle="tooltip" title="Call Contact">
 															<div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3">
 																<div class="fs-3 fw-bold text-gray-700">
 																	<i class="las la-phone-volume fs-2 text-success"></i>
@@ -444,7 +432,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 														</a>
 														<!--end::Stats-->
 														<!--begin::Stats-->
-														<a href="mailto:<?php echo $selected_advisor_data->email; ?>">
+														<a href="mailto:<?php echo $selected_advisor_data->email; ?>" data-bs-toggle="tooltip" title="Email Contact">
 															<div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mx-4 mb-3">
 																<div class="fs-2 fw-bold text-gray-700">
 																	<i class="las la-envelope-open-text fs-2  text-success"></i>
@@ -568,7 +556,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																	<div class="row  mt-4">
 																		<div class="col-md-6">
 																			<div class="text-gray-600">Birthdate </div>
-																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->birth_date) ? date("d, M Y", strtotime($selected_advisor_data->birth_date)) : '-'; ?></div>
+																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '-'; ?></div>
 																		</div>
 																		<div class="col-md-6">
 																			<div class="text-gray-600">Gender </div>
@@ -584,7 +572,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		<?php if ($selected_advisor_data->marital_status == 'Married') { ?>
 																			<div class="col-md-6">
 																				<div class="text-gray-600">Anniversary </div>
-																				<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->anniversary_date) ? date('d, M Y', strtotime($selected_advisor_data->anniversary_date)) : ''; ?></div>
+																				<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->anniversary_date) ? date('m/d/Y', strtotime($selected_advisor_data->anniversary_date)) : ''; ?></div>
 																			</div>
 																		<?php } ?>
 																	</div>
@@ -641,7 +629,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																			<span class="path3"></span>
 																		</i>
 																		<h3 class="fw-bold p-2 pt-0 pb-0">
-																			Employed
+																			Business Information
 																		</h3>
 																	</div>
 																	<!--end::Card title-->
@@ -704,12 +692,12 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		<div class="row mt-4">
 																			<div class="col-md-6">
 																				<div class="text-gray-600">Start Date </div>
-																				<div class="fw-bold mt-1"><?php echo date("F, d Y", strtotime($get_advisor_last_employment->start_date)); ?></div>
+																				<div class="fw-bold mt-1"><?php echo date("m/d/Y", strtotime($get_advisor_last_employment->start_date)); ?></div>
 																			</div>
 																			<div class="col-md-6">
 																				<?php if ($get_advisor_last_employment->end_date) { ?>
 																					<div class="text-gray-600">End Date </div>
-																					<div class="fw-bold mt-1"><?php echo date("F, d Y", strtotime($get_advisor_last_employment->end_date)); ?></div>
+																					<div class="fw-bold mt-1"><?php echo date("m/d/Y", strtotime($get_advisor_last_employment->end_date)); ?></div>
 																				<?php } ?>
 																			</div>
 																		</div>
@@ -858,13 +846,19 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		<?php  ?>
 																		<label class="form-label">Personal Interests</label>
 
-																		<input class="form-control" value="<?php echo $personal_interest; ?>" id="personal_interest" />
+																		<input class="form-control" placeholder="Add Tag" value="<?php echo $personal_interest; ?>" id="personal_interest" />
 
 																	</div>
 																	<div class="mb-10 financial_interest_tag_section">
 																		<label class="form-label">Financial Interests</label>
 
-																		<input class="form-control" value="<?php echo $financial_interest; ?>" id="financial_interest" />
+																		<input class="form-control" placeholder="Add Tag" value="<?php echo $financial_interest; ?>" id="financial_interest" />
+																	</div>
+
+																	<div class="mb-10 business_interest_tag_section">
+																		<label class="form-label">Business Interest</label>
+
+																		<input class="form-control" placeholder="Add Tag" value="<?php echo $business_interest; ?>" id="business_interest" />
 																	</div>
 																</div>
 															</div>
@@ -929,7 +923,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																				<?php echo $activity_result->note; ?>
 																			</div>
 																			<div class="meta mt-2">
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("m/d/Y", strtotime($activity_result->activity_date)); ?></span>
 																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo $activity_result->start_time; ?></span>
 																				<?php if ($activity_result->type) { ?>
 																					<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
@@ -946,7 +940,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																				<?php echo $activity_result->note; ?>
 																			</div>
 																			<div class="meta mt-2">
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("m/d/Y", strtotime($activity_result->activity_date)); ?></span>
 																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo $activity_result->start_time; ?></span>
 																				<?php if ($activity_result->type) { ?>
 																					<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
@@ -988,7 +982,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																<?php foreach ($get_advisor_note_list as $note_result) { ?>
 																	<div class="fs-5">
 																		<b><?php echo $note_result->label; ?></b>
-																		<span class="note_modal cursor-pointer" data-bs-toggle="modal" data-bs-target="#kt_modal_note" id="note_add" advisor_id="<?php echo $selected_advisor_data->id; ?>" note_id="<?php echo $note_result->id; ?>">
+																		<span class="note_modal cursor-pointer" data-bs-toggle="modal" data-bs-target="#kt_modal_note" id="note_add" advisor_id="<?php echo $selected_advisor_data->advisor_id; ?>" note_id="<?php echo $note_result->id; ?>">
 																			<i class="ki-duotone ki-pencil">
 																				<span class="path1"></span>
 																				<span class="path2"></span>
@@ -999,7 +993,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		<?php echo $note_result->note; ?>
 																	</div>
 																	<div class="meta mt-2">
-																		<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($note_result->created_at)); ?></span>
+																		<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("m/d/Y", strtotime($note_result->created_at)); ?></span>
 																	</div>
 																	<div class="separator separator-dashed mb-6 mt-5"></div>
 																<?php } ?>
@@ -1396,7 +1390,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input type="text" name="address_label" id="address_label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Street Address" required />
+									<input type="text" name="address_label" id="address_label" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Custom Address Label" required />
 									<!--end::Input-->
 								</div>
 							</div>
@@ -2019,9 +2013,11 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 	<script>
 		var personal_interest_input = document.querySelector("#personal_interest");
 		var financial_interest_input = document.querySelector("#financial_interest");
+		var business_interest_input = document.querySelector("#business_interest");
 
 		var personal_interest_tagify = new Tagify(personal_interest_input);
 		var financial_interest_tagify = new Tagify(financial_interest_input);
+		var business_interest_tagify = new Tagify(business_interest_input);
 
 		personal_interest_tagify.on('add', function(event) {
 			update_personal_interest_tag();
@@ -2031,12 +2027,20 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 			update_financial_interest_tag();
 		});
 
+		business_interest_tagify.on('add', function(event) {
+			update_business_interest_tag();
+		});
+
 		$(document).on('click', '.personal_interest_tag_section .tagify__tag', function() {
 			update_personal_interest_tag();
 		});
 
 		$(document).on('click', '.financial_interest_tag_section .tagify__tag', function() {
 			update_financial_interest_tag();
+		});
+
+		$(document).on('click', '.financial_interest_tag_section .tagify__tag', function() {
+			update_business_interest_tag();
 		});
 
 		function update_personal_interest_tag() {
@@ -2061,6 +2065,20 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 				action: 'update_advisor_financial_interest',
 				advisor_id: '<?php echo $selected_advisor_data->id ?>',
 				financial_interest: financial_interest_tag,
+				is_ajax: true,
+			}, function(result) {
+
+			});
+		}
+
+		function update_business_interest_tag() {
+
+			var business_interest_tag = business_interest_tagify.value.map(tagData => tagData.value);
+
+			$.post(ajax_url, {
+				action: 'update_advisor_business_interest',
+				advisor_id: '<?php echo $selected_advisor_data->id ?>',
+				business_interest: business_interest_tag,
 				is_ajax: true,
 			}, function(result) {
 

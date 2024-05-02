@@ -90,7 +90,7 @@ if (isset($_POST['carrier_appointed_export_submit'])) {
             $i++;
         }
 
-        $filename    = "Carrier Appointed List - " . date('m-d-Y') . ".csv";
+        $filename    = "Carrier Appointed List - " . date('Y_m_d') . ".csv";
 
         // Output an .xlsx file  
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);

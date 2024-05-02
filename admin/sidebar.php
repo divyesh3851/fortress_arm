@@ -10,9 +10,9 @@
                     <!--begin:Menu link-->
                     <a class="menu-link <?php echo ($page_name == 'dashboard') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/dashboard">
                         <span class="menu-icon">
-                            <i class="ki-outline ki-home-2 fs-2"></i>
+                            <i class="ki-outline ki-home-2 fs-2x"></i>
                         </span>
-                        <span class="menu-title">ARM Dashboard</span>
+                        <span class="menu-title">Dashboard</span>
                     </a>
                     <!--end:Menu link-->
                 </div>
@@ -24,39 +24,9 @@
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'advisor') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/advisor/advisor-list">
                             <span class="menu-icon">
-                                <i class="las la-user-friends fs-2"></i>
+                                <i class="las la-user-friends fs-2x"></i>
                             </span>
-                            <span class="menu-title">Advisor Information</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                <?php } ?>
-                <!--end:Menu item-->
-
-                <!--begin:Menu item-->
-                <?php if (Admin()->check_for_page_access('verification')) { ?>
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link <?php echo ($page_name == 'verification') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/verification/advisor-list">
-                            <span class="menu-icon">
-                                <i class="las la-check-double fs-2"></i>
-                            </span>
-                            <span class="menu-title">Verification</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                <?php } ?>
-                <!--end:Menu item-->
-
-                <!--begin:Menu item-->
-                <?php if (Admin()->check_for_page_access('notes')) { ?>
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link <?php echo ($page_name == 'notes') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/notes">
-                            <span class="menu-icon">
-                                <i class="las la-pencil-alt fs-2"></i>
-                            </span>
-                            <span class="menu-title">Notes</span>
+                            <span class="menu-title">Contacts</span>
                         </a>
                         <!--end:Menu link-->
                     </div>
@@ -69,13 +39,147 @@
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'message') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/message/messages-list">
                             <span class="menu-icon">
-                                <i class="las la-comment-dots fs-2"></i>
+                                <i class="las la-comment-dots fs-2x"></i>
                             </span>
-                            <span class="menu-title">Messages</span>
+                            <span class="menu-title">Conversations</span>
                         </a>
                         <!--end:Menu link-->
                     </div>
                 <?php } ?>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <?php if (Admin()->check_for_page_access('activities')) { ?>
+                    <div class="menu-item">
+                        <!--begin:Menu link-->
+                        <a class="menu-link <?php echo ($page_name == 'activity') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/activity/activity-list">
+                            <span class="menu-icon">
+                                <i class="las la-project-diagram fs-2x"></i>
+                            </span>
+                            <span class="menu-title">Activities</span>
+                        </a>
+                        <!--end:Menu link-->
+                    </div>
+                <?php } ?>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'calendar') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/calendar">
+                        <span class="menu-icon">
+                            <i class="las la-calendar fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Calendar</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'opportunities') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-compress-arrows-alt fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Opportunities</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <?php if (Admin()->check_for_page_access('verification')) { ?>
+                    <div class="menu-item">
+                        <!--begin:Menu link-->
+                        <a class="menu-link <?php echo ($page_name == 'verification') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/verification/advisor-list">
+                            <span class="menu-icon">
+                                <i class="las la-check-double fs-2x"></i>
+                            </span>
+                            <span class="menu-title">Verification</span>
+                        </a>
+                        <!--end:Menu link-->
+                    </div>
+                <?php } ?>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'sites') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-globe fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Sites</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'marketing') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-bullhorn fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Marketing</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'automation') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-robot fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Automation</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'reputation') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-star fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Reputation</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'reporting') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-notes-medical fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Reporting</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'university') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-university fs-2"></i>
+                        </span>
+                        <span class="menu-title">University</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
                 <!--end:Menu item-->
 
                 <!--begin:Menu item-->
@@ -84,9 +188,50 @@
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'doc_vault') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/document/document-vault">
                             <span class="menu-icon">
-                                <i class="lab la-dropbox fs-2"></i>
+                                <i class="lab la-dropbox fs-2x"></i>
                             </span>
                             <span class="menu-title">Document Vault</span>
+                        </a>
+                        <!--end:Menu link-->
+                    </div>
+                <?php } ?>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'important_links') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-link fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Important Links</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link <?php echo ($page_name == 'marketplace') ? 'active' : ''; ?>" href="">
+                        <span class="menu-icon">
+                            <i class="las la-chart-bar fs-2x"></i>
+                        </span>
+                        <span class="menu-title">Marketplace</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <?php if (Admin()->check_for_page_access('notes')) { ?>
+                    <div class="menu-item">
+                        <!--begin:Menu link-->
+                        <a class="menu-link <?php echo ($page_name == 'notes') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/notes">
+                            <span class="menu-icon">
+                                <i class="las la-pencil-alt fs-2x"></i>
+                            </span>
+                            <span class="menu-title">Notes</span>
                         </a>
                         <!--end:Menu link-->
                     </div>
@@ -99,7 +244,7 @@
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'campaigns') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/campaigns/list">
                             <span class="menu-icon">
-                                <i class="las la-bullhorn fs-2"></i>
+                                <i class="las la-bullhorn fs-2x"></i>
                             </span>
                             <span class="menu-title">Campaigns</span>
                         </a>
@@ -114,7 +259,7 @@
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'newsletter') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/newsletter">
                             <span class="menu-icon">
-                                <i class="las la-envelope-open fs-2"></i>
+                                <i class="las la-envelope-open fs-2x"></i>
                             </span>
                             <span class="menu-title">Newsletter</span>
                         </a>
@@ -129,7 +274,7 @@
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'analytics') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/analytics/dashboard">
                             <span class="menu-icon">
-                                <i class="lar la-chart-bar fs-2"></i>
+                                <i class="lar la-chart-bar fs-2x"></i>
                             </span>
                             <span class="menu-title">Analytics</span>
                         </a>
@@ -144,7 +289,7 @@
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'compliance') ? 'active' : ''; ?>" href="">
                             <span class="menu-icon">
-                                <i class="las la-file-alt fs-2"></i>
+                                <i class="las la-file-alt fs-2x"></i>
                             </span>
                             <span class="menu-title">Compliance</span>
                         </a>
@@ -154,20 +299,6 @@
                 <?php } ?>
 
 
-                <!--begin:Menu item-->
-                <?php if (Admin()->check_for_page_access('activities')) { ?>
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link <?php echo ($page_name == 'activity') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/activity/activity-list/">
-                            <span class="menu-icon">
-                                <i class="las la-project-diagram fs-2"></i>
-                            </span>
-                            <span class="menu-title">Activities</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                <?php } ?>
-                <!--end:Menu item-->
 
 
                 <!--begin:Menu item-->
@@ -178,9 +309,9 @@
                         <!--begin:Menu link-->
                         <span class="menu-link">
                             <span class="menu-icon">
-                                <i class="ki-outline ki-abstract-26 fs-2"></i>
+                                <i class="las la-user-tie fs-2x"></i>
                             </span>
-                            <span class="menu-title">User Management</span>
+                            <span class="menu-title">User</span>
                             <span class="menu-arrow"></span>
                         </span>
                         <!--end:Menu link-->
@@ -215,7 +346,7 @@
                         <!--begin:Menu link-->
                         <span class="menu-link">
                             <span class="menu-icon">
-                                <i class="ki-outline ki-abstract-26 fs-2"></i>
+                                <i class="las la-cog fs-2x"></i>
                             </span>
                             <span class="menu-title">Settings</span>
                             <span class="menu-arrow"></span>

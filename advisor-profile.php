@@ -72,11 +72,11 @@ $selected_long_term_care_insurance = ($get_selected_advisor_interest && $get_sel
 $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_advisor_interest->critical_illness) ? explode(",", $get_selected_advisor_interest->critical_illness) : array();
 
 
-$birth_date = ($selected_advisor_data->birth_date) ? date("d, F Y ", strtotime($selected_advisor_data->birth_date)) : '';
+$birth_date = ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '';
 
-$anniversary_date = ($selected_advisor_data->anniversary_date) ? date("d, F Y ", strtotime($selected_advisor_data->anniversary_date)) : '';
+$anniversary_date = ($selected_advisor_data->anniversary_date) ? date("m/d/Y", strtotime($selected_advisor_data->anniversary_date)) : '';
 
-$spouses_birthdate = (Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate")) ? date("d, F Y ", strtotime(Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate"))) : '';
+$spouses_birthdate = (Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate")) ? date("m/d/Y ", strtotime(Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate"))) : '';
 
 $type_of_licenses = ($selected_advisor_data->licenses_type) ? explode(',', $selected_advisor_data->licenses_type) : array();
 
@@ -957,7 +957,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <label class="fw-semibold fs-6 mb-2">Start Date</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <input type="text" name="emp_start_date" id="emp_start_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Start Date" value="<?php echo (isset($get_last_employment) && $get_last_employment->start_date) ? date('d, F Y', strtotime($get_last_employment->start_date)) : ''; ?>" />
+                                                                <input type="text" name="emp_start_date" id="emp_start_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Start Date" value="<?php echo (isset($get_last_employment) && $get_last_employment->start_date) ? date('m/d/Y', strtotime($get_last_employment->start_date)) : ''; ?>" />
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-2 fv-row">
@@ -965,7 +965,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <label class="fw-semibold fs-6 mb-2">End Date</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <input type="text" name="emp_end_date" id="emp_end_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="End Date" value="<?php echo (isset($get_last_employment) && $get_last_employment->end_date) ? date('d, F Y', strtotime($get_last_employment->end_date)) : ''; ?>" />
+                                                                <input type="text" name="emp_end_date" id="emp_end_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="End Date" value="<?php echo (isset($get_last_employment) && $get_last_employment->end_date) ? date('m/d/Y', strtotime($get_last_employment->end_date)) : ''; ?>" />
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-8 fv-row">

@@ -90,7 +90,7 @@ if (isset($_POST['market_export_submit'])) {
             $i++;
         }
 
-        $filename    = "Market List - " . date('m-d-Y') . ".csv";
+        $filename    = "Market List - " . date('Y_m_d') . ".csv";
 
         // Output an .xlsx file  
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);

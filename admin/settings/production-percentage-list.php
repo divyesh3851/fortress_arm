@@ -91,7 +91,7 @@ if (isset($_POST['production_percentage_export_submit'])) {
             $i++;
         }
 
-        $filename    = "Production Percentage List - " . date('m-d-Y') . ".csv";
+        $filename    = "Production Percentage List - " . date('Y_m_d') . ".csv";
 
         // Output an .xlsx file  
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);

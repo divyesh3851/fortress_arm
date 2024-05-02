@@ -46,6 +46,121 @@ class Settings
         add_action('wp_ajax_market_delete', array($this, 'market_delete'));
     }
 
+    public function show_ration_star($rating = 0)
+    {
+
+        $rating_html = '<div class="rating">';
+
+        if ($rating == 0) {
+            $rating_html .= '<div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>';
+        }
+        if ($rating == 1) {
+
+            $rating_html .= '<div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>';
+        }
+        if ($rating == 2) {
+            $rating_html .= '<div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>';
+        }
+        if ($rating == 3) {
+            $rating_html .= '<div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>';
+        }
+
+        if ($rating == 4) {
+            $rating_html .= '<div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label ">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>';
+        }
+
+        if ($rating == 5) {
+            $rating_html .= '<div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>
+                    <div class="rating-label checked">
+                        <i class="ki-duotone ki-star fs-6"></i>
+                    </div>';
+        }
+        $rating_html .= '</div>';
+
+        return $rating_html;
+    }
+
     public function get_address_type_list()
     {
         $address_type = array(
@@ -132,10 +247,7 @@ class Settings
     {
         return array(
             "1" => "Fixed Index Annuities",
-            "2" => "Variable Annuities",
             "3" => "Multi-Year Guaranteed Annuities",
-            "4" => "Single Premium Immediate Annuities",
-            "5" => "Deferred Income Annuities",
             "6" => "Long-Term Care Annuities",
         );
     }
@@ -143,13 +255,10 @@ class Settings
     public function get_interest_life_insurance()
     {
         return array(
-            "1" => "IUL",
-            "2" => "VUL",
-            "3" => "Term",
-            "4" => "Living Benefits",
-            "5" => "Whole Life",
-            "6" => "Final Expense",
-            "7" => "Advanced Case design like premium finance, executive bonus structure",
+            "1" => "Indexed Universal Life",
+            "2" => "Term",
+            "3" => "Whole Life",
+            "4" => "Advanced Planning",
         );
     }
 

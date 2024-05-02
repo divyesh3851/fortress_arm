@@ -62,10 +62,10 @@
 
                                         <!--begin::Info-->
                                         <?php if ($greeting_result['greeting'] == 'anniversary') { ?>
-                                            <div class="fw-semibold text-gray-500 mb-6">Anniversary Date : <?php echo ($greeting_result['greeting_date']) ? date("F d,Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
+                                            <div class="fw-semibold text-gray-500 mb-6">Anniversary Date : <?php echo ($greeting_result['greeting_date']) ? date("m/d/Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
                                         <?php } ?>
                                         <?php if ($greeting_result['greeting'] == 'birthday') { ?>
-                                            <div class="fw-semibold text-gray-500 mb-6">Birthday Date : <?php echo ($greeting_result['greeting_date']) ? date("F d,Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
+                                            <div class="fw-semibold text-gray-500 mb-6">Birthday Date : <?php echo ($greeting_result['greeting_date']) ? date("m/d/Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
                                         <?php } ?>
                                         <!--end::Info-->
                                         <div class="d-flex">

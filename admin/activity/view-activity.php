@@ -117,7 +117,7 @@ $get_advisor_activity_list = Admin()->get_advisor_activity_list(siget('advisor_i
                                                                     <!--begin::Description-->
                                                                     <div class="d-flex align-items-center mt-1 fs-6">
                                                                         <!--begin::Info-->
-                                                                        <div class="text-muted me-2 fs-7">Created at <?php echo date("F d,Y", strtotime($activity_result->created_at)); ?> by <?php echo  $name; ?></div>
+                                                                        <div class="text-muted me-2 fs-7">Created at <?php echo date("m/d/Y", strtotime($activity_result->created_at)); ?> by <?php echo  $name; ?></div>
                                                                         <!--end::Info-->
                                                                         <!--begin::User-->
                                                                         <div class="symbol symbol-circle symbol-25px" data-bs-toggle="tooltip" data-bs-boundary="window" data-bs-placement="top" title="<?php echo  $name; ?>">

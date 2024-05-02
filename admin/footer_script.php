@@ -14,7 +14,7 @@
 
     $('.flatpickr').flatpickr({
         enableTime: !1,
-        dateFormat: "d, M Y",
+        dateFormat: "m/d/Y",
         allowInput: true,
     });
 
@@ -31,6 +31,7 @@
         var dateString = date;
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var parts = dateString.split('-');
-        return formattedDate = parts[2] + ', ' + months[parseInt(parts[1]) - 1] + ' ' + parts[0];
+        return formattedDate = parts[1] + '/' + parts[2] + '/' + parts[0];
+        //return formattedDate = parts[2] + ', ' + months[parseInt(parts[1]) - 1] + ' ' + parts[0];
     }
 </script>

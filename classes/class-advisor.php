@@ -34,6 +34,24 @@ class Advisor
         add_action('wp_ajax_get_selected_activity_data', array($this, 'get_selected_activity_data'));
     }
 
+    public function get_today_appointment()
+    {
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date = '" . date('Y-m-d') . "' AND status = 0");
+    }
+
+    public function get_count_total_advisor_by_status($status)
+    {
+        global $wpdb;
+
+        if (!$status) {
+            return false;
+        }
+
+        return $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE advisor_status = " . $status . " AND status = 0 ");
+    }
+
     public function get_advisor_records_between_two_dates($start_date = '', $end_date = '', $advisor_status = array())
     {
         global $wpdb;
@@ -468,17 +486,25 @@ class Advisor
         return $wpdb->get_results("SELECT * FROM activity WHERE activity_date < '" . date('Y-m-d') . "' AND user_id = " . $advisor_id . " ORDER BY activity_date DESC LIMIT 0,5");
     }
 
-    public function get_advisor_upcoming_activity($advisor_id)
+    public function get_advisor_upcoming_activity($id)
     {
         global $wpdb;
 
-        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+        if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $id = ($_SESSION['fbs_arm_admin_id']) ? $_SESSION['fbs_arm_admin_id'] : $id;
+        } else {
+            $id = (sipost('advisor_id')) ? sipost('advisor_id') : $id;
+        }
 
-        if (!$advisor_id) {
+        if (!$id) {
             return false;
         }
 
-        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND user_id = " . $advisor_id . " ORDER BY activity_date ASC LIMIT 0,5");
+        if (isset($_SESSION['fbs_arm_admin_id'])) {
+            return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND logged_id = " . $id . " ORDER BY activity_date ASC LIMIT 0,5");
+        } else {
+            return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND user_id = " . $id . " ORDER BY activity_date ASC LIMIT 0,5");
+        }
     }
 
     public function get_selected_activity_data($activity_id = '')
@@ -574,6 +600,28 @@ class Advisor
 
             return true;
         }
+    }
+
+    public function update_advisor_business_interest()
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : '';
+
+        if (!$advisor_id) {
+            return false;
+        }
+
+        $business_interest = (sipost('business_interest')) ? serialize(sipost('business_interest')) : '';
+
+        $business_interest_old = $wpdb->get_var("SELECT business_interest FROM advisor WHERE id = " . $advisor_id);
+
+        $wpdb->update("advisor", array("business_interest" => $business_interest), array("id" => $advisor_id));
+
+        Admin()->create_track_log_activity($advisor_id, $advisor_id, 'business interest update', 'business_interest_update', unserialize($business_interest_old), sipost('business_interest'), 'business interest has been updated', 'advisor');
+
+        echo json_encode(array("status" => true));
+        die();
     }
 
     public function update_advisor_financial_interest()
@@ -1392,7 +1440,7 @@ class Advisor
             "city"              => sipost("city"),
             "state"             => sipost("state"),
             "birth_date"        => $birth_date,
-            "advisor_status"    => sipost("advisor_status"),
+            "advisor_status"    => (sipost("advisor_status")) ? sipost("advisor_status") : 1,
             "designation"       => sipost("designation"),
             "licenses_type"     => $licenses_type,
             "marital_status"    => sipost("marital_status"),
@@ -1408,7 +1456,7 @@ class Advisor
             "rating"            => sipost('rating'),
             "created_at"        => current_time('mysql'),
             "created_by"        => $created_by,
-            "created_by_type"   => $created_by_type
+            "created_by_type"   => $created_by_type,
         );
 
         $wpdb->insert("advisor", $advisor_info);

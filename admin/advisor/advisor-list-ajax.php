@@ -179,7 +179,7 @@ class DataTableApi
             //$item['CreditCardType'] = $item['CreditCardType'] === 'americanexpress' ? 'american-express' : $item['CreditCardType'];
 
             // reformat datetime 
-            $item['created_at'] = date('d M Y, g:i a', strtotime($item['created_at']));
+            $item['created_at'] = date('m/d/Y', strtotime($item['created_at']));
 
             return $item;
         }, $data);

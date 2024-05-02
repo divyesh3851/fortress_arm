@@ -5,7 +5,7 @@
         <!--begin::Modal content-->
         <div class="modal-content modal-rounded">
             <!--begin::Modal header-->
-            <div class="modal-header py-7 d-flex justify-content-between">
+            <div class="modal-header py-5 d-flex justify-content-between">
                 <!--begin::Modal title-->
                 <h2>Notification</h2>
                 <!--end::Modal title-->
@@ -17,7 +17,8 @@
             </div>
             <!--begin::Modal header-->
             <!--begin::Modal body-->
-            <div class="modal-body scroll-y m-5">
+            <div class="modal-body scroll-y m-0">
+                <h4 class="mb-8">Birthdays and Anniversaries</h4>
                 <!--begin::Row-->
                 <div class="row g-6 g-xl-9">
                     <?php
@@ -62,10 +63,10 @@
 
                                         <!--begin::Info-->
                                         <?php if ($greeting_result['greeting'] == 'anniversary') { ?>
-                                            <div class="fw-semibold text-gray-500 mb-6">Anniversary Date : <?php echo ($greeting_result['greeting_date']) ? date("F d,Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
+                                            <div class="fw-semibold text-gray-500 mb-6">Anniversary Date : <?php echo ($greeting_result['greeting_date']) ? date("m/d/Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
                                         <?php } ?>
                                         <?php if ($greeting_result['greeting'] == 'birthday') { ?>
-                                            <div class="fw-semibold text-gray-500 mb-6">Birthday Date : <?php echo ($greeting_result['greeting_date']) ? date("F d,Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
+                                            <div class="fw-semibold text-gray-500 mb-6">Birthday Date : <?php echo ($greeting_result['greeting_date']) ? date("m/d/Y", strtotime($greeting_result['greeting_date'])) : ''; ?></div>
                                         <?php } ?>
                                         <!--end::Info-->
                                         <div class="d-flex">

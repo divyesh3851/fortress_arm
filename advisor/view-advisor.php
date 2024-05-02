@@ -384,7 +384,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 													<a href="#" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1"><?php echo $selected_advisor_data->prefix . '. ' . $selected_advisor_data->first_name . ' ' . $selected_advisor_data->last_name; ?></a>
 													<!--end::Name-->
 
-													<div class="text-gray-600 mb-2">Advisor Since <?php echo date("m-d-Y", strtotime($selected_advisor_data->created_at)); ?></div>
+													<div class="text-gray-600 mb-2">Advisor Since <?php echo date("m/d/Y", strtotime($selected_advisor_data->created_at)); ?></div>
 													<div class="rating mb-5">
 														<div class="rating-label checked">
 															<i class="ki-duotone ki-star fs-6"></i>
@@ -548,7 +548,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																	<div class="row  mt-4">
 																		<div class="col-md-6">
 																			<div class="text-gray-600">Birthdate </div>
-																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->birth_date) ? date("d, M Y", strtotime($selected_advisor_data->birth_date)) : '-'; ?></div>
+																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '-'; ?></div>
 																		</div>
 																		<div class="col-md-6">
 																			<div class="text-gray-600">Gender </div>
@@ -564,7 +564,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		<?php if ($selected_advisor_data->marital_status == 'Married') { ?>
 																			<div class="col-md-6">
 																				<div class="text-gray-600">Anniversary </div>
-																				<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->anniversary_date) ? date('d, M Y', strtotime($selected_advisor_data->anniversary_date)) : ''; ?></div>
+																				<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->anniversary_date) ? date('m/d/Y', strtotime($selected_advisor_data->anniversary_date)) : ''; ?></div>
 																			</div>
 																		<?php } ?>
 																	</div>
@@ -684,12 +684,12 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		<div class="row mt-4">
 																			<div class="col-md-6">
 																				<div class="text-gray-600">Start Date </div>
-																				<div class="fw-bold mt-1"><?php echo date("F, d Y", strtotime($get_advisor_last_employment->start_date)); ?></div>
+																				<div class="fw-bold mt-1"><?php echo date("m/d/Y", strtotime($get_advisor_last_employment->start_date)); ?></div>
 																			</div>
 																			<div class="col-md-6">
 																				<?php if ($get_advisor_last_employment->end_date) { ?>
 																					<div class="text-gray-600">End Date </div>
-																					<div class="fw-bold mt-1"><?php echo date("F, d Y", strtotime($get_advisor_last_employment->end_date)); ?></div>
+																					<div class="fw-bold mt-1"><?php echo date("m/d/Y", strtotime($get_advisor_last_employment->end_date)); ?></div>
 																				<?php } ?>
 																			</div>
 																		</div>
@@ -909,7 +909,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																				<?php echo $activity_result->note; ?>
 																			</div>
 																			<div class="meta mt-2">
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("m/d/Y", strtotime($activity_result->activity_date)); ?></span>
 																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo $activity_result->start_time; ?></span>
 																				<?php if ($activity_result->type) { ?>
 																					<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
@@ -926,7 +926,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																				<?php echo $activity_result->note; ?>
 																			</div>
 																			<div class="meta mt-2">
-																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($activity_result->activity_date)); ?></span>
+																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("m/d/Y", strtotime($activity_result->activity_date)); ?></span>
 																				<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo $activity_result->start_time; ?></span>
 																				<?php if ($activity_result->type) { ?>
 																					<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo Settings()->get_selected_activity_type_name($activity_result->type); ?></span>
@@ -979,7 +979,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		<?php echo $note_result->note; ?>
 																	</div>
 																	<div class="meta mt-2">
-																		<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("d, F Y", strtotime($note_result->created_at)); ?></span>
+																		<span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"><?php echo date("m/d/Y", strtotime($note_result->created_at)); ?></span>
 																	</div>
 																	<div class="separator separator-dashed mb-6 mt-5"></div>
 																<?php } ?>

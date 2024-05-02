@@ -396,7 +396,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                         <!--begin::Datatable-->
                                         <table id="kt_datatable_example_1" class="table align-middle table-row-dashed fs-6 gy-5">
                                             <thead>
-                                                <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                                <tr class="text-start text-gray-500 fw-bold fs-7  gs-0">
                                                     <th class="w-10px pe-2">
                                                         <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                                                             <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
@@ -408,7 +408,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                                     <th>City</th>
                                                     <th>State</th>
                                                     <th>Lead Source</th>
-                                                    <th>Registerd Date</th>
+                                                    <th>Contact Added On </th>
                                                     <th class="text-start">Actions</th>
                                                 </tr>
                                             </thead>
@@ -828,35 +828,35 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                             className: 'text-start',
                             render: function(data, type, row) {
                                 return `<div class="d-flex">  
-                                            <a href="tel:${data.mobile_no}">
+                                            <a href="tel:${data.mobile_no}" data-bs-toggle="tooltip" title="Call Contact">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">
                                                         <i class="las la-phone-volume fs-2 text-success"></i>
                                                     </div>
                                                 </div>
                                             </a> 
-                                            <a href="mailto:${data.email}">
+                                            <a href="mailto:${data.email}"  data-bs-toggle="tooltip" title="Email Contact">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-2 fw-bold text-gray-700">
                                                         <i class="las la-envelope-open-text fs-2  text-success"></i>
                                                     </div>
                                                 </div> 
                                             </a>
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.record_id}">
+                                            <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.record_id}" data-bs-toggle="tooltip" title="View Quick Info">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">
                                                         <i class="las la-eye fs-2 text-primary"></i>
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}">
+                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" data-bs-toggle="tooltip" title="Edit Contact">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-2 fw-bold text-gray-700">
                                                         <i class="las la-user-edit fs-2 text-primary"></i>
                                                     </div>
                                                 </div> 
                                             </a>
-                                            <a href="#" data-kt-docs-table-filter="delete_row" advisor_id="${data.record_id}">
+                                            <a href="#" data-kt-docs-table-filter="delete_row" advisor_id="${data.record_id}" data-bs-toggle="tooltip" title="Delete Contact">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-2 fw-bold text-gray-700">
                                                         <i class="las la-trash-alt fs-2 text-primary"></i>

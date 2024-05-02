@@ -90,7 +90,7 @@ if (isset($_POST['lead_source_export_submit'])) {
             $i++;
         }
 
-        $filename    = "Lead Source List - " . date('m-d-Y') . ".csv";
+        $filename    = "Lead Source List - " . date('Y_m_d') . ".csv";
 
         // Output an .xlsx file  
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);

@@ -75,11 +75,11 @@ $selected_long_term_care_insurance = ($get_selected_advisor_interest && $get_sel
 $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_advisor_interest->critical_illness) ? explode(",", $get_selected_advisor_interest->critical_illness) : array();
 
 
-$birth_date = ($selected_advisor_data->birth_date) ? date("d, F Y ", strtotime($selected_advisor_data->birth_date)) : '';
+$birth_date = ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '';
 
-$anniversary_date = ($selected_advisor_data->anniversary_date) ? date("d, F Y ", strtotime($selected_advisor_data->anniversary_date)) : '';
+$anniversary_date = ($selected_advisor_data->anniversary_date) ? date("m/d/Y", strtotime($selected_advisor_data->anniversary_date)) : '';
 
-$spouses_birthdate = (Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate")) ? date("d, F Y ", strtotime(Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate"))) : '';
+$spouses_birthdate = (Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate")) ? date("m/d/Y", strtotime(Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate"))) : '';
 
 $type_of_licenses = ($selected_advisor_data->licenses_type) ? explode(',', $selected_advisor_data->licenses_type) : array();
 
@@ -577,9 +577,9 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <div class="col-md-6 fv-row">
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
-                                                                                    <i class="bi bi-envelope fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                                                                    <i class="bi bi-instagram fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
                                                                                 </span>
-                                                                                <input type="email" class="form-control" name="email_opt_out" id="email_opt_out" placeholder="Email Opt Out" aria-label="Email Opt Out" aria-describedby="basic-addon1" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "email_opt_out"); ?>" />
+                                                                                <input type="email" class="form-control" name="instagram_url" id="instagram_url" placeholder="Instagram URL" aria-label="Instagram URL" aria-describedby="basic-addon1" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "instagram_url"); ?>" />
                                                                             </div>
                                                                         </div>
                                                                         <!--begin::Input wrapper-->
@@ -812,6 +812,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
                                                                 <textarea name="organization" id="organization" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Are you active within the leadership of any of these organizations, locally or nationally?" /><?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "organization"); ?></textarea>
+                                                                <em>Are you active within the leadership of any of these organizations, locally or nationally? </em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -862,7 +863,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($carrier_result->id, $carrier_with_business)) ? 'selected' : ''; ?> value="<?php echo $carrier_result->id; ?>"><?php echo $carrier_result->name; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -912,7 +912,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($production_percentage_result->id, $production_percentages)) ? 'selected' : ''; ?> value="<?php echo $production_percentage_result->id; ?>"><?php echo $production_percentage_result->type; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-4 fv-row">
@@ -926,7 +925,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($market_result->id, $markets)) ? 'selected' : ''; ?> value="<?php echo $market_result->id; ?>"><?php echo $market_result->type; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -948,6 +946,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                     </div>
                                                 </div>
                                                 <!--begin::Step 6-->
+                                                <?php /*
                                                 <div data-kt-stepper-element="content">
                                                     <div class="w-100">
                                                         <!--begin::Input group-->
@@ -1222,6 +1221,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                         </div>
                                                     </div>
                                                 </div>
+                                                */ ?>
                                                 <!--end::Step 6-->
                                                 <!--begin::Step 7-->
                                                 <div data-kt-stepper-element="content">
