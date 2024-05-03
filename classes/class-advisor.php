@@ -34,7 +34,20 @@ class Advisor
         add_action('wp_ajax_get_selected_activity_data', array($this, 'get_selected_activity_data'));
     }
 
-    public function get_today_appointment()
+    public function get_upcoming_activity($id)
+    {
+        global $wpdb;
+
+        $id = ($id) ? $id : $_SESSION['fbs_arm_admin_id'];
+
+        if (!$id) {
+            return false;
+        }
+
+        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date > '" . date('Y-m-d') . "' AND logged_id = " . $id . " ORDER BY activity_date ASC LIMIT 0,5");
+    }
+
+    public function get_today_activity()
     {
         global $wpdb;
 
@@ -490,21 +503,13 @@ class Advisor
     {
         global $wpdb;
 
-        if (isset($_SESSION['fbs_arm_admin_id'])) {
-            $id = ($_SESSION['fbs_arm_admin_id']) ? $_SESSION['fbs_arm_admin_id'] : $id;
-        } else {
-            $id = (sipost('advisor_id')) ? sipost('advisor_id') : $id;
-        }
+        $id = (sipost('advisor_id')) ? sipost('advisor_id') : $id;
 
         if (!$id) {
             return false;
         }
 
-        if (isset($_SESSION['fbs_arm_admin_id'])) {
-            return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND logged_id = " . $id . " ORDER BY activity_date ASC LIMIT 0,5");
-        } else {
-            return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND user_id = " . $id . " ORDER BY activity_date ASC LIMIT 0,5");
-        }
+        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date >= '" . date('Y-m-d') . "' AND user_id = " . $id . " ORDER BY activity_date ASC LIMIT 0,5");
     }
 
     public function get_selected_activity_data($activity_id = '')
@@ -1265,7 +1270,7 @@ class Advisor
 
         $this->update_advisor_meta($advisor_id, 'total_children', sipost('total_children'));
 
-        $this->update_advisor_meta($advisor_id, 'email_opt_out', sipost('email_opt_out'));
+        $this->update_advisor_meta($advisor_id, 'instagram_url', sipost('instagram_url'));
 
         $this->update_advisor_meta($advisor_id, 'facebook_url', sipost('facebook_url'));
 
@@ -1494,7 +1499,7 @@ class Advisor
 
             $this->update_advisor_meta($last_id, 'total_children', sipost('total_children'));
 
-            $this->update_advisor_meta($last_id, 'email_opt_out', sipost('email_opt_out'));
+            $this->update_advisor_meta($last_id, 'instagram_url', sipost('instagram_url'));
 
             $this->update_advisor_meta($last_id, 'facebook_url', sipost('facebook_url'));
 

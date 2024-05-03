@@ -487,19 +487,13 @@ $get_market_list = Settings()->get_market_list(); ?>
                                                                     <div class="row mb-4 mb-7">
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Email Opt Out</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
-                                                                            <input type="text" name="email_opt_out" id="email_opt_out" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Email Opt Out" />
+                                                                            <input type="url" name="instagram_url" id="instagram_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Instagram URL" />
                                                                             <!--end::Input-->
                                                                         </div>
                                                                         <!--end::Input wrapper-->
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Facebok URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="facebook_url" id="facebook_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Facebok URL" />
                                                                             <!--end::Input-->
@@ -509,9 +503,6 @@ $get_market_list = Settings()->get_market_list(); ?>
                                                                     <div class="row mb-4 mb-7">
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">LinkedIn URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="linkedin_url" id="linkedin_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="LinkedIn URL" />
                                                                             <!--end::Input-->
@@ -519,9 +510,6 @@ $get_market_list = Settings()->get_market_list(); ?>
                                                                         <!--end::Input wrapper-->
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Youtube URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="youtube_url" id="youtube_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Youtube URL" />
                                                                             <!--end::Input-->
@@ -531,9 +519,6 @@ $get_market_list = Settings()->get_market_list(); ?>
                                                                     <div class="row mb-4 mb-7">
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Twitter URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="twitter_url" id="twitter_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Twitter URL" />
                                                                             <!--end::Input-->

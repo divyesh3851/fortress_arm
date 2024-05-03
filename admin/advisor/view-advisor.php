@@ -530,7 +530,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																			<span class="path3"></span>
 																		</i>
 																		<h3 class="fw-bold p-2 pt-0 pb-0">
-																			Profile Info
+																			Profile Information
 																		</h3>
 																	</div>
 																	<!--end::Card title-->
@@ -588,6 +588,8 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		</div>
 																		<div class="col-md-7 text-sm-end">
 																			<?php
+																			$instagram_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'instagram_url');
+
 																			$facebook_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'facebook_url');
 
 																			$linkedin_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'linkedin_url');
@@ -595,6 +597,10 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																			$youtube_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'youtube_url');
 
 																			$twitter_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'twitter_url');
+
+																			if ($instagram_url) { ?>
+																				<a class="p-1" href="<?php echo $instagram_url; ?>" target="_blank"><img src="<?php echo site_url(); ?>/assets/media/svg/social-logos/instagram.svg"></a>
+																			<?php }
 
 																			if ($facebook_url) { ?>
 																				<a class="p-1" href="<?php echo $facebook_url; ?>" target="_blank"><img src="<?php echo site_url(); ?>/assets/media/svg/social-logos/facebook.svg"></a>
@@ -982,7 +988,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																<?php foreach ($get_advisor_note_list as $note_result) { ?>
 																	<div class="fs-5">
 																		<b><?php echo $note_result->label; ?></b>
-																		<span class="note_modal cursor-pointer" data-bs-toggle="modal" data-bs-target="#kt_modal_note" id="note_add" advisor_id="<?php echo $selected_advisor_data->advisor_id; ?>" note_id="<?php echo $note_result->id; ?>">
+																		<span class="note_modal cursor-pointer" data-bs-toggle="modal" data-bs-target="#kt_modal_note" id="note_add" advisor_id="<?php echo $selected_advisor_data->id; ?>" note_id="<?php echo $note_result->id; ?>">
 																			<i class="ki-duotone ki-pencil">
 																				<span class="path1"></span>
 																				<span class="path2"></span>

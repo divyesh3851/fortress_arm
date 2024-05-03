@@ -81,10 +81,11 @@ Admin()->check_login();
                             <!--begin::Content wrapper-->
                             <div class="d-flex flex-column flex-column-fluid">
                                 <!--begin::Toolbar-->
+                                <?php /*
                                 <div id="kt_app_toolbar" class="app-toolbar pt-6 pb-2">
                                     <!--begin::Toolbar container-->
                                     <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex align-items-stretch">
-                                        <!--begin::Toolbar wrapper-->
+                                        <!--begin::Toolbar wrapper--> 
                                         <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
                                             <!--begin::Page title-->
                                             <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
@@ -98,6 +99,7 @@ Admin()->check_login();
                                     </div>
                                     <!--end::Toolbar container-->
                                 </div>
+                                */ ?>
                                 <!--end::Toolbar-->
                                 <!--begin::Content-->
                                 <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -119,7 +121,7 @@ Admin()->check_login();
                                             <!--begin::Card body-->
                                             <div class="card-body">
                                                 <!--begin::Calendar-->
-                                                <div id="kt_calendar_app"></div>
+                                                <div id="event_calendar"></div>
                                                 <!--end::Calendar-->
                                             </div>
                                             <!--end::Card body-->
@@ -140,7 +142,7 @@ Admin()->check_login();
                                                             <h2 class="fw-bold" data-kt-calendar="title">Add Event</h2>
                                                             <!--end::Modal title-->
                                                             <!--begin::Close-->
-                                                            <div class="btn btn-icon btn-sm btn-active-icon-primary" id="kt_modal_add_event_close">
+                                                            <div class="btn btn-icon btn-sm btn-active-icon-primary" id="kt_modal_add_event_close" data-bs-dismiss="modal">
                                                                 <i class="ki-outline ki-cross fs-1"></i>
                                                             </div>
                                                             <!--end::Close-->
@@ -385,11 +387,451 @@ Admin()->check_login();
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <?php require SITE_DIR . '/admin/footer_script.php'; ?>
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/apps/calendar/calendar.js"></script>
     <!--end::Global Javascript Bundle-->
     <!--begin::Custom Javascript(used for this page only)-->
     <!--end::Custom Javascript-->
     <script>
+        "use strict";
+        var KTAppCalendar = (function() {
+            var e,
+                t,
+                n,
+                a,
+                o,
+                r,
+                i,
+                l,
+                d,
+                c,
+                s,
+                m,
+                u,
+                v,
+                f,
+                p,
+                y,
+                D,
+                k,
+                _,
+                b,
+                g,
+                S,
+                h,
+                T,
+                Y,
+                w,
+                x,
+                L,
+                E = {
+                    id: "",
+                    eventName: "",
+                    eventDescription: "",
+                    eventLocation: "",
+                    startDate: "",
+                    endDate: "",
+                    allDay: !1
+                };
+            const M = () => {
+                    (v.innerText = "Activity Details"), u.show();
+                    const o = f.querySelectorAll('[data-kt-calendar="datepicker"]'),
+                        i = f.querySelector("#kt_calendar_datepicker_allday");
+                    i.addEventListener("click", (e) => {
+                            e.target.checked ?
+                                o.forEach((e) => {
+                                    e.classList.add("d-none");
+                                }) :
+                                (l.setDate(E.startDate, !0, "Y-m-d"),
+                                    o.forEach((e) => {
+                                        e.classList.remove("d-none");
+                                    }));
+                        }),
+                        C(E),
+                        D.addEventListener("click", function(o) {
+                            o.preventDefault(),
+                                p &&
+                                p.validate().then(function(o) {
+                                    console.log("validated!"),
+                                        "Valid" == o ?
+                                        (D.setAttribute("data-kt-indicator", "on"),
+                                            (D.disabled = !0),
+                                            setTimeout(function() {
+                                                D.removeAttribute("data-kt-indicator"),
+                                                    Swal.fire({
+                                                        text: "New event added to calendar!",
+                                                        icon: "success",
+                                                        buttonsStyling: !1,
+                                                        confirmButtonText: "Ok, got it!",
+                                                        customClass: {
+                                                            confirmButton: "btn btn-primary"
+                                                        }
+                                                    }).then(function(
+                                                        o
+                                                    ) {
+                                                        if (o.isConfirmed) {
+                                                            u.hide(), (D.disabled = !1);
+                                                            let o = !1;
+                                                            i.checked && (o = !0), 0 === c.selectedDates.length && (o = !0);
+                                                            var d = moment(r.selectedDates[0]).format(),
+                                                                s = moment(l.selectedDates[l.selectedDates.length - 1]).format();
+                                                            if (!o) {
+                                                                const e = moment(r.selectedDates[0]).format("YYYY-MM-DD"),
+                                                                    t = e;
+                                                                (d = e + "T" + moment(c.selectedDates[0]).format("HH:mm:ss")), (s = t + "T" + moment(m.selectedDates[0]).format("HH:mm:ss"));
+                                                            }
+                                                            e.addEvent({
+                                                                id: A(),
+                                                                title: t.value,
+                                                                description: n.value,
+                                                                location: a.value,
+                                                                start: d,
+                                                                end: s,
+                                                                allDay: o
+                                                            }), e.render(), f.reset();
+                                                        }
+                                                    });
+                                            }, 2e3)) :
+                                        Swal.fire({
+                                            text: "Sorry, looks like there are some errors detected, please try again.",
+                                            icon: "error",
+                                            buttonsStyling: !1,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            },
+                                        });
+                                });
+                        });
+                },
+                B = () => {
+                    var e, t, n;
+                    w.show(),
+                        E.allDay ?
+                        ((e = ""), (t = moment(E.startDate).format("Do MMM, YYYY")), (n = moment(E.endDate).format("Do MMM, YYYY"))) :
+                        ((e = ""), (t = moment(E.startDate).format("Do MMM, YYYY - h:mm a")), (n = moment(E.endDate).format("Do MMM, YYYY - h:mm a"))),
+                        (b.innerText = E.eventName),
+                        (g.innerText = e),
+                        (S.innerText = E.eventDescription ? E.eventDescription : "--"),
+                        (h.innerText = E.eventLocation ? E.eventLocation : "--"),
+                        (T.innerText = t),
+                        (Y.innerText = n);
+                },
+                q = () => {
+                    x.addEventListener("click", (o) => {
+                        o.preventDefault(),
+                            w.hide(),
+                            (() => {
+                                (v.innerText = "Edit an activity"), u.show();
+                                const o = f.querySelectorAll('[data-kt-calendar="datepicker"]'),
+                                    i = f.querySelector("#kt_calendar_datepicker_allday");
+                                i.addEventListener("click", (e) => {
+                                        e.target.checked ?
+                                            o.forEach((e) => {
+                                                e.classList.add("d-none");
+                                            }) :
+                                            (l.setDate(E.startDate, !0, "Y-m-d"),
+                                                o.forEach((e) => {
+                                                    e.classList.remove("d-none");
+                                                }));
+                                    }),
+                                    C(E),
+                                    D.addEventListener("click", function(o) {
+                                        o.preventDefault(),
+                                            p &&
+                                            p.validate().then(function(o) {
+                                                console.log("validated!"),
+                                                    "Valid" == o ?
+                                                    (D.setAttribute("data-kt-indicator", "on"),
+                                                        (D.disabled = !0),
+                                                        setTimeout(function() {
+                                                            D.removeAttribute("data-kt-indicator"),
+                                                                Swal.fire({
+                                                                    text: "New event added to calendar!",
+                                                                    icon: "success",
+                                                                    buttonsStyling: !1,
+                                                                    confirmButtonText: "Ok, got it!",
+                                                                    customClass: {
+                                                                        confirmButton: "btn btn-primary"
+                                                                    },
+                                                                }).then(function(o) {
+                                                                    if (o.isConfirmed) {
+                                                                        u.hide(), (D.disabled = !1), e.getEventById(E.id).remove();
+                                                                        let o = !1;
+                                                                        i.checked && (o = !0), 0 === c.selectedDates.length && (o = !0);
+                                                                        var d = moment(r.selectedDates[0]).format(),
+                                                                            s = moment(l.selectedDates[l.selectedDates.length - 1]).format();
+                                                                        if (!o) {
+                                                                            const e = moment(r.selectedDates[0]).format("YYYY-MM-DD"),
+                                                                                t = e;
+                                                                            (d = e + "T" + moment(c.selectedDates[0]).format("HH:mm:ss")), (s = t + "T" + moment(m.selectedDates[0]).format("HH:mm:ss"));
+                                                                        }
+                                                                        e.addEvent({
+                                                                            id: A(),
+                                                                            title: t.value,
+                                                                            description: n.value,
+                                                                            location: a.value,
+                                                                            start: d,
+                                                                            end: s,
+                                                                            allDay: o
+                                                                        }), e.render(), f.reset();
+                                                                    }
+                                                                });
+                                                        }, 2e3)) :
+                                                    Swal.fire({
+                                                        text: "Sorry, looks like there are some errors detected, please try again.",
+                                                        icon: "error",
+                                                        buttonsStyling: !1,
+                                                        confirmButtonText: "Ok, got it!",
+                                                        customClass: {
+                                                            confirmButton: "btn btn-primary"
+                                                        },
+                                                    });
+                                            });
+                                    });
+                            })();
+                    });
+                },
+                C = () => {
+                    (t.value = E.eventName ? E.eventName : ""), (n.value = E.eventDescription ? E.eventDescription : ""), (a.value = E.eventLocation ? E.eventLocation : ""), r.setDate(E.startDate, !0, "Y-m-d");
+                    const e = E.endDate ? E.endDate : moment(E.startDate).format();
+                    l.setDate(e, !0, "Y-m-d");
+                    const o = f.querySelector("#kt_calendar_datepicker_allday"),
+                        i = f.querySelectorAll('[data-kt-calendar="datepicker"]');
+                    E.allDay ?
+                        ((o.checked = !0),
+                            i.forEach((e) => {
+                                e.classList.add("d-none");
+                            })) :
+                        (c.setDate(E.startDate, !0, "Y-m-d H:i"),
+                            m.setDate(E.endDate, !0, "Y-m-d H:i"),
+                            l.setDate(E.startDate, !0, "Y-m-d"),
+                            (o.checked = !1),
+                            i.forEach((e) => {
+                                e.classList.remove("d-none");
+                            }));
+                },
+                N = (e) => {
+                    (E.id = e.id), (E.eventName = e.title), (E.eventDescription = e.description), (E.eventLocation = e.location), (E.startDate = e.startStr), (E.endDate = e.endStr), (E.allDay = e.allDay);
+                },
+                A = () => Date.now().toString() + Math.floor(1e3 * Math.random()).toString();
+            return {
+                init: function() {
+                    const C = document.getElementById("kt_modal_add_event");
+                    (f = C.querySelector("#kt_modal_add_event_form")),
+                    (t = f.querySelector('[name="calendar_event_name"]')),
+                    (n = f.querySelector('[name="calendar_event_description"]')),
+                    (a = f.querySelector('[name="calendar_event_location"]')),
+                    (o = f.querySelector("#kt_calendar_datepicker_start_date")),
+                    (i = f.querySelector("#kt_calendar_datepicker_end_date")),
+                    (d = f.querySelector("#kt_calendar_datepicker_start_time")),
+                    (s = f.querySelector("#kt_calendar_datepicker_end_time")),
+                    (y = document.querySelector('[data-kt-calendar="add"]')),
+                    (D = f.querySelector("#kt_modal_add_event_submit")),
+                    (k = f.querySelector("#kt_modal_add_event_cancel")),
+                    (_ = C.querySelector("#kt_modal_add_event_close")),
+                    (v = f.querySelector('[data-kt-calendar="title"]')),
+                    (u = new bootstrap.Modal(C));
+                    const H = document.getElementById("kt_modal_view_event");
+                    var F, O, I, R, V, P;
+                    (w = new bootstrap.Modal(H)),
+                    (b = H.querySelector('[data-kt-calendar="event_name"]')),
+                    (g = H.querySelector('[data-kt-calendar="all_day"]')),
+                    (S = H.querySelector('[data-kt-calendar="event_description"]')),
+                    (h = H.querySelector('[data-kt-calendar="event_location"]')),
+                    (T = H.querySelector('[data-kt-calendar="event_start_date"]')),
+                    (Y = H.querySelector('[data-kt-calendar="event_end_date"]')),
+                    (x = H.querySelector("#kt_modal_view_event_edit")),
+                    (L = H.querySelector("#kt_modal_view_event_delete")),
+                    (F = document.getElementById("event_calendar")),
+                    (O = moment().startOf("day")),
+                    (I = O.format("YYYY-MM")),
+                    (R = O.clone().subtract(1, "day").format("YYYY-MM-DD")),
+                    (V = O.format("YYYY-MM-DD")),
+                    (P = O.clone().add(1, "day").format("YYYY-MM-DD")),
+                    (e = new FullCalendar.Calendar(F, {
+                        headerToolbar: {
+                            left: "prev,next today",
+                            center: "title",
+                            right: "dayGridMonth,timeGridWeek,timeGridDay"
+                        },
+                        initialDate: V,
+                        navLinks: !0,
+                        selectable: !0,
+                        selectMirror: !0,
+                        select: function(e) {
+                            N(e), M();
+                        },
+                        eventClick: function(e) {
+                            N({
+                                id: e.event.id,
+                                title: e.event.title,
+                                description: e.event.extendedProps.description,
+                                location: e.event.extendedProps.location,
+                                startStr: e.event.startStr,
+                                endStr: (e.event.endStr) ? e.event.endStr : e.event.startStr,
+                                allDay: e.event.allDay
+                            }), B();
+                        },
+                        editable: !0,
+                        dayMaxEvents: !0,
+                        events: {
+                            url: site_url + '/admin/get_activity.php',
+                        },
+                        datesSet: function() {},
+                    })).render(),
+                        (p = FormValidation.formValidation(f, {
+                            fields: {
+                                calendar_event_name: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: "Event name is required"
+                                        }
+                                    }
+                                },
+                                calendar_event_start_date: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: "Start date is required"
+                                        }
+                                    }
+                                },
+                                calendar_event_end_date: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: "End date is required"
+                                        }
+                                    }
+                                },
+                            },
+                            plugins: {
+                                trigger: new FormValidation.plugins.Trigger(),
+                                bootstrap: new FormValidation.plugins.Bootstrap5({
+                                    rowSelector: ".fv-row",
+                                    eleInvalidClass: "",
+                                    eleValidClass: ""
+                                })
+                            },
+                        })),
+                        (r = flatpickr(o, {
+                            enableTime: !1,
+                            dateFormat: "Y-m-d"
+                        })),
+                        (l = flatpickr(i, {
+                            enableTime: !1,
+                            dateFormat: "Y-m-d"
+                        })),
+                        (c = flatpickr(d, {
+                            enableTime: !0,
+                            noCalendar: !0,
+                            dateFormat: "H:i"
+                        })),
+                        (m = flatpickr(s, {
+                            enableTime: !0,
+                            noCalendar: !0,
+                            dateFormat: "H:i"
+                        })),
+                        q(),
+                        y.addEventListener("click", (e) => {
+                            (E = {
+                                id: "",
+                                eventName: "",
+                                eventDescription: "",
+                                startDate: new Date(),
+                                endDate: new Date(),
+                                allDay: !1
+                            }), M();
+                        }),
+                        L.addEventListener("click", (t) => {
+                            t.preventDefault(),
+                                Swal.fire({
+                                    text: "Are you sure you would like to delete this event?",
+                                    icon: "warning",
+                                    showCancelButton: !0,
+                                    buttonsStyling: !1,
+                                    confirmButtonText: "Yes, delete it!",
+                                    cancelButtonText: "No, return",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary",
+                                        cancelButton: "btn btn-active-light"
+                                    },
+                                }).then(function(t) {
+                                    t.value ?
+                                        (e.getEventById(E.id).remove(), w.hide()) :
+                                        "cancel" === t.dismiss && Swal.fire({
+                                            text: "Your event was not deleted!.",
+                                            icon: "error",
+                                            buttonsStyling: !1,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            }
+                                        });
+                                });
+                        }),
+                        k.addEventListener("click", function(e) {
+                            e.preventDefault(),
+                                Swal.fire({
+                                    text: "Are you sure you would like to cancel?",
+                                    icon: "warning",
+                                    showCancelButton: !0,
+                                    buttonsStyling: !1,
+                                    confirmButtonText: "Yes, cancel it!",
+                                    cancelButtonText: "No, return",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary",
+                                        cancelButton: "btn btn-active-light"
+                                    },
+                                }).then(function(e) {
+                                    e.value ?
+                                        (f.reset(), u.hide()) :
+                                        "cancel" === e.dismiss && Swal.fire({
+                                            text: "Your form has not been cancelled!.",
+                                            icon: "error",
+                                            buttonsStyling: !1,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            }
+                                        });
+                                });
+                        }),
+                        _.addEventListener("click", function(e) {
+                            e.preventDefault(),
+                                Swal.fire({
+                                    text: "Are you sure you would like to cancel?",
+                                    icon: "warning",
+                                    showCancelButton: !0,
+                                    buttonsStyling: !1,
+                                    confirmButtonText: "Yes, cancel it!",
+                                    cancelButtonText: "No, return",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary",
+                                        cancelButton: "btn btn-active-light"
+                                    },
+                                }).then(function(e) {
+                                    e.value ?
+                                        (f.reset(), u.hide()) :
+                                        "cancel" === e.dismiss && Swal.fire({
+                                            text: "Your form has not been cancelled!.",
+                                            icon: "error",
+                                            buttonsStyling: !1,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            }
+                                        });
+                                });
+                        }),
+                        ((e) => {
+                            e.addEventListener("hidden.bs.modal", (e) => {
+                                p && p.resetForm(!0);
+                            });
+                        })(C);
+                },
+            };
+        })();
+        KTUtil.onDOMContentLoaded(function() {
+            KTAppCalendar.init();
+        });
     </script>
     <!--end::Javascript-->
 </body>

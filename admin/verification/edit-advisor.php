@@ -564,18 +564,12 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                 <div class="card-body pt-0">
                                                                     <div class="row mb-4">
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Email Opt Out</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
-                                                                            <input type="text" name="email_opt_out" id="email_opt_out" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Email Opt Out" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "email_opt_out"); ?>" />
+                                                                            <input type="url" name="instagram_url" id="instagram_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Instagram URL" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "instagram_url"); ?>" />
                                                                             <!--end::Input-->
                                                                         </div>
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Facebok URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="facebook_url" id="facebook_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Facebok URL" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "facebook_url"); ?>" />
                                                                             <!--end::Input-->
@@ -583,9 +577,6 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                     </div>
                                                                     <div class="row mb-4">
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">LinkedIn URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="linkedin_url" id="linkedin_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="LinkedIn URL" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "linkedin_url"); ?>" />
                                                                             <!--end::Input-->
@@ -593,9 +584,6 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                         <!--end::Input wrapper-->
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Youtube URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="youtube_url" id="youtube_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Youtube URL" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "youtube_url"); ?>" />
                                                                             <!--end::Input-->
@@ -605,9 +593,6 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
                                                                     <div class="row mb-4">
                                                                         <!--begin::Input wrapper-->
                                                                         <div class="col-md-6 fv-row">
-                                                                            <!--begin::Label-->
-                                                                            <label class="fw-semibold fs-6 mb-2">Twitter URL</label>
-                                                                            <!--end::Label-->
                                                                             <!--begin::Input-->
                                                                             <input type="url" name="twitter_url" id="twitter_url" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Twitter URL" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "twitter_url"); ?>" />
                                                                             <!--end::Input-->

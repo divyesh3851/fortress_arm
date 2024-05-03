@@ -580,6 +580,8 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																		</div>
 																		<div class="col-md-7 text-sm-end">
 																			<?php
+																			$instagram_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'instagram_url');
+
 																			$facebook_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'facebook_url');
 
 																			$linkedin_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'linkedin_url');
@@ -587,6 +589,10 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																			$youtube_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'youtube_url');
 
 																			$twitter_url = Advisor()->get_advisor_meta($selected_advisor_data->id, 'twitter_url');
+
+																			if ($instagram_url) { ?>
+																				<a class="p-1" href="<?php echo $instagram_url; ?>" target="_blank"><img src="<?php echo site_url(); ?>/assets/media/svg/social-logos/instagram.svg"></a>
+																			<?php }
 
 																			if ($facebook_url) { ?>
 																				<a class="p-1" href="<?php echo $facebook_url; ?>" target="_blank"><img src="<?php echo site_url(); ?>/assets/media/svg/social-logos/facebook.svg"></a>

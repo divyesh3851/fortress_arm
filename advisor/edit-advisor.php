@@ -574,9 +574,9 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <div class="col-md-6 fv-row">
                                                                             <div class="input-group mb-5">
                                                                                 <span class="input-group-text" id="basic-addon1">
-                                                                                    <i class="bi bi-envelope fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                                                                    <i class="bi bi-instagram fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
                                                                                 </span>
-                                                                                <input type="email" class="form-control" name="email_opt_out" id="email_opt_out" placeholder="Email Opt Out" aria-label="Email Opt Out" aria-describedby="basic-addon1" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "email_opt_out"); ?>" />
+                                                                                <input type="url" class="form-control" name="instagram_url" id="instagram_url" placeholder="Instagram URL" aria-label="Instagram URL" aria-describedby="basic-addon1" value="<?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "instagram_url"); ?>" />
                                                                             </div>
                                                                         </div>
                                                                         <!--begin::Input wrapper-->

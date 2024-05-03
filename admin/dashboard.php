@@ -32,9 +32,9 @@ $total_warm_advisor = Advisor()->get_count_total_advisor_by_status(3);
 $total_hot_advisor  = Advisor()->get_count_total_advisor_by_status(4);
 $total_won_advisor  = 0;
 
-$get_today_appointment = Advisor()->get_today_appointment();
+$get_today_activity = Advisor()->get_today_activity();
 
-$get_advisor_upcoming_activity_list = Advisor()->get_advisor_upcoming_activity(2);
+$get_advisor_upcoming_activity_list = Advisor()->get_upcoming_activity($_SESSION['fbs_arm_admin_id']);
 
 $get_advisor_note_list = Advisor()->get_note_list(2);
 ?>
@@ -2238,8 +2238,8 @@ $get_advisor_note_list = Advisor()->get_note_list(2);
                                                         <div class="card-body">
                                                             <div class="row g-5">
                                                                 <?php
-                                                                if ($get_today_appointment) {
-                                                                    foreach ($get_today_appointment as $activity_result) {
+                                                                if ($get_today_activity) {
+                                                                    foreach ($get_today_activity as $activity_result) {
 
                                                                         $activity_type = ($activity_result->type) ? Settings()->get_selected_activity_type_name($activity_result->type) : '';
 
