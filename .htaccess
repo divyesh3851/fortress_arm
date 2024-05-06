@@ -80,4 +80,5 @@ Options -MultiViews
 	RewriteRule ^admin/settings/mail-setting?$ admin/settings/mail-setting.php [NC,L]
 
 	RewriteRule ^admin/calendar?$ admin/calendar.php [NC,L]
+	RewriteRule ^admin/important-links-list?$ admin/important-links-list.php [NC,L]
 </IfModule>

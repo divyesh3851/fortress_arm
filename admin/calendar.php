@@ -9,7 +9,7 @@ Admin()->check_login();
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
 </head>
 <!--end::Head-->
@@ -55,7 +55,8 @@ Admin()->check_login();
                     <!--begin::Content wrapper-->
                     <div class="d-flex flex-column flex-column-fluid">
 
-                        <?php if (isset($_SESSION['process_success'])) {
+                        <?php
+                        if (isset($_SESSION['process_success'])) {
                             unset($_SESSION['process_success']); ?>
                             <div class="alert alert-success d-flex align-items-center p-5 ms-lg-15">
                                 <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
@@ -81,25 +82,31 @@ Admin()->check_login();
                             <!--begin::Content wrapper-->
                             <div class="d-flex flex-column flex-column-fluid">
                                 <!--begin::Toolbar-->
-                                <?php /*
+
                                 <div id="kt_app_toolbar" class="app-toolbar pt-6 pb-2">
                                     <!--begin::Toolbar container-->
                                     <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex align-items-stretch">
-                                        <!--begin::Toolbar wrapper--> 
+                                        <!--begin::Toolbar wrapper-->
                                         <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
                                             <!--begin::Page title-->
                                             <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
                                                 <!--begin::Title-->
-                                                <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Calendar</h1>
                                                 <!--end::Title-->
                                             </div>
                                             <!--end::Page title-->
+                                            <?php
+                                            $bookmark = Advisor()->check_bookmark(site_url() . '/admin/calendar');
+
+                                            if ($bookmark) { ?>
+                                                <i class="bi bi-bookmarks-fill fs-2x cursor-pointer text-primary  bookmark_page" bookmark_url="<?php echo site_url(); ?>/admin/calendar"></i>
+                                            <?php } else { ?>
+                                                <i class="bi bi-bookmarks fs-2x cursor-pointer text-primary bookmark_page" data-bs-toggle="modal" data-bs-target="#kt_modal_bookmark_link" bookmark_name="Calendar" bookmark_url="<?php echo site_url(); ?>/admin/calendar"></i>
+                                            <?php } ?>
                                         </div>
                                         <!--end::Toolbar wrapper-->
                                     </div>
                                     <!--end::Toolbar container-->
                                 </div>
-                                */ ?>
                                 <!--end::Toolbar-->
                                 <!--begin::Content-->
                                 <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -109,7 +116,21 @@ Admin()->check_login();
                                         <div class="card">
                                             <!--begin::Card header-->
                                             <div class="card-header">
-                                                <h2 class="card-title fw-bold">Calendar</h2>
+                                                <div class="d-flex flex-stack flex-wrap gap-4 w-100">
+                                                    <div class="d-flex flex-column justify-content-center gap-1 me-3">
+                                                        <h2 class="card-title fw-bold">Calendar</h2>
+                                                    </div>
+                                                    <div class="w-25">
+                                                        <select name="timezone" id="timezone" data-control="select2" data-placeholder="Select a Time Zone..." class="form-select form-select-solid" required>
+                                                            <option value="">Select Time Zone</option>
+                                                            <?php foreach (Settings()->get_timezone_list() as $key => $timezone_result) { ?>
+                                                                <option <?php echo ($key == 7) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo $timezone_result; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+
                                                 <?php /* 
                                                 <div class="card-toolbar">
                                                     <button class="btn btn-flex btn-primary" data-kt-calendar="add">
@@ -385,7 +406,7 @@ Admin()->check_login();
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
     <!--end::Global Javascript Bundle-->
     <!--begin::Custom Javascript(used for this page only)-->

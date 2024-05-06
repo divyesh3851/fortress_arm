@@ -9,10 +9,6 @@ if (siget('user_type')) {
     $AND = ' AND created_by = ' . siget('fbs_arm_admin_id') . ' AND created_by_type = "admin" ';
 }
 
-$totalRecords = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE status = 0 ' . $AND);
-
-$totalRecordwithFilter = $wpdb->get_var('SELECT COUNT( * ) FROM advisor WHERE status = 0 ' . $AND);
-
 $advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 ' . $AND . ' ORDER BY id DESC');
 
 foreach ($advisor_list as $advisor_result) {
@@ -43,20 +39,19 @@ foreach ($advisor_list as $advisor_result) {
             <!--begin::User details-->';
 
     $advisor_status = '';
-    if ($advisor_result->advisor_status == '1') {
+    if ($advisor_result->advisor_status == 1) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-success">New</div>';
-    } else if ($advisor_result->advisor_status == '2') {
+    } else if ($advisor_result->advisor_status == 2) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-primary">Cold</div>';
-    } else if ($advisor_result->advisor_status == '3') {
+    } else if ($advisor_result->advisor_status == 3) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-warning">Warm</div>';
-    } else if ($advisor_result->advisor_status == '4') {
+    } else if ($advisor_result->advisor_status == 4) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-info">Hot</div>';
-    } else {
-        $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-danger">Inactive</div>';
+    } else if ($advisor_result->advisor_status == 5) {
+        $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-dark">FBS Agent</div>';
     }
 
     $lead_source = ($advisor_result->lead_source) ? Settings()->get_selected_lead_source_data($advisor_result->lead_source)->type : '';
-
 
     $rating = Settings()->show_ration_star($advisor_result->rating);
 

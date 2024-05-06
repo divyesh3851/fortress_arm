@@ -34,127 +34,19 @@ foreach ($advisor_list as $advisor_result) {
             <!--begin::User details-->';
 
     $advisor_status = '';
-    if ($advisor_result->advisor_status == '1') {
+    if ($advisor_result->advisor_status == 1) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-success">New</div>';
-    } else if ($advisor_result->advisor_status == '2') {
+    } else if ($advisor_result->advisor_status == 2) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-primary">Cold</div>';
-    } else if ($advisor_result->advisor_status == '3') {
+    } else if ($advisor_result->advisor_status == 3) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-warning">Warm</div>';
-    } else if ($advisor_result->advisor_status == '4') {
+    } else if ($advisor_result->advisor_status == 4) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-info">Hot</div>';
-    } else {
-        $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-danger">Inactive</div>';
+    } else if ($advisor_result->advisor_status == 5) {
+        $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-dark">FBS Agent</div>';
     }
 
     $lead_source = ($advisor_result->lead_source) ? Settings()->get_selected_lead_source_data($advisor_result->lead_source)->type : '';
-
-    $rating = '<div class="rating">';
-
-    if ($advisor_result->rating == 0) {
-        $rating .= '<div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>';
-    }
-    if ($advisor_result->rating == 1) {
-        $rating .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>';
-    }
-    if ($advisor_result->rating == 2) {
-        $rating .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>';
-    }
-    if ($advisor_result->rating == 3) {
-        $rating .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>';
-    }
-
-    if ($advisor_result->rating == 4) {
-        $rating .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>';
-    }
-
-    if ($advisor_result->rating == 5) {
-        $rating .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
-                    </div>';
-    }
-    $rating .= '</div>';
 
     $data[] = array(
         'record_id'     => $advisor_result->id,

@@ -100,7 +100,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/advisor/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -236,11 +236,13 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                     <h3 class="stepper-title">Production Info</h3>
                                                 </div>
                                                 <!--end::Step 5-->
+                                                <?php /*
                                                 <!--begin::Step 6-->
                                                 <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <h3 class="stepper-title">Employement</h3>
                                                 </div>
                                                 <!--end::Step 6-->
+                                                */ ?>
                                                 <!--begin::Step 6-->
                                                 <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <h3 class="stepper-title">Interests</h3>
@@ -809,6 +811,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
                                                                 <textarea name="organization" id="organization" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Are you active within the leadership of any of these organizations, locally or nationally?" /><?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "organization"); ?></textarea>
+                                                                <em>Are you active within the leadership of any of these organizations, locally or nationally? </em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -859,7 +862,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($carrier_result->id, $carrier_with_business)) ? 'selected' : ''; ?> value="<?php echo $carrier_result->id; ?>"><?php echo $carrier_result->name; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -909,7 +911,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($production_percentage_result->id, $production_percentages)) ? 'selected' : ''; ?> value="<?php echo $production_percentage_result->id; ?>"><?php echo $production_percentage_result->type; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-4 fv-row">
@@ -923,7 +924,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($market_result->id, $markets)) ? 'selected' : ''; ?> value="<?php echo $market_result->id; ?>"><?php echo $market_result->type; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -945,6 +945,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                     </div>
                                                 </div>
                                                 <!--begin::Step 6-->
+                                                <?php /*
                                                 <div data-kt-stepper-element="content">
                                                     <div class="w-100">
                                                         <!--begin::Input group-->
@@ -1220,6 +1221,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                     </div>
                                                 </div>
                                                 <!--end::Step 6-->
+                                                */ ?>
                                                 <!--begin::Step 7-->
                                                 <div data-kt-stepper-element="content">
                                                     <div class="w-100">
@@ -1431,7 +1433,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/advisor/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
     <!--<script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/create-account.js"></script>-->

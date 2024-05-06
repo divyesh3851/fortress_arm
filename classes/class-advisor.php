@@ -23,6 +23,8 @@ class Advisor
 
         add_action('wp_ajax_update_advisor_financial_interest', array($this, 'update_advisor_financial_interest'));
 
+        add_action('wp_ajax_update_advisor_business_interest', array($this, 'update_advisor_business_interest'));
+
         add_action('wp_ajax_check_email_exist', array($this, 'check_email_exist'));
 
         add_action('wp_ajax_get_selected_note_data', array($this, 'get_selected_note_data'));
@@ -32,6 +34,149 @@ class Advisor
         add_action('wp_ajax_delete_note', array($this, 'delete_note'));
 
         add_action('wp_ajax_get_selected_activity_data', array($this, 'get_selected_activity_data'));
+
+        add_action('wp_ajax_get_selected_advisor_professional_data', array($this, 'get_selected_advisor_professional_data'));
+
+        add_action('wp_ajax_save_bookmark', array($this, 'save_bookmark'));
+
+        add_action('wp_ajax_remove_bookmark', array($this, 'remove_bookmark'));
+    }
+
+    public function remove_bookmark($url = '')
+    {
+        global $wpdb;
+
+        $url = (sipost('url')) ? sipost('url') : $url;
+
+        if (!$url) {
+            return;
+        }
+
+        if (isset($_SESSION['fbs_advisor_id'])) {
+            $user_id = $_SESSION['fbs_advisor_id'];
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $user_id = $_SESSION['fbs_arm_admin_id'];
+            $user_type = 'admin';
+        }
+
+        return $wpdb->delete("important_links", array("user_id" => $user_id, "user_type" => $user_type, "url" => $url));
+    }
+
+    public function check_bookmark($url = '')
+    {
+        global $wpdb;
+
+        $url = (sipost('url')) ? sipost('url') : $url;
+
+        if (!$url) {
+            return;
+        }
+
+        if (isset($_SESSION['fbs_advisor_id'])) {
+            $user_id = $_SESSION['fbs_advisor_id'];
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $user_id = $_SESSION['fbs_arm_admin_id'];
+            $user_type = 'admin';
+        }
+
+        $bookmark_id = $wpdb->get_var("SELECT id FROM important_links WHERE user_id = " . $user_id . " AND user_type = '" . $user_type . "' AND url = '" . $url . "'");
+
+        return $bookmark_id;
+    }
+
+    public function save_bookmark()
+    {
+        global $wpdb;
+
+        $user_id = '';
+        $user_type = '';
+
+        if (isset($_SESSION['fbs_advisor_id'])) {
+            $user_id = $_SESSION['fbs_advisor_id'];
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $user_id = $_SESSION['fbs_arm_admin_id'];
+            $user_type = 'admin';
+        }
+
+        if (!$user_id || !sipost("url")) {
+            return;
+        }
+
+        $check_bookmark = $this->check_bookmark(sipost("url"));
+
+        if ($check_bookmark) {
+            $status = $wpdb->delete("important_links", array('id' => $check_bookmark));
+        } else {
+            $status = $wpdb->insert(
+                "important_links",
+                array(
+                    "user_id"   => $user_id,
+                    "user_type" => $user_type,
+                    "name"      => sipost("name"),
+                    "url"       => sipost("url"),
+                    "notes"     => sipost("notes"),
+                    "created_at" => current_time('mysql')
+                )
+            );
+        }
+
+        echo json_encode(array("status" => $status));
+        die();
+    }
+
+    public function get_selected_advisor_professional_data($advisor_id = '')
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        if (!$advisor_id) {
+            return false;
+        }
+
+        $profiessional_info = $wpdb->get_row("SELECT license_no,npn_no,city,state,designation,affiliations,carrier_appointed,carrier_with_business,premium_volume,production_percentages,markets FROM advisor WHERE id = " . $advisor_id);
+
+        if (sipost('is_ajax')) {
+            echo json_encode(array("profiessional_info" => $profiessional_info));
+            die();
+        } else {
+            return $profiessional_info;
+        }
+    }
+
+    public function update_professional_info($advisor_id)
+    {
+        global $wpdb;
+
+        if (!$advisor_id) {
+            return false;
+        }
+
+        $carrier_with_business = (!empty(sipost('carrier_with_business'))) ? implode(',', sipost('carrier_with_business')) : '';
+
+        $production_percentages = (!empty(sipost('production_percentages'))) ? implode(',', sipost('production_percentages')) : '';
+
+        $markets = (!empty(sipost('markets'))) ? implode(',', sipost('markets')) : '';
+
+        $profiessional_info = array(
+            'license_no'        => sipost('license_no'),
+            'npn_no'            => sipost('npn_no'),
+            'city'              => sipost('city'),
+            'state'             => sipost('state'),
+            'designation'       => sipost('designation'),
+            'affiliations'      => sipost('affiliations'),
+            'carrier_appointed' => sipost('carrier_appointed'),
+            'carrier_with_business'     => $carrier_with_business,
+            'premium_volume'            => sipost('premium_volume'),
+            'production_percentages'    => $production_percentages,
+            'markets'                   => $markets,
+            'updated_at'                => current_time('mysql'),
+        );
+
+        return $wpdb->update("advisor", $profiessional_info, array("id" => $advisor_id));
     }
 
     public function get_upcoming_activity($id)
@@ -44,14 +189,30 @@ class Advisor
             return false;
         }
 
-        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date > '" . date('Y-m-d') . "' AND logged_id = " . $id . " ORDER BY activity_date ASC LIMIT 0,5");
+        $AND = "";
+        if (!IS_ADMIN) {
+            $AND = " AND logged_id = " . $id . " AND user_type = 'admin'";
+        }
+
+        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date > '" . date('Y-m-d') . "' " . $AND . " ORDER BY activity_date ASC LIMIT 0,5");
     }
 
-    public function get_today_activity()
+    public function get_today_activity($id)
     {
         global $wpdb;
 
-        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date = '" . date('Y-m-d') . "' AND status = 0");
+        $id = ($id) ? $id : $_SESSION['fbs_arm_admin_id'];
+
+        if (!$id) {
+            return false;
+        }
+
+        $AND = "";
+        if (!IS_ADMIN) {
+            $AND = " AND logged_id = " . $id . " AND user_type = 'admin'";
+        }
+
+        return $wpdb->get_results("SELECT * FROM activity WHERE activity_date = '" . date('Y-m-d') . "' AND status = 0 " . $AND);
     }
 
     public function get_count_total_advisor_by_status($status)
@@ -62,7 +223,12 @@ class Advisor
             return false;
         }
 
-        return $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE advisor_status = " . $status . " AND status = 0 ");
+        $AND = "";
+        if (!IS_ADMIN) {
+            $AND = " AND created_by = " . $_SESSION['fbs_arm_admin_id'] . " AND created_by_type = 'admin'";
+        }
+
+        return $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE advisor_status = " . $status . " AND status = 0 " . $AND);
     }
 
     public function get_advisor_records_between_two_dates($start_date = '', $end_date = '', $advisor_status = array())
@@ -550,6 +716,7 @@ class Advisor
         $activity_info = array(
             'title'         => sipost('title'),
             'activity_date' => $activity_date,
+            'recurring'     => sipost('recurring'),
             'start_time'    => sipost('start_time'),
             'end_time'      => sipost('end_time'),
             'type'          => sipost('type'),
@@ -589,6 +756,7 @@ class Advisor
             'user_type'     => 'advisor',
             'title'         => sipost('title'),
             'activity_date' => $activity_date,
+            'recurring'     => sipost('recurring'),
             'start_time'    => sipost('start_time'),
             'end_time'      => sipost('end_time'),
             'type'          => sipost('type'),

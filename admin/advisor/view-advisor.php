@@ -46,6 +46,19 @@ if (isset($_POST['save_employment'])) {
 	exit;
 }
 
+if (isset($_POST['save_professional_info'])) {
+
+	$response = Advisor()->update_professional_info($selected_advisor_data->id);
+
+	if ($response == 1) {
+		$_SESSION['update_profile_process_success'] = true;
+	} else {
+		$_SESSION['update_profile_process_fail'] = true;
+	}
+	wp_redirect(site_url() . '/admin/advisor/view-advisor/' . siget('advisor_id'));
+	exit;
+}
+
 if (isset($_POST['save_address'])) {
 
 	if (sipost('address_id')) {
@@ -107,6 +120,20 @@ $advisor_profile = Advisor()->get_advisor_meta($selected_advisor_data->id, 'prof
 
 $get_state_list = Settings()->get_state_list();
 
+$get_designation_list = Settings()->get_designation_list();
+
+$get_affiliations_list = Settings()->get_affiliations_list();
+
+$get_carrier_appointed_list = Settings()->get_carrier_appointed_list();
+
+$get_carrier_list = Settings()->get_carrier_list();
+
+$get_premium_volume_list = Settings()->get_premium_volume_list();
+
+$get_production_percentage_list = Settings()->get_production_percentage_list();
+
+$get_market_list = Settings()->get_market_list();
+
 $get_advisor_last_employment = Advisor()->get_advisor_last_employment($selected_advisor_data->id);
 
 $get_interest_life_insurance_list = Settings()->get_interest_life_insurance();
@@ -153,7 +180,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 <!--begin::Head-->
 
 <head>
-	<?php require SITE_DIR . '/admin/head.php'; ?>
+	<?php require SITE_DIR . '/head.php'; ?>
 	<link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 </head>
 <!--end::Head-->
@@ -378,16 +405,16 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 										<!--begin::Card-->
 										<div class="ribbon ribbon-end ribbon-clip">
 											<div class="ribbon-label">
-												<?php if ($selected_advisor_data->advisor_status == '1') {
+												<?php if ($selected_advisor_data->advisor_status == 1) {
 													echo 'New <span class="ribbon-inner bg-success"></span>';
-												} else if ($selected_advisor_data->advisor_status == '2') {
+												} else if ($selected_advisor_data->advisor_status == 2) {
 													echo 'Cold <span class="ribbon-inner bg-primary"></span>';
-												} else if ($selected_advisor_data->advisor_status == '3') {
+												} else if ($selected_advisor_data->advisor_status == 3) {
 													echo 'Warm <span class="ribbon-inner bg-warning"></span>';
-												} else if ($selected_advisor_data->advisor_status == '4') {
+												} else if ($selected_advisor_data->advisor_status == 4) {
 													echo 'Hot <span class="ribbon-inner bg-info"></span>';
-												} else {
-													echo 'Inactive <span class="ribbon-inner bg-danger"></span>';
+												} else if ($selected_advisor_data->advisor_status == 5) {
+													echo 'FBS Agent <span class="ribbon-inner bg-dark"></span>';
 												} ?>
 											</div>
 										</div>
@@ -446,14 +473,13 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 												<!--end::Summary-->
 												<!--begin::Details toggle-->
 												<div class="d-flex flex-stack fs-4 py-3">
-													<div class="fw-bold rotate collapsible" data-bs-toggle="collapse" href="#kt_user_view_details" role="button" aria-expanded="false" aria-controls="kt_user_view_details">Details
+													<div class="fw-bold rotate collapsible" data-bs-toggle="collapse" href="#kt_user_view_details" role="button" aria-expanded="false" aria-controls="kt_user_view_details">Professional Info
 														<span class="ms-2 rotate-180">
 															<i class="ki-outline ki-down fs-3"></i>
 														</span>
 													</div>
-													<span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit Advisor Details">
-														<a href="<?php echo site_url() ?>/admin/advisor/edit-advisor/<?php echo $selected_advisor_data->id; ?>" class="btn btn-sm btn-light-primary">Edit</a>
-													</span>
+													<a href="" class=" align-self-center" data-bs-toggle="modal" data-bs-target="#kt_modal_edit_professional_info" id="edit_professional_info" advisor_id="<?php echo $selected_advisor_data->id; ?>"><i class="bi bi-pencil-square text-primary fs-2x"></i>
+													</a>
 												</div>
 												<!--end::Details toggle-->
 												<div class="separator"></div>
@@ -462,11 +488,11 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 													<div class="pb-5 fs-6">
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">License No</div>
-														<div class="text-gray-600"><?php echo $selected_advisor_data->license_no; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->license_no) ? $selected_advisor_data->license_no : '-'; ?></div>
 														<!--begin::Details item-->
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">NPN No</div>
-														<div class="text-gray-600"><?php echo $selected_advisor_data->npn_no; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->npn_no) ? $selected_advisor_data->npn_no : '-'; ?></div>
 														<!--begin::Details item-->
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">Address</div>
@@ -474,28 +500,36 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 														</div>
 
 														<!--begin::Details item-->
+														<div class="fw-bold mt-5">Professional Designations</div>
+														<div class="text-gray-600">
+															<?php
+															$designation_info = Settings()->get_selected_designation_data($selected_advisor_data->designation);
+															echo ($designation_info) ? $designation_info->initials . ' - ' . $designation_info->name : '-'; ?>
+														</div>
+
+														<!--begin::Details item-->
 														<div class="fw-bold mt-5">Affiliations</div>
-														<div class="text-gray-600"><?php echo ($selected_advisor_data->affiliations) ? Settings()->get_selected_affiliations_data($selected_advisor_data->affiliations)->type  : ''; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->affiliations) ? Settings()->get_selected_affiliations_data($selected_advisor_data->affiliations)->type  : '-'; ?></div>
 
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">Carriers Appointed</div>
-														<div class="text-gray-600"><?php echo ($selected_advisor_data->carrier_appointed) ? Settings()->get_selected_carrier_appointed_data($selected_advisor_data->carrier_appointed)->type  : ''; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->carrier_appointed) ? Settings()->get_selected_carrier_appointed_data($selected_advisor_data->carrier_appointed)->type  : '-'; ?></div>
 
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">Carriers Business</div>
-														<div class="text-gray-600"><?php echo ($selected_advisor_data->carrier_with_business) ? Settings()->get_selected_multiple_carrier_name($selected_advisor_data->carrier_with_business)  : ''; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->carrier_with_business) ? Settings()->get_selected_multiple_carrier_name($selected_advisor_data->carrier_with_business)  : '-'; ?></div>
 
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">Premium Volume</div>
-														<div class="text-gray-600"><?php echo ($selected_advisor_data->premium_volume) ? Settings()->get_selected_premium_volume_data($selected_advisor_data->premium_volume)->type  : ''; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->premium_volume) ? Settings()->get_selected_premium_volume_data($selected_advisor_data->premium_volume)->type  : '-'; ?></div>
 
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">Production Percentages </div>
-														<div class="text-gray-600"><?php echo ($selected_advisor_data->production_percentages) ? Settings()->get_selected_multiple_production_percentage_name($selected_advisor_data->production_percentages)  : ''; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->production_percentages) ? Settings()->get_selected_multiple_production_percentage_name($selected_advisor_data->production_percentages)  : '-'; ?></div>
 
 														<!--begin::Details item-->
 														<div class="fw-bold mt-5">Markets </div>
-														<div class="text-gray-600"><?php echo ($selected_advisor_data->markets) ? Settings()->get_selected_multiple_market_name($selected_advisor_data->markets)  : ''; ?></div>
+														<div class="text-gray-600"><?php echo ($selected_advisor_data->markets) ? Settings()->get_selected_multiple_market_name($selected_advisor_data->markets)  : '-'; ?></div>
 													</div>
 												</div>
 												<!--end::Details content-->
@@ -848,20 +882,20 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																</div>
 																<!--begin::Card body-->
 																<div class="card-body p-5">
-																	<div class="mb-10 personal_interest_tag_section">
+																	<div class="mb-5 personal_interest_tag_section">
 																		<?php  ?>
 																		<label class="form-label">Personal Interests</label>
 
 																		<input class="form-control" placeholder="Add Tag" value="<?php echo $personal_interest; ?>" id="personal_interest" />
 
 																	</div>
-																	<div class="mb-10 financial_interest_tag_section">
+																	<div class="mb-5 financial_interest_tag_section">
 																		<label class="form-label">Financial Interests</label>
 
 																		<input class="form-control" placeholder="Add Tag" value="<?php echo $financial_interest; ?>" id="financial_interest" />
 																	</div>
 
-																	<div class="mb-10 business_interest_tag_section">
+																	<div class="mb-5 business_interest_tag_section">
 																		<label class="form-label">Business Interest</label>
 
 																		<input class="form-control" placeholder="Add Tag" value="<?php echo $business_interest; ?>" id="business_interest" />
@@ -1333,6 +1367,203 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 
 								<!--begin::Button-->
 								<button type="submit" class="btn btn-primary" id="save_profile" name="save_profile">
+									<span class="indicator-label">
+										Save
+									</span>
+									<span class="indicator-progress">
+										Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+									</span>
+								</button>
+								<!--end::Button-->
+							</div>
+						</div>
+					</form>
+				</div>
+				<!--begin::Modal body-->
+			</div>
+		</div>
+		<!--end::Modal - Edit Profile-->
+	</div>
+	<!--end::Modals-->
+
+	<!--begin::Modal - Edit Profile -->
+	<div class="modal fade" id="kt_modal_edit_professional_info" tabindex="-1" aria-hidden="true">
+		<!--begin::Modal dialog-->
+		<div class="modal-dialog modal-dialog-centered mw-850px">
+			<!--begin::Modal content-->
+			<div class="modal-content modal-rounded">
+				<!--begin::Modal header-->
+				<div class="modal-header py-5 d-flex justify-content-between">
+					<!--begin::Modal title-->
+					<h2>Professional Info</h2>
+					<!--end::Modal title-->
+					<!--begin::Close-->
+					<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+						<i class="ki-outline ki-cross fs-1"></i>
+					</div>
+					<!--end::Close-->
+				</div>
+				<!--begin::Modal header-->
+				<!--begin::Modal body-->
+				<div class="modal-body scroll-y m-2">
+					<form class="" id="professional_info_form" method="post" enctype="multipart/form-data">
+						<div class="w-100">
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">License #</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<input type="text" name="license_no" id="license_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="License No" />
+									<!--end::Input-->
+								</div>
+
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">NPN #</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<input type="text" name="npn_no" id="npn_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="NPN No" />
+									<!--end::Input-->
+								</div>
+							</div>
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">City</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<input type="text" name="city" id="professional_info_city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
+									<!--end::Input-->
+								</div>
+
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">State</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="state" id="professional_info_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info" required>
+										<option value="">Select State</option>
+										<?php foreach ($get_state_list as $state_result) { ?>
+											<option value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+							</div>
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">Affiliations</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="affiliations" id="affiliations" data-control="select2" data-placeholder="Select a Affiliations..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
+										<option value="">Select Affiliation</option>
+										<?php foreach ($get_affiliations_list as $affiliation_result) { ?>
+											<option value="<?php echo $affiliation_result->id; ?>"><?php echo $affiliation_result->type; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">Professional Designations</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="designation" id="designation" data-control="select2" data-placeholder="Select a Designation..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
+										<option value="">Select Designation</option>
+										<?php foreach ($get_designation_list as $designation_result) { ?>
+											<option value="<?php echo $designation_result->id; ?>"><?php echo $designation_result->initials . ' - ' . $designation_result->name; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+							</div>
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">How many carriers are you currently appointed with? </label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="carrier_appointed" id="carrier_appointed" data-control="select2" data-placeholder="Select a Carriers..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
+										<option value="">Select Appointed</option>
+										<?php foreach ($get_carrier_appointed_list as $carrier_appointed_result) { ?>
+											<option value="<?php echo $carrier_appointed_result->id; ?>"><?php echo $carrier_appointed_result->type; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">Which Carrier(s) does the agent do business with? </label>
+
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="carrier_with_business[]" id="carrier_with_business" class="form-select  form-select-solid" data-control="select2" data-close-on-select="false" data-placeholder="Select an Carrier" data-allow-clear="true" multiple="multiple" data-dropdown-parent="#kt_modal_edit_professional_info">
+										<option value="">Select Carrier</option>
+										<?php foreach ($get_carrier_list as $carrier_result) { ?>
+											<option value="<?php echo $carrier_result->id; ?>"><?php echo $carrier_result->name; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+							</div>
+
+							<div class="row mb-7">
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">Premium Volume </label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="premium_volume" id="premium_volume" data-control="select2" data-placeholder="Select a Premium Volume..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
+										<option value="">Select Volume</option>
+										<?php foreach ($get_premium_volume_list as $premium_volume_result) { ?>
+											<option value="<?php echo $premium_volume_result->id; ?>"><?php echo $premium_volume_result->type; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+								<div class="col-md-6 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">Production Percentages </label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="production_percentages[]" id="production_percentages" data-control="select2" data-close-on-select="false" data-placeholder="Select a Production Percentages..." data-allow-clear="true" multiple="multiple" class="form-select form-select-solid" data-dropdown-parent="#kt_modal_edit_professional_info">
+										<option value="">Select Production Percentages</option>
+										<?php foreach ($get_production_percentage_list as $production_percentage_result) { ?>
+											<option value="<?php echo $production_percentage_result->id; ?>"><?php echo $production_percentage_result->type; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+							</div>
+
+							<div class="row mb-7">
+								<div class="col-md-12 fv-row">
+									<!--begin::Label-->
+									<label class="fw-semibold fs-6 mb-2">Markets</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="markets[]" id="markets" data-control="select2" data-close-on-select="false" data-placeholder="Select a Markets..." data-allow-clear="true" multiple="multiple" class="form-select form-select-solid" data-dropdown-parent="#kt_modal_edit_professional_info">
+										<option value="">Select Markets</option>
+										<?php foreach ($get_market_list as $market_result) { ?>
+											<option value="<?php echo $market_result->id; ?>"><?php echo $market_result->type; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+							</div>
+
+							<div class="d-flex justify-content-end align-items-center mt-12">
+
+								<!--begin::Button-->
+								<button type="submit" class="btn btn-primary" id="save_professional_info" name="save_professional_info">
 									<span class="indicator-label">
 										Save
 									</span>
@@ -1843,7 +2074,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 						<div class="w-100">
 							<!--begin::Input group-->
 							<div class="row mb-7">
-								<div class="col-md-12 fv-row">
+								<div class="col-md-8 fv-row">
 									<!--begin::Label-->
 									<label class="required fw-semibold fs-6 mb-2">Title</label>
 									<!--end::Label-->
@@ -1851,15 +2082,29 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<input type="text" name="title" id="activity_title" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Title" required />
 									<!--end::Input-->
 								</div>
-							</div>
-							<!--begin::Input group-->
-							<div class="row mb-7">
 								<div class="col-md-4 fv-row">
 									<!--begin::Label-->
 									<label class="required fw-semibold fs-6 mb-2">Date</label>
 									<!--end::Label-->
 									<!--begin::Input-->
 									<input type="text" name="date" id="activity_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Date" />
+									<!--end::Input-->
+								</div>
+							</div>
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<div class="col-md-4 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">Recurring</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="recurring" id="recurring" data-control="select2" data-placeholder="Select ..." class="form-select form-select-solid is_empty" required>
+										<option value="">Select </option>
+										<option value="once"> Once </option>
+										<option value="weekly"> Weekly </option>
+										<option value="monthly"> Monthly </option>
+										<option value="yearly"> Yearly </option>
+									</select>
 									<!--end::Input-->
 								</div>
 								<div class="col-md-4 fv-row">
@@ -2010,7 +2255,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 		var hostUrl = "assets/";
 	</script>
 	<!--begin::Global Javascript Bundle(mandatory for all pages)-->
-	<?php require SITE_DIR . '/admin/footer_script.php'; ?>
+	<?php require SITE_DIR . '/footer_script.php'; ?>
 	<!--end::Global Javascript Bundle-->
 	<!--begin::Vendors Javascript(used for this page only)-->
 	<script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>
@@ -2126,6 +2371,65 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 					if (results.advisor_info.anniversary_date) {
 						$("#anniversary_date").val(change_ymd_to_dmy_text(results.advisor_info.anniversary_date));
 					}
+				}
+
+			});
+		});
+
+		$(document).on("click", "#edit_professional_info", function() {
+
+			var advisor_id = $(this).attr('advisor_id');
+
+			$(".is_empty").val("");
+
+			$("select.is_empty").val(null).trigger("change");
+
+			$("textarea.is_empty").html("");
+
+			if (!advisor_id)
+				return false;
+
+			$.post(ajax_url, {
+				action: 'get_selected_advisor_professional_data',
+				advisor_id: advisor_id,
+				is_ajax: true,
+			}, function(result) {
+
+				var results = JSON.parse(result);
+
+				if (results) {
+					$("#license_no").val(results.profiessional_info.license_no);
+					$("#npn_no").val(results.profiessional_info.npn_no);
+					$("#professional_info_city").val(results.profiessional_info.city);
+					$("#professional_info_state").val(results.profiessional_info.state).trigger("change");
+					$("#affiliations").val(results.profiessional_info.affiliations).trigger("change");
+					$("#designation").val(results.profiessional_info.designation).trigger("change");
+					$("#carrier_appointed").val(results.profiessional_info.carrier_appointed).trigger("change");
+
+					$("#premium_volume").val(results.profiessional_info.premium_volume).trigger("change");
+
+					var production_percentages = results.profiessional_info.production_percentages;
+					if (production_percentages) {
+						$("#production_percentages").val(production_percentages.split(',')).trigger("change");
+					} else {
+						$("#production_percentages").val('').trigger("change");
+					}
+
+					var carrier_with_business = results.profiessional_info.carrier_with_business;
+					if (carrier_with_business) {
+						$("#carrier_with_business").val(carrier_with_business.split(',')).trigger("change");
+					} else {
+						$("#carrier_with_business").val('').trigger("change");
+					}
+
+					var markets = results.profiessional_info.markets;
+					if (markets) {
+						$("#markets").val(markets.split(',')).trigger("change");
+					} else {
+						$("#markets").val('').trigger("change");
+					}
+
+
 				}
 
 			});

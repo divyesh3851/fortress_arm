@@ -7,7 +7,7 @@ Admin()->check_login(); ?>
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
     <style>
         .swal2-popup {
             padding-bottom: 50px;
@@ -2299,7 +2299,7 @@ Admin()->check_login(); ?>
     <!--end::Scrolltop-->
 
     <!--begin::Javascript-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
 
     <!--begin::Vendors Javascript(used for this page only)-->

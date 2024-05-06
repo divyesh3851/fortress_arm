@@ -14,7 +14,7 @@ if (Admin()->check_for_page_access("analytics", true)) {
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -667,7 +667,7 @@ if (Admin()->check_for_page_access("analytics", true)) {
     </div>
     <!--end::Scrolltop-->
     <!--begin::Javascript-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
 
     <!--begin::Vendors Javascript(used for this page only)-->

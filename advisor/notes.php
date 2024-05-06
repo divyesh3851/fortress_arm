@@ -32,7 +32,7 @@ $get_notes_list = Advisor()->get_note_list($_SESSION['fbs_advisor_id']);
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/advisor/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -301,7 +301,7 @@ $get_notes_list = Advisor()->get_note_list($_SESSION['fbs_advisor_id']);
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/advisor/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Custom Javascript(used for this page only)-->
     <!--end::Custom Javascript-->

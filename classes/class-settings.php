@@ -46,6 +46,22 @@ class Settings
         add_action('wp_ajax_market_delete', array($this, 'market_delete'));
     }
 
+    public function get_timezone_list()
+    {
+        return array(
+            '1' => 'UTC-11: Samoa Standard Time (ST)',
+            '2' => 'UTC-10: Hawaii-Aleutian Standard Time (HAT)',
+            '3' => 'UTC-9: Alaska Standard Time (AKT)',
+            '4' => 'UTC−8: Pacific Standard Time (PT)',
+            '5' => 'UTC−7: Mountain Standard Time (MT)',
+            '6' => 'UTC−6: Central Standard Time (CT)',
+            '7' => 'UTC−5: Eastern Standard Time (ET)',
+            '8' => 'UTC−4: Atlantic Standard Time (AST)',
+            '9' => 'UTC+10: Chamorro Standard Time (ChT)',
+            '10' => 'UTC+12: Wake Island Time Zone (WIT)',
+        );
+    }
+
     public function show_ration_star($rating = 0)
     {
 
@@ -1055,7 +1071,7 @@ class Settings
             "2" => "Cold",
             "3" => "Warm",
             "4" => "Hot",
-            "5" => "Inactive"
+            "5" => "FBS Agent"
         );
     }
 

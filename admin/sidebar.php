@@ -200,7 +200,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'important_links') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'important_links') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/important-links-list">
                         <span class="menu-icon">
                             <i class="las la-link fs-2x"></i>
                         </span>

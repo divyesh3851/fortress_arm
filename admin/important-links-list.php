@@ -1,35 +1,121 @@
-<?php require '../../config.php';
-$page_name = 'user_management';
-$sub_page_name = 'user';
+<?php require '../config.php';
+$page_name = 'important_links';
+$sub_page_name = '';
 Admin()->check_login();
 
-// page permition for admin user
-if (!IS_ADMIN) {
-    wp_redirect(add_query_arg('access', 1, site_url('admin/dashboard')));
-    die();
-}
+require SITE_DIR . '/vendor/autoload.php';
 
-if (isset($_POST['save_user'])) {
+if (isset($_POST['market_export_submit'])) {
 
-    if (!empty(sipost('id'))) {
-        $response = Admin()->update_admin_user();
-    } else {
-        $response = Admin()->add_admin_user();
+    $format = (sipost('format')) ? sipost('format') : '';
+
+    if (!$format) {
+        return false;
     }
 
-    if ($response == 1) {
-        $_SESSION['process_success'] = true;
-    } elseif ($response == 'duplicate') {
-        $_SESSION['process_duplicate'] = true;
-    } else {
-        $_SESSION['process_fail'] = true;
+    $get_market_list = Settings()->get_market_list();
+
+    if ($format == 'excel') {
+
+        $spreadsheet    = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+        $sheet    = $spreadsheet->getActiveSheet();
+
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+
+        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->applyFromArray($styleArray);
+
+        // Set the value of header cell 
+        $column         = 1;
+
+        //$highestRow = $sheet->getHighestRow();
+
+        $highestRow     = 1;
+
+        $headings       =  array("No", "Type");
+
+        foreach ($headings as $key  => $heading) {
+
+            $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
+            $sheet->setCellValue($highestColumn . $highestRow, $heading);
+            $column++;
+        }
+
+        $i = 1;
+
+        foreach ($get_market_list as $result) {
+
+            $fields     = array($i, $result->type);
+
+            $column         = 1;
+            $highestRow     = $sheet->getHighestRow();
+            $highestRow     = $highestRow + 1;
+
+            foreach ($fields as $column_value) {
+
+                $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
+                $sheet->setCellValue($highestColumn . $highestRow, $column_value);
+                $column++;
+            }
+
+            $i++;
+        }
+
+        $filename    = "Market List - " . date('Y_m_d') . ".csv";
+
+        // Output an .xlsx file  
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        header('Content-Encoding: UTF-8');
+        header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        $writer->save('php://output');
+        die();
+        exit;
+    } else if ($format == 'pdf') {
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4', 'margin_left' => '5', 'margin_right' => '5', 'margin_top' => '10', 'margin_bottom' => '10', 'margin_header' => '5', 'margin_footer' => '5', 'defaultheaderline' => 0, 'defaulfooterline' => 0]);
+        $html = '<html> 
+                    <body>
+                        <div class="col-md-12">
+                            <p class="category" style="text-align:center; font-size: 18px;">
+                                <b>Market List</b>
+                            </p>	
+                            <table class="table" width="100%" border="1" cellpadding="4" style="border-collapse: collapse; text-align:left; font-size:13px;">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th align="left">Type</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>';
+        $j = 1;
+        foreach ($get_market_list as $result) {
+            $html .= "<tr>
+                        <td>" . $j . "</td>
+                        <td>" . $result->type . "</td>
+                    </tr>";
+            $j++;
+        }
+
+        $html .= '</tbody>
+                            </table>
+                        </div>
+                    </body>
+                 </html>';
+
+        $stylesheet = file_get_contents(site_url() . '/assets/css/pdf.css'); // external css
+
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->WriteHTML($html);
+
+        $path = "Market List - " . date('Y_m_d') . ".pdf";
+
+        $mpdf->Output($path, 'D');
     }
-
-    wp_redirect(site_url() . '/admin/admin-user/list');
-    exit;
 }
-
-$get_all_admin_role_list = Admin()->get_all_admin_role_list();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,7 +178,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                                     <!--begin::Page title-->
                                     <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
                                         <!--begin::Title-->
-                                        <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Users List</h1>
+                                        <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Important Link List</h1>
                                         <!--end::Title-->
                                     </div>
                                     <!--end::Page title-->
@@ -109,35 +195,6 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                         <div id="kt_app_content" class="app-content flex-column-fluid">
                             <!--begin::Content container-->
                             <div id="kt_app_content_container" class="app-container container-fluid">
-                                <?php if (isset($_SESSION['process_success'])) {
-                                    unset($_SESSION['process_success']); ?>
-                                    <div class="alert alert-success d-flex align-items-center p-5">
-                                        <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                        <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-success">The user has been save successfully.</h4>
-                                        </div>
-                                    </div>
-                                <?php }
-
-                                if (isset($_SESSION['process_duplicate'])) {
-                                    unset($_SESSION['process_duplicate']); ?>
-                                    <div class="alert alert-danger d-flex align-items-center p-5">
-                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                        <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-danger">The user has been already exist.</h4>
-                                        </div>
-                                    </div>
-                                <?php }
-
-                                if (isset($_SESSION['process_fail'])) {
-                                    unset($_SESSION['process_fail']); ?>
-                                    <div class="alert alert-danger d-flex align-items-center p-5">
-                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                        <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-danger">The user has been save failed.</h4>
-                                        </div>
-                                    </div>
-                                <?php } ?>
 
                                 <!--begin::Card-->
                                 <div class="card">
@@ -148,7 +205,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                                             <!--begin::Search-->
                                             <div class="d-flex align-items-center position-relative my-1">
                                                 <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span class="path1"></span><span class="path2"></span></i>
-                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search User" />
+                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Volume" />
                                             </div>
                                             <!--end::Search-->
                                         </div>
@@ -158,12 +215,10 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                                             <!--begin::Toolbar-->
                                             <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
 
-                                                <!--begin::Add User-->
-                                                <button type="button" class="btn btn-primary user_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_user" title="Add User">
-                                                    <i class="ki-duotone ki-plus fs-2"></i>
-                                                    Add User
-                                                </button>
-                                                <!--end::Add User-->
+                                                <!--begin::Export-->
+                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_export_modal">
+                                                    <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
+                                                <!--end::Export-->
 
                                             </div>
                                             <!--end::Toolbar-->
@@ -191,9 +246,8 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                                                         </div>
                                                     </th>
                                                     <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Mobile No</th>
-                                                    <th class="text-start min-w-100px">Actions</th>
+                                                    <th>URL</th>
+                                                    <th>Notes</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="text-gray-600 fw-semibold">
@@ -225,93 +279,45 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
     </div>
     <!--end::App-->
 
-    <!--begin::Modal - View Users-->
-    <div class="modal fade" id="kt_modal_user" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal - Adjust Balance-->
+    <div class="modal fade" id="kt_export_modal" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
-        <div class="modal-dialog modal-dialog-centered mw-700px p-9">
+        <div class="modal-dialog modal-dialog-centered mw-650px">
             <!--begin::Modal content-->
-            <div class="modal-content modal-rounded">
+            <div class="modal-content">
                 <!--begin::Modal header-->
-                <div class="modal-header py-5 d-flex justify-content-between">
+                <div class="modal-header">
                     <!--begin::Modal title-->
-                    <h2>User</h2>
+                    <h2 class="fw-bold">Export Market</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <div id="kt_export_close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                         <i class="ki-outline ki-cross fs-1"></i>
                     </div>
                     <!--end::Close-->
                 </div>
-                <!--begin::Modal header-->
+                <!--end::Modal header-->
                 <!--begin::Modal body-->
-                <div class="modal-body  m-2">
+                <div class="modal-body scroll-y mx-5 mx-xl-10 my-7">
                     <!--begin::Form-->
-                    <form id="kt_modal_add_user_form" class="form" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="id" id="id" class="is_empty">
+                    <form id="" class="form" method="post">
                         <!--begin::Input group-->
-                        <div class="row mb-7">
-                            <div class="col-md-6 fv-row">
-                                <!--begin::Label-->
-                                <label class="required fw-semibold fs-6 mb-2">First Name</label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                <input type="text" name="first_name" id="first_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="First Name" required />
-                                <!--end::Input-->
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <!--begin::Label-->
-                                <label class="required fw-semibold fs-6 mb-2">Last Name</label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                <input type="text" name="last_name" id="last_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Last Name" required />
-                                <!--end::Input-->
-                            </div>
-                        </div>
-                        <div class="row mb-7">
-                            <div class="col-md-6 fv-row">
-                                <!--begin::Label-->
-                                <label class="required fw-semibold fs-6 mb-2">Email</label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                <input type="email" name="email" id="email" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Email" autocomplete="off" required />
-                                <!--end::Input-->
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <!--begin::Label-->
-                                <label class="fw-semibold fs-6 mb-2">Mobile No</label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                <input type="text" name="mobile_no" id="mobile_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Mobile No" />
-                                <!--end::Input-->
-                            </div>
-                        </div>
-                        <div class="row mb-7">
-                            <div class="col-md-6 fv-row">
-                                <!--begin::Label-->
-                                <label class="required fw-semibold fs-6 mb-2">Password</label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                <input type="password" name="password" id="password" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Password" autocomplete="off" required />
-                                <!--end::Input-->
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <!--begin::Label-->
-                                <label class="required fw-semibold fs-6 mb-2">Role</label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                <select name="role_id" id="role_id" data-control="select2" data-placeholder="Select a Role ..." class="form-select form-select-solid is_empty" required>
-                                    <option value="">Select Role</option>
-                                    <?php foreach ($get_all_admin_role_list as $key => $role_result) { ?>
-                                        <option value="<?php echo $role_result->role_id; ?>"><?php echo $role_result->role_name; ?></option>
-                                    <?php } ?>
-                                </select>
-                                <!--end::Input-->
-                            </div>
+                        <div class="fv-row mb-10">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-semibold form-label mb-5">Select Export Format:</label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select data-control="select2" data-placeholder="Select a format" data-hide-search="true" name="format" class="form-select form-select-solid">
+                                <option value="excel">Excel</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                            <!--end::Input-->
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
-                        <div class="text-center pt-10">
-                            <button type="submit" name="save_user" id="save_user" class="btn btn-primary" data-kt-users-modal-action="submit">
+                        <div class="text-center">
+                            <button type="reset" id="market_export_cancel" class="btn btn-light me-3">Discard</button>
+                            <button type="submit" id="market_export_submit" name="market_export_submit" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -321,11 +327,13 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                     </form>
                     <!--end::Form-->
                 </div>
-                <!--begin::Modal body-->
+                <!--end::Modal body-->
             </div>
+            <!--end::Modal content-->
         </div>
+        <!--end::Modal dialog-->
     </div>
-    <!--end::Modal - View Users-->
+    <!--end::Modal - New Card-->
 
     <!--begin::Scrolltop-->
     <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
@@ -352,7 +360,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
             // Shared variables
             var table;
             var dt;
-            var filterOptions;
+            var filterOption;
 
             // Private functions
             var initDatatable = function() {
@@ -370,7 +378,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                         className: 'row-selected'
                     },
                     ajax: {
-                        url: "<?php echo site_url(); ?>/admin/admin_user/list-ajax.php",
+                        url: "<?php echo site_url(); ?>/admin/important-links-list-ajax.php",
                     },
                     columns: [{
                             data: 'record_id'
@@ -379,13 +387,10 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                             data: 'name'
                         },
                         {
-                            data: 'email'
+                            data: 'url'
                         },
                         {
-                            data: 'mobile_no'
-                        },
-                        {
-                            data: null
+                            data: 'notes'
                         },
                     ],
                     columnDefs: [{
@@ -402,31 +407,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                             target: 1,
                             className: 'd-flex align-items-center',
                         },
-                        {
-                            targets: -1,
-                            data: null,
-                            orderable: false,
-                            className: 'text-start',
-                            render: function(data, type, row) {
-                                return `<div class="d-flex">    
-                                            <a href="#" id="${data.record_id}" class="user_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_user" data-kt-docs-table-filter="edit_row">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-user-edit fs-2 text-primary"></i>
-                                                    </div>
-                                                </div> 
-                                            </a> 
 
-                                            <a href="#" data-kt-docs-table-filter="delete_row" id="${data.record_id}">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-trash-alt fs-2 text-primary"></i>
-                                                    </div>
-                                                </div> 
-                                            </a>  
-                                        </div>`;
-                            },
-                        },
                     ],
                 });
 
@@ -490,7 +471,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                                     timer: 2000
                                 }).then(function() {
                                     $.post(ajax_url, {
-                                        action: 'admin_user_delete',
+                                        action: 'market_delete',
                                         id: id
                                     }, function(result) {
 
@@ -533,8 +514,8 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                 // Reset datatable
                 if (resetButton) {
                     resetButton.addEventListener('click', function() {
-                        // Reset LicenseType type
-                        filterOptions[0].checked = true;
+                        // Reset market type
+                        filterOption[0].checked = true;
 
                         // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
                         dt.search('').draw();
@@ -676,7 +657,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
         });
 
 
-        $(document).on("click", ".user_modal", function() {
+        $(document).on("click", ".market_modal", function() {
 
             var id = $(this).attr('id');
 
@@ -686,15 +667,11 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
 
             $("textarea.is_empty").html("");
 
-            $("#password").attr("required", true);
-
             if (!id)
                 return false;
 
-            $("#password").removeAttr("required");
-
             $.post(ajax_url, {
-                action: 'get_selected_admin_user_data',
+                action: 'get_selected_market_data',
                 id: id,
                 is_ajax: true,
             }, function(result) {
@@ -704,11 +681,7 @@ $get_all_admin_role_list = Admin()->get_all_admin_role_list();
                 if (results) {
 
                     $("#id").val(id);
-                    $("#first_name").val(results.first_name);
-                    $("#last_name").val(results.last_name);
-                    $("#email").val(results.email);
-                    $("#mobile_no").val(results.mobile_no);
-                    $("#role_id").val(results.role_id).trigger("change");
+                    $("#market").val(results.market_info.type);
 
                 }
 

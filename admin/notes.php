@@ -38,7 +38,7 @@ $get_notes_list = Advisor()->get_note_list();
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -307,7 +307,7 @@ $get_notes_list = Advisor()->get_note_list();
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Custom Javascript(used for this page only)-->
     <!--end::Custom Javascript-->

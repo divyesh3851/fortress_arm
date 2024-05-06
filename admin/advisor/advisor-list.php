@@ -178,7 +178,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -239,6 +239,17 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                     </div>
                                     <!--end::Page title-->
                                     <!--begin::Actions-->
+                                    <div class="">
+                                        <?php
+                                        $bookmark = Advisor()->check_bookmark(site_url() . '/admin/advisor/advisor-list');
+
+                                        if ($bookmark) { ?>
+                                            <i class="bi bi-bookmarks-fill fs-2x cursor-pointer text-primary  bookmark_page" bookmark_url="<?php echo site_url(); ?>/admin/advisor/advisor-list"></i>
+                                        <?php } else { ?>
+                                            <i class="bi bi-bookmarks fs-2x cursor-pointer text-primary bookmark_page" data-bs-toggle="modal" data-bs-target="#kt_modal_bookmark_link" bookmark_name="Contact List" bookmark_url="<?php echo site_url(); ?>/admin/advisor/advisor-list"></i>
+                                        <?php } ?>
+
+                                    </div>
                                     <!--end::Actions-->
                                 </div>
                                 <!--end::Toolbar wrapper-->
@@ -696,7 +707,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>

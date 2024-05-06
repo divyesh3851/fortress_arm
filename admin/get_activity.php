@@ -2,7 +2,7 @@
 require '../config.php';
 Admin()->check_login();
 
-$get_today_activity = Advisor()->get_today_activity();
+$get_today_activity = Advisor()->get_today_activity($_SESSION['fbs_arm_admin_id']);
 
 $get_advisor_upcoming_activity_list = Advisor()->get_upcoming_activity($_SESSION['fbs_arm_admin_id']);
 

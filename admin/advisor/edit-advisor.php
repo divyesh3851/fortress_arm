@@ -100,7 +100,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/admin/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -236,11 +236,13 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                     <h3 class="stepper-title">Production Info</h3>
                                                 </div>
                                                 <!--end::Step 5-->
+                                                <?php /*
                                                 <!--begin::Step 6-->
                                                 <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <h3 class="stepper-title">Employement</h3>
                                                 </div>
                                                 <!--end::Step 6-->
+                                                */ ?>
                                                 <!--begin::Step 6-->
                                                 <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <h3 class="stepper-title">Interests</h3>
@@ -655,10 +657,14 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                         <!--begin::Repeater-->
                                                         <div id="">
                                                             <!--begin::Form group-->
-                                                            <div class="form-group mb-5">
+                                                            <div class="form-group mb-8">
                                                                 <div data-repeater-list="kt_docs_repeater_basic">
                                                                     <div data-repeater-item>
                                                                         <div class="form-group row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <h4>Primary Phone Number</h4>
+                                                                            </div>
+                                                                            <?php /*
                                                                             <div class="col-md-2">
                                                                                 <label class="required form-label">Type</label>
                                                                                 <select name="contact_type" data-control="select2" data-placeholder="Select a type..." class="form-select form-select-solid is_empty" required>
@@ -668,13 +674,14 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                                     <?php } ?>
                                                                                 </select>
                                                                             </div>
+                                                                            */ ?>
                                                                             <div class="col-md-3">
-                                                                                <label class="required form-label">Primary Phone Number</label>
-                                                                                <input type="text" name="mobile_no" class="form-control mb-2 mb-md-0 " placeholder="Enter Primary Phone Number" value="<?php echo $selected_advisor_data->mobile_no;  ?>" required />
+                                                                                <label class="required form-label">Phone Number</label>
+                                                                                <input type="text" name="mobile_no" class="form-control mb-2 mb-md-0 " placeholder="Enter Phone Number" value="<?php echo $selected_advisor_data->mobile_no;  ?>" required />
                                                                             </div>
                                                                             <div class="col-md-3">
-                                                                                <label class="required form-label">Primary Email Address</label>
-                                                                                <input type="email" name="email" class="form-control mb-2 mb-md-0 " placeholder="Enter Primary Email Address" value="<?php echo $selected_advisor_data->email; ?>" required />
+                                                                                <label class="required form-label">Email Address</label>
+                                                                                <input type="email" name="email" class="form-control mb-2 mb-md-0 " placeholder="Enter Email Address" value="<?php echo $selected_advisor_data->email; ?>" required />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -684,11 +691,15 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
 
                                                             <!--begin::Form group-->
                                                             <div id="contact_info_multi_row" style="display: block">
+                                                                <div class="mb-2 ">
+                                                                    <h4>Additional Phone Number</h4>
+                                                                </div>
                                                                 <div class="extra_contact">
                                                                     <?php if (!empty($get_advisor_extra_contact)) {
                                                                         $i = 1;
                                                                         foreach ($get_advisor_extra_contact as $contact_results) { ?>
                                                                             <div class="form-group row mb-5" id="row_id_<?php echo $i; ?>">
+                                                                                <?php /* 
                                                                                 <div class="col-md-2">
                                                                                     <label class="form-label">Type</label>
                                                                                     <select id="contact_type_1" name="contact_type_1" data-control="select2" data-placeholder="Select a type..." class="form-select form-select-solid is_empty">
@@ -698,13 +709,14 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                                         <?php } ?>
                                                                                     </select>
                                                                                 </div>
+                                                                                */ ?>
                                                                                 <div class="col-md-3">
-                                                                                    <label class="form-label">Additional Phone Number</label>
-                                                                                    <input type="text" name="mobile_no_<?php echo $i; ?>" class="form-control mb-2 mb-md-0" placeholder="Enter Additional Phone Number" value="<?php echo $contact_results->mobile_no; ?>" />
+                                                                                    <label class="form-label"> Phone Number</label>
+                                                                                    <input type="text" name="mobile_no_<?php echo $i; ?>" class="form-control mb-2 mb-md-0" placeholder="Enter  Phone Number" value="<?php echo $contact_results->mobile_no; ?>" />
                                                                                 </div>
                                                                                 <div class="col-md-3">
-                                                                                    <label class="form-label">Additional Email Address</label>
-                                                                                    <input type="email" name="email_<?php echo $i; ?>" class="form-control mb-2 mb-md-0" placeholder="Enter Additional Email Address" value="<?php echo $contact_results->email; ?>" />
+                                                                                    <label class="form-label"> Email Address</label>
+                                                                                    <input type="email" name="email_<?php echo $i; ?>" class="form-control mb-2 mb-md-0" placeholder="Enter Email Address" value="<?php echo $contact_results->email; ?>" />
                                                                                 </div>
 
                                                                                 <div class="col-md-2">
@@ -720,6 +732,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         }
                                                                     } else { ?>
                                                                         <div class="form-group row mb-5" id="row_id_1">
+                                                                            <?php /* 
                                                                             <div class="col-md-2">
                                                                                 <label class="form-label">Type</label>
                                                                                 <select id="contact_type_1" name="contact_type_1" data-control="select2" data-placeholder="Select a type..." class="form-select form-select-solid is_empty">
@@ -729,13 +742,14 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                                     <?php } ?>
                                                                                 </select>
                                                                             </div>
+                                                                            */ ?>
                                                                             <div class="col-md-3">
-                                                                                <label class="form-label">Additional Phone Number</label>
-                                                                                <input type="text" name="mobile_no_1" class="form-control mb-2 mb-md-0" placeholder="Enter Additional Phone Number" />
+                                                                                <label class="form-label"> Phone Number</label>
+                                                                                <input type="text" name="mobile_no_1" class="form-control mb-2 mb-md-0" placeholder="Enter Phone Number" />
                                                                             </div>
                                                                             <div class="col-md-3">
-                                                                                <label class="form-label">Additional Email Address</label>
-                                                                                <input type="email" name="email_1" class="form-control mb-2 mb-md-0" placeholder="Enter Additional Email Address" />
+                                                                                <label class="form-label"> Email Address</label>
+                                                                                <input type="email" name="email_1" class="form-control mb-2 mb-md-0" placeholder="Enter Email Address" />
                                                                             </div>
 
                                                                             <div class="col-md-2">
@@ -1435,7 +1449,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/admin/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
     <!--<script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/create-account.js"></script>-->
@@ -1446,7 +1460,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
 
     <script type="text/html" id="tmpl-contact-info-row-list">
         <div class="form-group row mb-5" id="row_id_{{{data.index}}}">
-            <div class="col-md-2">
+            <!--<div class="col-md-2">
                 <label class="form-label">Type</label>
                 <select id="contact_type_{{{data.index}}}" name="contact_type_{{{data.index}}}" data-control="select2" data-placeholder="Select a type..." class="form-select form-select-solid is_empty">
                     <option value="">Select Type</option>
@@ -1454,14 +1468,15 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                         <option value="<?php echo $contact_type_result; ?>"><?php echo $contact_type_result; ?></option>
                     <?php } ?>
                 </select>
+            </div>-->
+
+            <div class="col-md-3">
+                <label class="form-label">Phone Number</label>
+                <input type="text" name="mobile_no_{{{data.index}}}" class="form-control mb-2 mb-md-0" placeholder="Enter Phone Number" />
             </div>
             <div class="col-md-3">
-                <label class="form-label">Additional Phone Number</label>
-                <input type="text" name="mobile_no_{{{data.index}}}" class="form-control mb-2 mb-md-0" placeholder="Enter Additional Phone Number" />
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Additional Email Address</label>
-                <input type="email" name="email_{{{data.index}}}" class="form-control mb-2 mb-md-0" placeholder="Enter Additional Email Address" />
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email_{{{data.index}}}" class="form-control mb-2 mb-md-0" placeholder="Enter Email Address" />
             </div>
 
             <div class="col-md-2">

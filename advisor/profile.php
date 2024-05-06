@@ -22,7 +22,7 @@ $admin_profile_img = Advisor()->get_advisor_meta($get_login_admin_info->id, 'pro
 <!--begin::Head-->
 
 <head>
-    <?php require SITE_DIR . '/advisor/head.php'; ?>
+    <?php require SITE_DIR . '/head.php'; ?>
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -1016,9 +1016,6 @@ $admin_profile_img = Advisor()->get_advisor_meta($get_login_admin_info->id, 'pro
                                                         <!--begin::Label-->
                                                         <label class="col-lg-4 col-form-label fw-semibold fs-6">
                                                             <span class="required">Contact Phone</span>
-                                                            <span class="ms-1" data-bs-toggle="tooltip" title="Phone number must be active">
-                                                                <i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
-                                                            </span>
                                                         </label>
                                                         <!--end::Label-->
                                                         <!--begin::Col-->
@@ -1034,9 +1031,6 @@ $admin_profile_img = Advisor()->get_advisor_meta($get_login_admin_info->id, 'pro
                                                         <!--begin::Label-->
                                                         <label class="col-lg-4 col-form-label fw-semibold fs-6">
                                                             <span class="">Password</span>
-                                                            <span class="ms-1" data-bs-toggle="tooltip" title="">
-                                                                <i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
-                                                            </span>
                                                         </label>
                                                         <!--end::Label-->
                                                         <!--begin::Col-->
@@ -1052,9 +1046,6 @@ $admin_profile_img = Advisor()->get_advisor_meta($get_login_admin_info->id, 'pro
                                                         <!--begin::Label-->
                                                         <label class="col-lg-4 col-form-label fw-semibold fs-6">
                                                             <span class="required">State</span>
-                                                            <span class="ms-1" data-bs-toggle="tooltip" title="State">
-                                                                <i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
-                                                            </span>
                                                         </label>
                                                         <!--end::Label-->
                                                         <!--begin::Col-->
@@ -1162,7 +1153,7 @@ $admin_profile_img = Advisor()->get_advisor_meta($get_login_admin_info->id, 'pro
         var hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <?php require SITE_DIR . '/advisor/footer_script.php'; ?>
+    <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>
@@ -1171,16 +1162,6 @@ $admin_profile_img = Advisor()->get_advisor_meta($get_login_admin_info->id, 'pro
     <script src="<?php echo site_url(); ?>/assets/js/custom/pages/user-profile/general.js"></script>
     <script src="<?php echo site_url(); ?>/assets/js/widgets.bundle.js"></script>
     <script src="<?php echo site_url(); ?>/assets/js/custom/widgets.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/apps/chat/chat.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/upgrade-plan.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/create-campaign.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/offer-a-deal/type.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/offer-a-deal/details.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/offer-a-deal/finance.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/offer-a-deal/complete.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/offer-a-deal/main.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/create-app.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/utilities/modals/users-search.js"></script>
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
 </body>

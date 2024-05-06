@@ -137,6 +137,8 @@ $personal_interest = ($selected_advisor_data->personal_interest) ? implode(",", 
 
 $financial_interest = ($selected_advisor_data->financial_interest) ? implode(",", (unserialize($selected_advisor_data->financial_interest))) : '';
 
+$business_interest = ($selected_advisor_data->business_interest) ? implode(",", (unserialize($selected_advisor_data->business_interest))) : '';
+
 $get_advisor_upcoming_activity_list = Advisor()->get_advisor_upcoming_activity($selected_advisor_data->id);
 
 $get_advisor_past_activity_list = Advisor()->get_advisor_past_activity($selected_advisor_data->id);
@@ -151,7 +153,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 <!--begin::Head-->
 
 <head>
-	<?php require SITE_DIR . '/advisor/head.php'; ?>
+	<?php require SITE_DIR . '/head.php'; ?>
 	<link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 </head>
 <!--end::Head-->
@@ -356,16 +358,16 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 										<!--begin::Card-->
 										<div class="ribbon ribbon-end ribbon-clip">
 											<div class="ribbon-label">
-												<?php if ($selected_advisor_data->advisor_status == '1') {
+												<?php if ($selected_advisor_data->advisor_status == 1) {
 													echo 'New <span class="ribbon-inner bg-success"></span>';
-												} else if ($selected_advisor_data->advisor_status == '2') {
+												} else if ($selected_advisor_data->advisor_status == 2) {
 													echo 'Cold <span class="ribbon-inner bg-primary"></span>';
-												} else if ($selected_advisor_data->advisor_status == '3') {
+												} else if ($selected_advisor_data->advisor_status == 3) {
 													echo 'Warm <span class="ribbon-inner bg-warning"></span>';
-												} else if ($selected_advisor_data->advisor_status == '4') {
+												} else if ($selected_advisor_data->advisor_status == 4) {
 													echo 'Hot <span class="ribbon-inner bg-info"></span>';
-												} else {
-													echo 'Inactive <span class="ribbon-inner bg-danger"></span>';
+												} else if ($selected_advisor_data->advisor_status == 5) {
+													echo 'FBS Agent <span class="ribbon-inner bg-dark"></span>';
 												} ?>
 											</div>
 										</div>
@@ -522,7 +524,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																			<span class="path3"></span>
 																		</i>
 																		<h3 class="fw-bold p-2 pt-0 pb-0">
-																			Profile Info
+																			Profile Information
 																		</h3>
 																	</div>
 																	<!--end::Card title-->
@@ -627,7 +629,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																			<span class="path3"></span>
 																		</i>
 																		<h3 class="fw-bold p-2 pt-0 pb-0">
-																			Employed
+																			Business Information
 																		</h3>
 																	</div>
 																	<!--end::Card title-->
@@ -840,17 +842,22 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																</div>
 																<!--begin::Card body-->
 																<div class="card-body p-5">
-																	<div class="mb-10 personal_interest_tag_section">
+																	<div class="mb-5 personal_interest_tag_section">
 																		<?php  ?>
 																		<label class="form-label">Personal Interests</label>
 
 																		<input class="form-control" value="<?php echo $personal_interest; ?>" id="personal_interest" />
 
 																	</div>
-																	<div class="mb-10 financial_interest_tag_section">
+																	<div class="mb-5 financial_interest_tag_section">
 																		<label class="form-label">Financial Interests</label>
 
 																		<input class="form-control" value="<?php echo $financial_interest; ?>" id="financial_interest" />
+																	</div>
+																	<div class="mb-5 business_interest_tag_section">
+																		<label class="form-label">Business Interests</label>
+
+																		<input class="form-control" value="<?php echo $business_interest; ?>" id="business_interest" />
 																	</div>
 																</div>
 															</div>
@@ -1829,7 +1836,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 						<div class="w-100">
 							<!--begin::Input group-->
 							<div class="row mb-7">
-								<div class="col-md-12 fv-row">
+								<div class="col-md-8 fv-row">
 									<!--begin::Label-->
 									<label class="required fw-semibold fs-6 mb-2">Title</label>
 									<!--end::Label-->
@@ -1837,15 +1844,30 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<input type="text" name="title" id="activity_title" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Title" required />
 									<!--end::Input-->
 								</div>
-							</div>
-							<!--begin::Input group-->
-							<div class="row mb-7">
+
 								<div class="col-md-4 fv-row">
 									<!--begin::Label-->
 									<label class="required fw-semibold fs-6 mb-2">Date</label>
 									<!--end::Label-->
 									<!--begin::Input-->
 									<input type="text" name="date" id="activity_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Date" />
+									<!--end::Input-->
+								</div>
+							</div>
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<div class="col-md-4 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">Recurring</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="recurring" id="recurring" data-control="select2" data-placeholder="Select ..." class="form-select form-select-solid is_empty" required>
+										<option value="">Select </option>
+										<option value="once"> Once </option>
+										<option value="weekly"> Weekly </option>
+										<option value="monthly"> Monthly </option>
+										<option value="yearly"> Yearly </option>
+									</select>
 									<!--end::Input-->
 								</div>
 								<div class="col-md-4 fv-row">
@@ -1996,7 +2018,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 		var hostUrl = "assets/";
 	</script>
 	<!--begin::Global Javascript Bundle(mandatory for all pages)-->
-	<?php require SITE_DIR . '/advisor/footer_script.php'; ?>
+	<?php require SITE_DIR . '/footer_script.php'; ?>
 	<!--end::Global Javascript Bundle-->
 	<!--begin::Vendors Javascript(used for this page only)-->
 	<script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>
@@ -2005,9 +2027,11 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 	<script>
 		var personal_interest_input = document.querySelector("#personal_interest");
 		var financial_interest_input = document.querySelector("#financial_interest");
+		var business_interest_input = document.querySelector("#business_interest");
 
 		var personal_interest_tagify = new Tagify(personal_interest_input);
 		var financial_interest_tagify = new Tagify(financial_interest_input);
+		var business_interest_tagify = new Tagify(business_interest_input);
 
 		personal_interest_tagify.on('add', function(event) {
 			update_personal_interest_tag();
@@ -2017,12 +2041,20 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 			update_financial_interest_tag();
 		});
 
+		business_interest_tagify.on('add', function(event) {
+			update_business_interest_tag();
+		});
+
 		$(document).on('click', '.personal_interest_tag_section .tagify__tag', function() {
 			update_personal_interest_tag();
 		});
 
 		$(document).on('click', '.financial_interest_tag_section .tagify__tag', function() {
 			update_financial_interest_tag();
+		});
+
+		$(document).on('click', '.business_interest_tag_section .tagify__tag', function() {
+			update_business_interest_tag();
 		});
 
 		function update_personal_interest_tag() {
@@ -2047,6 +2079,20 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 				action: 'update_advisor_financial_interest',
 				advisor_id: '<?php echo $selected_advisor_data->id ?>',
 				financial_interest: financial_interest_tag,
+				is_ajax: true,
+			}, function(result) {
+
+			});
+		}
+
+		function update_business_interest_tag() {
+
+			var business_interest_tag = business_interest_tagify.value.map(tagData => tagData.value);
+
+			$.post(ajax_url, {
+				action: 'update_advisor_business_interest',
+				advisor_id: '<?php echo $selected_advisor_data->id ?>',
+				business_interest: business_interest_tag,
 				is_ajax: true,
 			}, function(result) {
 

@@ -125,7 +125,7 @@ $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_ad
 <!--begin::Head-->
 
 <head>
-	<?php require SITE_DIR . '/admin/head.php'; ?>
+	<?php require SITE_DIR . '/head.php'; ?>
 	<link href="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 </head>
 <!--end::Head-->
@@ -1632,7 +1632,7 @@ $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_ad
 		var hostUrl = "assets/";
 	</script>
 	<!--begin::Global Javascript Bundle(mandatory for all pages)-->
-	<?php require SITE_DIR . '/admin/footer_script.php'; ?>
+	<?php require SITE_DIR . '/footer_script.php'; ?>
 	<!--end::Global Javascript Bundle-->
 	<!--begin::Vendors Javascript(used for this page only)-->
 	<script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>
