@@ -18,6 +18,26 @@ class Admin
         add_action('wp_ajax_get_all_admin_user_list_role_wise', array($this, 'get_all_admin_user_list_role_wise'));
 
         add_action('wp_ajax_admin_role_delete', array($this, 'admin_role_delete'));
+
+        add_action('wp_ajax_global_search', array($this, 'global_search'));
+    }
+
+    public function global_search()
+    {
+        global $wpdb;
+
+        if (isset($_SESSION['fbs_advisor_id'])) {
+            $user_id = $_SESSION['fbs_advisor_id'];
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $user_id = $_SESSION['fbs_arm_admin_id'];
+            $user_type = 'admin';
+        }
+
+        $search_result = $wpdb->get_results("SELECT * FROM important_links WHERE user_id = " . $user_id . " AND user_type = '" . $user_type . "' AND ( name LIKE '%" . sipost('search_text') . "%' OR url LIKE '" . sipost('search_text') . "') ");
+
+        echo json_encode(array("links" => $search_result));
+        die();
     }
 
     public function admin_role_delete($role_id = '')

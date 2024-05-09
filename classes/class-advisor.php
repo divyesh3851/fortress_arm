@@ -40,6 +40,24 @@ class Advisor
         add_action('wp_ajax_save_bookmark', array($this, 'save_bookmark'));
 
         add_action('wp_ajax_remove_bookmark', array($this, 'remove_bookmark'));
+
+        add_action('wp_ajax_delete_activity', array($this, 'delete_activity'));
+    }
+
+    public function delete_activity($activity_id = '')
+    {
+        global $wpdb;
+
+        $activity_id = (sipost('activity_id')) ? sipost('activity_id') : $activity_id;
+
+        if (!$activity_id) {
+            return false;
+        }
+
+        $response = $wpdb->update("activity", array('status' => 1), array("id" => $activity_id));
+
+        echo json_encode(array("status" => $response));
+        die();
     }
 
     public function remove_bookmark($url = '')
@@ -702,12 +720,23 @@ class Advisor
         die();
     }
 
-    public function update_activity($advisor_id)
+    public function update_activity($advisor_id = '')
     {
         global $wpdb;
 
         if (!sipost('title') || !sipost('date')) {
             return false;
+        }
+
+        if (sipost('advisor_id') || $advisor_id) {
+            $user_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_advisor_id'])) {
+            $user_id = $_SESSION['fbs_advisor_id'];
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $user_id = $_SESSION['fbs_arm_admin_id'];
+            $user_type = 'admin';
         }
 
         $activity_date = (sipost('date')) ? strtotime(str_replace(',', '', sipost('date'))) : '';
@@ -727,13 +756,13 @@ class Advisor
 
         if ($wpdb->update("activity", $activity_info, array('id' => sipost('activity_id')))) {
 
-            Admin()->create_track_log_activity($advisor_id, sipost('activity_id'), 'activity update', 'activity_update', $activity_info, '', 'Activity has been updated', 'advisor');
+            Admin()->create_track_log_activity($user_id, sipost('activity_id'), 'activity update', 'activity_update', $activity_info, '', 'Activity has been updated', $user_type);
 
             return true;
         }
     }
 
-    public function add_activity($advisor_id)
+    public function add_activity($advisor_id = '')
     {
         global $wpdb;
 
@@ -741,9 +770,18 @@ class Advisor
             return false;
         }
 
-        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+        if (sipost('advisor_id') || $advisor_id) {
+            $user_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_advisor_id'])) {
+            $user_id = $_SESSION['fbs_advisor_id'];
+            $user_type = 'advisor';
+        } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+            $user_id = $_SESSION['fbs_arm_admin_id'];
+            $user_type = 'admin';
+        }
 
-        if (!$advisor_id) {
+        if (!$user_id) {
             return false;
         }
 
@@ -752,8 +790,8 @@ class Advisor
 
         $activity_info = array(
             'logged_id'     => ADMIN_USER_ID,
-            'user_id'       => $advisor_id,
-            'user_type'     => 'advisor',
+            'user_id'       => $user_id,
+            'user_type'     => $user_type,
             'title'         => sipost('title'),
             'activity_date' => $activity_date,
             'recurring'     => sipost('recurring'),
@@ -769,7 +807,7 @@ class Advisor
 
             $last_id = $wpdb->insert_id;
 
-            Admin()->create_track_log_activity($advisor_id, $last_id, 'activity add', 'activity_add', $activity_info, '', 'New Activity Added', 'advisor');
+            Admin()->create_track_log_activity($user_id, $last_id, 'activity add', 'activity_add', $activity_info, '', 'New Activity Added', 'advisor');
 
             return true;
         }

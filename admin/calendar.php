@@ -3,6 +3,26 @@ $page_name = 'calendar';
 $sub_page_name = '';
 Admin()->check_login();
 
+if (isset($_POST['save_activity'])) {
+
+    if (sipost('activity_id')) {
+        $response = Advisor()->update_activity();
+    } else {
+        $response = Advisor()->add_activity();
+    }
+
+
+    if ($response == 1) {
+        $_SESSION['process_activity_success'] = true;
+    } elseif ($response == 'duplicate') {
+        $_SESSION['process_activity_duplicate'] = true;
+    } else {
+        $_SESSION['process_activity_fail'] = true;
+    }
+
+    wp_redirect(site_url() . '/admin/calendar');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,26 +76,15 @@ Admin()->check_login();
                     <div class="d-flex flex-column flex-column-fluid">
 
                         <?php
-                        if (isset($_SESSION['process_success'])) {
-                            unset($_SESSION['process_success']); ?>
+                        if (isset($_SESSION['process_activity_success'])) {
+                            unset($_SESSION['process_activity_success']); ?>
                             <div class="alert alert-success d-flex align-items-center p-5 ms-lg-15">
                                 <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
                                 <div class="d-flex flex-column">
-                                    <h4 class="mb-1 text-success">The note has been save successfully.</h4>
+                                    <h4 class="mb-1 text-success">The activity has been saved successfully.</h4>
                                 </div>
                             </div>
-                        <?php }
-
-                        if (isset($_SESSION['process_fail'])) {
-                            unset($_SESSION['process_fail']); ?>
-                            <div class="alert alert-danger d-flex align-items-center p-5 ms-lg-15">
-                                <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                <div class="d-flex flex-column">
-                                    <h4 class="mb-1 text-danger">Saving the note has failed.</h4>
-                                </div>
-                            </div>
-                        <?php }
-                        ?>
+                        <?php } ?>
 
                         <!--begin::Main-->
                         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -142,7 +151,7 @@ Admin()->check_login();
                                             <!--begin::Card body-->
                                             <div class="card-body">
                                                 <!--begin::Calendar-->
-                                                <div id="event_calendar"></div>
+                                                <div id="activity_calendar"></div>
                                                 <!--end::Calendar-->
                                             </div>
                                             <!--end::Card body-->
@@ -150,139 +159,138 @@ Admin()->check_login();
                                         <!--end::Card-->
                                         <!--begin::Modals-->
                                         <!--begin::Modal - New Product-->
-                                        <div class="modal fade" id="kt_modal_add_event" tabindex-="1" aria-hidden="true" data-bs-focus="false">
+                                        <div class="modal fade" id="kt_modal_activity" tabindex-="1" aria-hidden="true" data-bs-focus="false">
                                             <!--begin::Modal dialog-->
                                             <div class="modal-dialog modal-dialog-centered mw-650px">
                                                 <!--begin::Modal content-->
                                                 <div class="modal-content">
+                                                    <!--begin::Modal header-->
+                                                    <div class="modal-header">
+                                                        <!--begin::Modal title-->
+                                                        <h2 class="fw-bold" data-kt-calendar="title"> Event Details</h2>
+                                                        <!--end::Modal title-->
+                                                        <!--begin::Close-->
+                                                        <div class="btn btn-icon btn-sm btn-active-icon-primary" id="kt_modal_activity_close" data-bs-dismiss="modal">
+                                                            <i class="ki-outline ki-cross fs-1"></i>
+                                                        </div>
+                                                        <!--end::Close-->
+                                                    </div>
+                                                    <!--end::Modal header-->
                                                     <!--begin::Form-->
-                                                    <form class="form" action="#" id="kt_modal_add_event_form">
-                                                        <!--begin::Modal header-->
-                                                        <div class="modal-header">
-                                                            <!--begin::Modal title-->
-                                                            <h2 class="fw-bold" data-kt-calendar="title">Add Event</h2>
-                                                            <!--end::Modal title-->
-                                                            <!--begin::Close-->
-                                                            <div class="btn btn-icon btn-sm btn-active-icon-primary" id="kt_modal_add_event_close" data-bs-dismiss="modal">
-                                                                <i class="ki-outline ki-cross fs-1"></i>
-                                                            </div>
-                                                            <!--end::Close-->
-                                                        </div>
-                                                        <!--end::Modal header-->
-                                                        <!--begin::Modal body-->
-                                                        <div class="modal-body py-10 px-lg-17">
-                                                            <!--begin::Input group-->
-                                                            <div class="fv-row mb-9">
-                                                                <!--begin::Label-->
-                                                                <label class="fs-6 fw-semibold required mb-2">Event Name</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-solid" placeholder="" name="calendar_event_name" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <!--end::Input group-->
-                                                            <!--begin::Input group-->
-                                                            <div class="fv-row mb-9">
-                                                                <!--begin::Label-->
-                                                                <label class="fs-6 fw-semibold mb-2">Event Description</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-solid" placeholder="" name="calendar_event_description" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <!--end::Input group-->
-                                                            <!--begin::Input group-->
-                                                            <div class="fv-row mb-9">
-                                                                <!--begin::Label-->
-                                                                <label class="fs-6 fw-semibold mb-2">Event Location</label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-solid" placeholder="" name="calendar_event_location" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <!--end::Input group-->
-                                                            <!--begin::Input group-->
-                                                            <div class="fv-row mb-9">
-                                                                <!--begin::Checkbox-->
-                                                                <label class="form-check form-check-custom form-check-solid">
-                                                                    <input class="form-check-input" type="checkbox" value="" id="kt_calendar_datepicker_allday" />
-                                                                    <span class="form-check-label fw-semibold" for="kt_calendar_datepicker_allday">All Day</span>
-                                                                </label>
-                                                                <!--end::Checkbox-->
-                                                            </div>
-                                                            <!--end::Input group-->
-                                                            <!--begin::Input group-->
-                                                            <div class="row row-cols-lg-2 g-10">
-                                                                <div class="col">
-                                                                    <div class="fv-row mb-9">
+                                                    <div class="modal-body">
+                                                        <form class="" id="kt_modal_activity_form" method="post" enctype="multipart/form-data">
+                                                            <input type="hidden" name="activity_id" id="activity_id" class="is_empty" value="">
+                                                            <div class="w-100">
+                                                                <!--begin::Input group-->
+                                                                <div class="row mb-7">
+                                                                    <div class="col-md-8 fv-row">
                                                                         <!--begin::Label-->
-                                                                        <label class="fs-6 fw-semibold mb-2 required">Event Start Date</label>
+                                                                        <label class="required fw-semibold fs-6 mb-2">Title</label>
                                                                         <!--end::Label-->
                                                                         <!--begin::Input-->
-                                                                        <input class="form-control form-control-solid" name="calendar_event_start_date" placeholder="Pick a start date" id="kt_calendar_datepicker_start_date" />
+                                                                        <input type="text" name="title" id="activity_title" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Title" required />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="col-md-4 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class="required fw-semibold fs-6 mb-2">Date</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="date" id="activity_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Date" required />
                                                                         <!--end::Input-->
                                                                     </div>
                                                                 </div>
-                                                                <div class="col" data-kt-calendar="datepicker">
-                                                                    <div class="fv-row mb-9">
+                                                                <!--begin::Input group-->
+                                                                <div class="row mb-7">
+                                                                    <div class="col-md-4 fv-row">
                                                                         <!--begin::Label-->
-                                                                        <label class="fs-6 fw-semibold mb-2">Event Start Time</label>
+                                                                        <label class="required fw-semibold fs-6 mb-2">Recurring</label>
                                                                         <!--end::Label-->
                                                                         <!--begin::Input-->
-                                                                        <input class="form-control form-control-solid" name="calendar_event_start_time" placeholder="Pick a start time" id="kt_calendar_datepicker_start_time" />
+                                                                        <select name="recurring" id="recurring" data-control="select2" data-placeholder="Select ..." class="form-select form-select-solid is_empty" required>
+                                                                            <option value="">Select </option>
+                                                                            <option value="once"> Once </option>
+                                                                            <option value="weekly"> Weekly </option>
+                                                                            <option value="monthly"> Monthly </option>
+                                                                            <option value="yearly"> Yearly </option>
+                                                                        </select>
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="col-md-4 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class=" fw-semibold fs-6 mb-2">Start Time</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="start_time" id="activity_start_time" class="flat_time_pickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Start Time" />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="col-md-4 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class=" fw-semibold fs-6 mb-2">End Time</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="end_time" id="activity_end_time" class="flat_time_pickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="End Time" data-bs-focus="true" />
                                                                         <!--end::Input-->
                                                                     </div>
                                                                 </div>
+                                                                <!--begin::Input group-->
+                                                                <div class="row mb-7">
+                                                                    <div class="col-md-6 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class="fw-semibold fs-6 mb-2">Type</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <select name="type" id="activity_type" data-control="select2" data-placeholder="Select a Type..." class="form-select form-select-solid is_empty" required>
+                                                                            <option value="">Select Type</option>
+                                                                            <?php foreach (Settings()->get_activity_type_list() as $key => $type_result) { ?>
+                                                                                <option value="<?php echo $key; ?>"><?php echo $type_result; ?></option>
+                                                                            <?php } ?>
+                                                                        </select>
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                    <div class="col-md-6 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class="fw-semibold fs-6 mb-2">Location</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <input type="text" name="location" id="activity_location" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Location" />
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-7">
+                                                                    <div class="col-md-12 fv-row">
+                                                                        <!--begin::Label-->
+                                                                        <label class="fw-semibold fs-6 mb-2">Note</label>
+                                                                        <!--end::Label-->
+                                                                        <!--begin::Input-->
+                                                                        <textarea type="text" name="note" id="activity_note" rows="5" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Note"></textarea>
+                                                                        <!--end::Input-->
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class=" text-center">
+                                                                    <!--begin::Button-->
+                                                                    <button type="reset" id="kt_modal_activity_cancel" class="btn btn-light me-3">Cancel</button>
+                                                                    <!--end::Button-->
+                                                                    <!--begin::Button-->
+                                                                    <button type="submit" name="save_activity" id="save_activity" class="btn btn-primary">
+                                                                        <span class="indicator-label">Submit</span>
+                                                                        <span class="indicator-progress">Please wait...
+                                                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                                                    </button>
+                                                                    <!--end::Button-->
+                                                                </div>
+
                                                             </div>
-                                                            <!--end::Input group-->
-                                                            <!--begin::Input group-->
-                                                            <div class="row row-cols-lg-2 g-10">
-                                                                <div class="col">
-                                                                    <div class="fv-row mb-9">
-                                                                        <!--begin::Label-->
-                                                                        <label class="fs-6 fw-semibold mb-2 required">Event End Date</label>
-                                                                        <!--end::Label-->
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-control form-control-solid" name="calendar_event_end_date" placeholder="Pick a end date" id="kt_calendar_datepicker_end_date" />
-                                                                        <!--end::Input-->
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col" data-kt-calendar="datepicker">
-                                                                    <div class="fv-row mb-9">
-                                                                        <!--begin::Label-->
-                                                                        <label class="fs-6 fw-semibold mb-2">Event End Time</label>
-                                                                        <!--end::Label-->
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-control form-control-solid" name="calendar_event_end_time" placeholder="Pick a end time" id="kt_calendar_datepicker_end_time" />
-                                                                        <!--end::Input-->
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!--end::Input group-->
-                                                        </div>
-                                                        <!--end::Modal body-->
-                                                        <!--begin::Modal footer-->
-                                                        <div class="modal-footer flex-center">
-                                                            <!--begin::Button-->
-                                                            <button type="reset" id="kt_modal_add_event_cancel" class="btn btn-light me-3">Cancel</button>
-                                                            <!--end::Button-->
-                                                            <!--begin::Button-->
-                                                            <button type="button" id="kt_modal_add_event_submit" class="btn btn-primary">
-                                                                <span class="indicator-label">Submit</span>
-                                                                <span class="indicator-progress">Please wait...
-                                                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                                            </button>
-                                                            <!--end::Button-->
-                                                        </div>
-                                                        <!--end::Modal footer-->
-                                                    </form>
+                                                        </form>
+                                                    </div>
                                                     <!--end::Form-->
                                                 </div>
                                             </div>
                                         </div>
                                         <!--end::Modal - New Product-->
                                         <!--begin::Modal - New Product-->
-                                        <div class="modal fade" id="kt_modal_view_event" tabindex="-1" data-bs-focus="false" aria-hidden="true">
+                                        <div class="modal fade" id="kt_modal_view_activity" tabindex="-1" data-bs-focus="false" aria-hidden="true">
                                             <!--begin::Modal dialog-->
                                             <div class="modal-dialog modal-dialog-centered mw-650px">
                                                 <!--begin::Modal content-->
@@ -290,17 +298,17 @@ Admin()->check_login();
                                                     <!--begin::Modal header-->
                                                     <div class="modal-header border-0 justify-content-end">
                                                         <!--begin::Edit-->
-                                                        <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Edit Event" id="kt_modal_view_event_edit">
+                                                        <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Edit Activity" id="kt_modal_activity_edit">
                                                             <i class="ki-outline ki-pencil fs-2"></i>
                                                         </div>
                                                         <!--end::Edit-->
                                                         <!--begin::Edit-->
-                                                        <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Delete Event" id="kt_modal_view_event_delete">
+                                                        <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Delete Activity" id="kt_modal_activity_delete">
                                                             <i class="ki-outline ki-trash fs-2"></i>
                                                         </div>
                                                         <!--end::Edit-->
                                                         <!--begin::Close-->
-                                                        <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Hide Event" data-bs-dismiss="modal">
+                                                        <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Hide Activity" data-bs-dismiss="modal">
                                                             <i class="ki-outline ki-cross fs-2x"></i>
                                                         </div>
                                                         <!--end::Close-->
@@ -412,446 +420,147 @@ Admin()->check_login();
     <!--begin::Custom Javascript(used for this page only)-->
     <!--end::Custom Javascript-->
     <script>
-        "use strict";
-        var KTAppCalendar = (function() {
-            var e,
-                t,
-                n,
-                a,
-                o,
-                r,
-                i,
-                l,
-                d,
-                c,
-                s,
-                m,
-                u,
-                v,
-                f,
-                p,
-                y,
-                D,
-                k,
-                _,
-                b,
-                g,
-                S,
-                h,
-                T,
-                Y,
-                w,
-                x,
-                L,
-                E = {
-                    id: "",
-                    eventName: "",
-                    eventDescription: "",
-                    eventLocation: "",
-                    startDate: "",
-                    endDate: "",
-                    allDay: !1
-                };
-            const M = () => {
-                    (v.innerText = "Activity Details"), u.show();
-                    const o = f.querySelectorAll('[data-kt-calendar="datepicker"]'),
-                        i = f.querySelector("#kt_calendar_datepicker_allday");
-                    i.addEventListener("click", (e) => {
-                            e.target.checked ?
-                                o.forEach((e) => {
-                                    e.classList.add("d-none");
-                                }) :
-                                (l.setDate(E.startDate, !0, "Y-m-d"),
-                                    o.forEach((e) => {
-                                        e.classList.remove("d-none");
-                                    }));
-                        }),
-                        C(E),
-                        D.addEventListener("click", function(o) {
-                            o.preventDefault(),
-                                p &&
-                                p.validate().then(function(o) {
-                                    console.log("validated!"),
-                                        "Valid" == o ?
-                                        (D.setAttribute("data-kt-indicator", "on"),
-                                            (D.disabled = !0),
-                                            setTimeout(function() {
-                                                D.removeAttribute("data-kt-indicator"),
-                                                    Swal.fire({
-                                                        text: "New event added to calendar!",
-                                                        icon: "success",
-                                                        buttonsStyling: !1,
-                                                        confirmButtonText: "Ok, got it!",
-                                                        customClass: {
-                                                            confirmButton: "btn btn-primary"
-                                                        }
-                                                    }).then(function(
-                                                        o
-                                                    ) {
-                                                        if (o.isConfirmed) {
-                                                            u.hide(), (D.disabled = !1);
-                                                            let o = !1;
-                                                            i.checked && (o = !0), 0 === c.selectedDates.length && (o = !0);
-                                                            var d = moment(r.selectedDates[0]).format(),
-                                                                s = moment(l.selectedDates[l.selectedDates.length - 1]).format();
-                                                            if (!o) {
-                                                                const e = moment(r.selectedDates[0]).format("YYYY-MM-DD"),
-                                                                    t = e;
-                                                                (d = e + "T" + moment(c.selectedDates[0]).format("HH:mm:ss")), (s = t + "T" + moment(m.selectedDates[0]).format("HH:mm:ss"));
-                                                            }
-                                                            e.addEvent({
-                                                                id: A(),
-                                                                title: t.value,
-                                                                description: n.value,
-                                                                location: a.value,
-                                                                start: d,
-                                                                end: s,
-                                                                allDay: o
-                                                            }), e.render(), f.reset();
-                                                        }
-                                                    });
-                                            }, 2e3)) :
-                                        Swal.fire({
-                                            text: "Sorry, looks like there are some errors detected, please try again.",
-                                            icon: "error",
-                                            buttonsStyling: !1,
-                                            confirmButtonText: "Ok, got it!",
-                                            customClass: {
-                                                confirmButton: "btn btn-primary"
-                                            },
-                                        });
-                                });
-                        });
+        var kt_modal_activity = new bootstrap.Modal(document.getElementById('kt_modal_activity'));
+        var kt_modal_view_activity = new bootstrap.Modal(document.getElementById('kt_modal_view_activity'));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var todayDate = moment().startOf('day');
+            var YM = todayDate.format('YYYY-MM');
+            var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+            var TODAY = todayDate.format('YYYY-MM-DD');
+            var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
+
+            var calendarEl = document.getElementById('activity_calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth,timeGridWeek,timeGridDay",
                 },
-                B = () => {
-                    var e, t, n;
-                    w.show(),
-                        E.allDay ?
-                        ((e = ""), (t = moment(E.startDate).format("Do MMM, YYYY")), (n = moment(E.endDate).format("Do MMM, YYYY"))) :
-                        ((e = ""), (t = moment(E.startDate).format("Do MMM, YYYY - h:mm a")), (n = moment(E.endDate).format("Do MMM, YYYY - h:mm a"))),
-                        (b.innerText = E.eventName),
-                        (g.innerText = e),
-                        (S.innerText = E.eventDescription ? E.eventDescription : "--"),
-                        (h.innerText = E.eventLocation ? E.eventLocation : "--"),
-                        (T.innerText = t),
-                        (Y.innerText = n);
+                height: 800,
+                contentHeight: 780,
+                aspectRatio: 3, // see: https://fullcalendar.io/docs/aspectRatio
+
+                nowIndicator: true,
+                now: TODAY + 'T09:25:00',
+                initialDate: TODAY,
+                editable: true,
+                dayMaxEvents: true, // allow "more" link when too many events
+                navLinks: true,
+                selectable: true,
+                select: function(arg) {
+
+                    $(".is_empty").val("");
+                    $("select.is_empty").val(null).trigger("change");
+                    $("textarea.is_empty").html("");
+
+                    $("#activity_date").val(change_ymd_to_dmy_text(arg.startStr));
+                    kt_modal_activity.show();
                 },
-                q = () => {
-                    x.addEventListener("click", (o) => {
-                        o.preventDefault(),
-                            w.hide(),
-                            (() => {
-                                (v.innerText = "Edit an activity"), u.show();
-                                const o = f.querySelectorAll('[data-kt-calendar="datepicker"]'),
-                                    i = f.querySelector("#kt_calendar_datepicker_allday");
-                                i.addEventListener("click", (e) => {
-                                        e.target.checked ?
-                                            o.forEach((e) => {
-                                                e.classList.add("d-none");
-                                            }) :
-                                            (l.setDate(E.startDate, !0, "Y-m-d"),
-                                                o.forEach((e) => {
-                                                    e.classList.remove("d-none");
-                                                }));
-                                    }),
-                                    C(E),
-                                    D.addEventListener("click", function(o) {
-                                        o.preventDefault(),
-                                            p &&
-                                            p.validate().then(function(o) {
-                                                console.log("validated!"),
-                                                    "Valid" == o ?
-                                                    (D.setAttribute("data-kt-indicator", "on"),
-                                                        (D.disabled = !0),
-                                                        setTimeout(function() {
-                                                            D.removeAttribute("data-kt-indicator"),
-                                                                Swal.fire({
-                                                                    text: "New event added to calendar!",
-                                                                    icon: "success",
-                                                                    buttonsStyling: !1,
-                                                                    confirmButtonText: "Ok, got it!",
-                                                                    customClass: {
-                                                                        confirmButton: "btn btn-primary"
-                                                                    },
-                                                                }).then(function(o) {
-                                                                    if (o.isConfirmed) {
-                                                                        u.hide(), (D.disabled = !1), e.getEventById(E.id).remove();
-                                                                        let o = !1;
-                                                                        i.checked && (o = !0), 0 === c.selectedDates.length && (o = !0);
-                                                                        var d = moment(r.selectedDates[0]).format(),
-                                                                            s = moment(l.selectedDates[l.selectedDates.length - 1]).format();
-                                                                        if (!o) {
-                                                                            const e = moment(r.selectedDates[0]).format("YYYY-MM-DD"),
-                                                                                t = e;
-                                                                            (d = e + "T" + moment(c.selectedDates[0]).format("HH:mm:ss")), (s = t + "T" + moment(m.selectedDates[0]).format("HH:mm:ss"));
-                                                                        }
-                                                                        e.addEvent({
-                                                                            id: A(),
-                                                                            title: t.value,
-                                                                            description: n.value,
-                                                                            location: a.value,
-                                                                            start: d,
-                                                                            end: s,
-                                                                            allDay: o
-                                                                        }), e.render(), f.reset();
-                                                                    }
-                                                                });
-                                                        }, 2e3)) :
-                                                    Swal.fire({
-                                                        text: "Sorry, looks like there are some errors detected, please try again.",
-                                                        icon: "error",
-                                                        buttonsStyling: !1,
-                                                        confirmButtonText: "Ok, got it!",
-                                                        customClass: {
-                                                            confirmButton: "btn btn-primary"
-                                                        },
-                                                    });
-                                            });
-                                    });
-                            })();
+
+                eventClick: function(info) {
+
+                    $(".is_empty").val("");
+
+                    $("select.is_empty").val(null).trigger("change");
+
+                    $("textarea.is_empty").html("");
+
+                    $('[data-kt-calendar="event_name"]').html(info.event.title);
+                    $('[data-kt-calendar="event_description"]').html(info.event.extendedProps.description);
+                    $('[data-kt-calendar="event_start_date"]').html(info.event.extendedProps.activity_date + ' - ' + info.event.extendedProps.start_time);
+                    $('[data-kt-calendar="event_end_date"]').html(info.event.extendedProps.activity_date + ' - ' + info.event.extendedProps.end_time);
+                    $('[data-kt-calendar="event_location"]').html(info.event.extendedProps.location);
+                    kt_modal_view_activity.show();
+
+                    // Edit event button click handler
+                    $('#kt_modal_activity_edit').on('click', function() {
+
+                        kt_modal_view_activity.hide();
+
+                        $("#activity_id").val(info.event.id);
+                        $("#activity_title").val(info.event.title);
+                        $("#activity_date").val(info.event.extendedProps.activity_date);
+                        $("#recurring").val(info.event.extendedProps.recurring).trigger("change");
+                        $("#activity_start_time").val(info.event.extendedProps.start_time);
+                        $("#activity_end_time").val(info.event.extendedProps.end_time);
+                        $("#activity_type").val(info.event.extendedProps.type).trigger("change");
+                        $("#activity_location").val(info.event.extendedProps.location);
+                        $("#activity_note").val(info.event.extendedProps.description);
+
+                        kt_modal_activity.show();
+
+
+                        // Hide modal
+                        //$('#kt_modal_view_activity').modal('hide');
                     });
-                },
-                C = () => {
-                    (t.value = E.eventName ? E.eventName : ""), (n.value = E.eventDescription ? E.eventDescription : ""), (a.value = E.eventLocation ? E.eventLocation : ""), r.setDate(E.startDate, !0, "Y-m-d");
-                    const e = E.endDate ? E.endDate : moment(E.startDate).format();
-                    l.setDate(e, !0, "Y-m-d");
-                    const o = f.querySelector("#kt_calendar_datepicker_allday"),
-                        i = f.querySelectorAll('[data-kt-calendar="datepicker"]');
-                    E.allDay ?
-                        ((o.checked = !0),
-                            i.forEach((e) => {
-                                e.classList.add("d-none");
-                            })) :
-                        (c.setDate(E.startDate, !0, "Y-m-d H:i"),
-                            m.setDate(E.endDate, !0, "Y-m-d H:i"),
-                            l.setDate(E.startDate, !0, "Y-m-d"),
-                            (o.checked = !1),
-                            i.forEach((e) => {
-                                e.classList.remove("d-none");
-                            }));
-                },
-                N = (e) => {
-                    (E.id = e.id), (E.eventName = e.title), (E.eventDescription = e.description), (E.eventLocation = e.location), (E.startDate = e.startStr), (E.endDate = e.endStr), (E.allDay = e.allDay);
-                },
-                A = () => Date.now().toString() + Math.floor(1e3 * Math.random()).toString();
-            return {
-                init: function() {
-                    const C = document.getElementById("kt_modal_add_event");
-                    (f = C.querySelector("#kt_modal_add_event_form")),
-                    (t = f.querySelector('[name="calendar_event_name"]')),
-                    (n = f.querySelector('[name="calendar_event_description"]')),
-                    (a = f.querySelector('[name="calendar_event_location"]')),
-                    (o = f.querySelector("#kt_calendar_datepicker_start_date")),
-                    (i = f.querySelector("#kt_calendar_datepicker_end_date")),
-                    (d = f.querySelector("#kt_calendar_datepicker_start_time")),
-                    (s = f.querySelector("#kt_calendar_datepicker_end_time")),
-                    (y = document.querySelector('[data-kt-calendar="add"]')),
-                    (D = f.querySelector("#kt_modal_add_event_submit")),
-                    (k = f.querySelector("#kt_modal_add_event_cancel")),
-                    (_ = C.querySelector("#kt_modal_add_event_close")),
-                    (v = f.querySelector('[data-kt-calendar="title"]')),
-                    (u = new bootstrap.Modal(C));
-                    const H = document.getElementById("kt_modal_view_event");
-                    var F, O, I, R, V, P;
-                    (w = new bootstrap.Modal(H)),
-                    (b = H.querySelector('[data-kt-calendar="event_name"]')),
-                    (g = H.querySelector('[data-kt-calendar="all_day"]')),
-                    (S = H.querySelector('[data-kt-calendar="event_description"]')),
-                    (h = H.querySelector('[data-kt-calendar="event_location"]')),
-                    (T = H.querySelector('[data-kt-calendar="event_start_date"]')),
-                    (Y = H.querySelector('[data-kt-calendar="event_end_date"]')),
-                    (x = H.querySelector("#kt_modal_view_event_edit")),
-                    (L = H.querySelector("#kt_modal_view_event_delete")),
-                    (F = document.getElementById("event_calendar")),
-                    (O = moment().startOf("day")),
-                    (I = O.format("YYYY-MM")),
-                    (R = O.clone().subtract(1, "day").format("YYYY-MM-DD")),
-                    (V = O.format("YYYY-MM-DD")),
-                    (P = O.clone().add(1, "day").format("YYYY-MM-DD")),
-                    (e = new FullCalendar.Calendar(F, {
-                        headerToolbar: {
-                            left: "prev,next today",
-                            center: "title",
-                            right: "dayGridMonth,timeGridWeek,timeGridDay"
-                        },
-                        initialDate: V,
-                        navLinks: !0,
-                        selectable: !0,
-                        selectMirror: !0,
-                        select: function(e) {
-                            N(e), M();
-                        },
-                        eventClick: function(e) {
-                            N({
-                                id: e.event.id,
-                                title: e.event.title,
-                                description: e.event.extendedProps.description,
-                                location: e.event.extendedProps.location,
-                                startStr: e.event.startStr,
-                                endStr: (e.event.endStr) ? e.event.endStr : e.event.startStr,
-                                allDay: e.event.allDay
-                            }), B();
-                        },
-                        editable: !0,
-                        dayMaxEvents: !0,
-                        events: {
-                            url: site_url + '/admin/get_activity.php',
-                        },
-                        datesSet: function() {},
-                    })).render(),
-                        (p = FormValidation.formValidation(f, {
-                            fields: {
-                                calendar_event_name: {
-                                    validators: {
-                                        notEmpty: {
-                                            message: "Event name is required"
+
+                    $('#kt_modal_activity_delete').on('click', function() {
+                        kt_modal_activity.hide();
+                        var event = calendar.getEventById(info.event.id);
+                        if (event) {
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Yes, delete it!'
+                            }).then((result) => {
+
+                                if (result.isConfirmed) {
+
+                                    $.post(ajax_url, {
+                                        action: 'delete_activity',
+                                        activity_id: info.event.id,
+                                        is_ajax: true,
+                                    }, function(result) {
+
+                                        var results = JSON.parse(result);
+
+                                        if (results.status) {
+                                            event.remove();
+                                            Swal.fire(
+                                                'Deleted!',
+                                                'Your event has been deleted.',
+                                                'success'
+                                            );
+
+                                            setTimeout(function() {
+                                                location.reload();
+                                            }, 1000);
+
                                         }
-                                    }
-                                },
-                                calendar_event_start_date: {
-                                    validators: {
-                                        notEmpty: {
-                                            message: "Start date is required"
-                                        }
-                                    }
-                                },
-                                calendar_event_end_date: {
-                                    validators: {
-                                        notEmpty: {
-                                            message: "End date is required"
-                                        }
-                                    }
-                                },
-                            },
-                            plugins: {
-                                trigger: new FormValidation.plugins.Trigger(),
-                                bootstrap: new FormValidation.plugins.Bootstrap5({
-                                    rowSelector: ".fv-row",
-                                    eleInvalidClass: "",
-                                    eleValidClass: ""
-                                })
-                            },
-                        })),
-                        (r = flatpickr(o, {
-                            enableTime: !1,
-                            dateFormat: "Y-m-d"
-                        })),
-                        (l = flatpickr(i, {
-                            enableTime: !1,
-                            dateFormat: "Y-m-d"
-                        })),
-                        (c = flatpickr(d, {
-                            enableTime: !0,
-                            noCalendar: !0,
-                            dateFormat: "H:i"
-                        })),
-                        (m = flatpickr(s, {
-                            enableTime: !0,
-                            noCalendar: !0,
-                            dateFormat: "H:i"
-                        })),
-                        q(),
-                        y.addEventListener("click", (e) => {
-                            (E = {
-                                id: "",
-                                eventName: "",
-                                eventDescription: "",
-                                startDate: new Date(),
-                                endDate: new Date(),
-                                allDay: !1
-                            }), M();
-                        }),
-                        L.addEventListener("click", (t) => {
-                            t.preventDefault(),
-                                Swal.fire({
-                                    text: "Are you sure you would like to delete this event?",
-                                    icon: "warning",
-                                    showCancelButton: !0,
-                                    buttonsStyling: !1,
-                                    confirmButtonText: "Yes, delete it!",
-                                    cancelButtonText: "No, return",
-                                    customClass: {
-                                        confirmButton: "btn btn-primary",
-                                        cancelButton: "btn btn-active-light"
-                                    },
-                                }).then(function(t) {
-                                    t.value ?
-                                        (e.getEventById(E.id).remove(), w.hide()) :
-                                        "cancel" === t.dismiss && Swal.fire({
-                                            text: "Your event was not deleted!.",
-                                            icon: "error",
-                                            buttonsStyling: !1,
-                                            confirmButtonText: "Ok, got it!",
-                                            customClass: {
-                                                confirmButton: "btn btn-primary"
-                                            }
-                                        });
-                                });
-                        }),
-                        k.addEventListener("click", function(e) {
-                            e.preventDefault(),
-                                Swal.fire({
-                                    text: "Are you sure you would like to cancel?",
-                                    icon: "warning",
-                                    showCancelButton: !0,
-                                    buttonsStyling: !1,
-                                    confirmButtonText: "Yes, cancel it!",
-                                    cancelButtonText: "No, return",
-                                    customClass: {
-                                        confirmButton: "btn btn-primary",
-                                        cancelButton: "btn btn-active-light"
-                                    },
-                                }).then(function(e) {
-                                    e.value ?
-                                        (f.reset(), u.hide()) :
-                                        "cancel" === e.dismiss && Swal.fire({
-                                            text: "Your form has not been cancelled!.",
-                                            icon: "error",
-                                            buttonsStyling: !1,
-                                            confirmButtonText: "Ok, got it!",
-                                            customClass: {
-                                                confirmButton: "btn btn-primary"
-                                            }
-                                        });
-                                });
-                        }),
-                        _.addEventListener("click", function(e) {
-                            e.preventDefault(),
-                                Swal.fire({
-                                    text: "Are you sure you would like to cancel?",
-                                    icon: "warning",
-                                    showCancelButton: !0,
-                                    buttonsStyling: !1,
-                                    confirmButtonText: "Yes, cancel it!",
-                                    cancelButtonText: "No, return",
-                                    customClass: {
-                                        confirmButton: "btn btn-primary",
-                                        cancelButton: "btn btn-active-light"
-                                    },
-                                }).then(function(e) {
-                                    e.value ?
-                                        (f.reset(), u.hide()) :
-                                        "cancel" === e.dismiss && Swal.fire({
-                                            text: "Your form has not been cancelled!.",
-                                            icon: "error",
-                                            buttonsStyling: !1,
-                                            confirmButtonText: "Ok, got it!",
-                                            customClass: {
-                                                confirmButton: "btn btn-primary"
-                                            }
-                                        });
-                                });
-                        }),
-                        ((e) => {
-                            e.addEventListener("hidden.bs.modal", (e) => {
-                                p && p.resetForm(!0);
+
+                                    });
+                                }
                             });
-                        })(C);
+                        }
+                    });
+
                 },
-            };
-        })();
-        KTUtil.onDOMContentLoaded(function() {
-            KTAppCalendar.init();
+                events: {
+                    url: site_url + '/admin/get_activity.php',
+                },
+                eventContent: function(info) {
+                    var element = $(info.el);
+
+                    if (info.event.extendedProps && info.event.extendedProps.description) {
+                        if (element.hasClass('fc-day-grid-event')) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        } else if (element.hasClass('fc-time-grid-event')) {
+                            element.find('.fc-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                        } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                            element.find('.fc-list-item-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                        }
+                    }
+                },
+                //datesSet: function() {},
+            });
+            calendar.render();
         });
     </script>
     <!--end::Javascript-->
