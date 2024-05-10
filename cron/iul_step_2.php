@@ -1,6 +1,10 @@
 <?php
 require '../config.php';
 
+if (!get_option('iul_email_cron')) {
+    return;
+}
+
 $current_date = date('Y-m-d H:i', strtotime(current_time('mysql')));
 
 $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.gender,ad.birth_date,ad.state,ad.mail_reminder,ad.created_by,ad.created_by_type FROM advisor as ad INNER JOIN interest ON ad.id = interest.advisor_id WHERE interest.life_insurance != '' AND ad.advisor_status = 2 AND ad.status = 0 AND ( ad.mail_reminder != '' OR ad.mail_reminder != NULL OR ad.mail_reminder != '0000-00-00 00:00:00') AND mail_reminder LIKE '%" . $current_date . "%'");

@@ -26,6 +26,7 @@ if (isset($_POST['save_setting'])) {
         update_option('sendgrid_api_key', sipost('sendgrid_api_key'));
     }
 
+    $_SESSION['process_success'] = true;
     wp_redirect(site_url() . '/admin/settings/mail-setting');
     exit;
 }
@@ -114,27 +115,7 @@ if (isset($_POST['save_setting'])) {
                                     <div class="alert alert-success d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-success">The designation has been save successfully.</h4>
-                                        </div>
-                                    </div>
-                                <?php }
-
-                                if (isset($_SESSION['process_duplicate'])) {
-                                    unset($_SESSION['process_duplicate']); ?>
-                                    <div class="alert alert-danger d-flex align-items-center p-5">
-                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                        <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-danger">The designation has been already exist.</h4>
-                                        </div>
-                                    </div>
-                                <?php }
-
-                                if (isset($_SESSION['process_fail'])) {
-                                    unset($_SESSION['process_fail']); ?>
-                                    <div class="alert alert-danger d-flex align-items-center p-5">
-                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                        <div class="d-flex flex-column">
-                                            <h4 class="mb-1 text-danger">The designation has been save failed.</h4>
+                                            <h4 class="mb-1 text-success">The mail settings has been save successfully.</h4>
                                         </div>
                                     </div>
                                 <?php } ?>

@@ -89,4 +89,5 @@ Options -MultiViews
 	RewriteRule ^admin/settings/fixed-indexed-annuities?$ admin/settings/fixed-indexed-annuities.php [NC,L]
 	RewriteRule ^admin/settings/long-term-care?$ admin/settings/long-term-care.php [NC,L]
 	RewriteRule ^admin/settings/life-settlements?$ admin/settings/life-settlements.php [NC,L]
+	RewriteRule ^admin/settings/cron-setting?$ admin/settings/cron-setting.php [NC,L]
 </IfModule>

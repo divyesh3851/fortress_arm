@@ -1,6 +1,10 @@
 <?php
 require '../config.php';
 
+if (!get_option('iul_email_cron')) {
+    return;
+}
+
 $current_time = current_time('mysql');
 $one_hour_ago = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($current_time)));
 
