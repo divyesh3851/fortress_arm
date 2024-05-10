@@ -1668,6 +1668,7 @@ class Advisor
             "created_at"        => current_time('mysql'),
             "created_by"        => $created_by,
             "created_by_type"   => $created_by_type,
+            "mail_reminder"     => current_time('mysql'),
         );
 
         $wpdb->insert("advisor", $advisor_info);

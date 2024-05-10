@@ -463,7 +463,7 @@ class Admin
         global $wpdb;
 
         $mail_log_info = array(
-            "logged_id"     => $_SESSION['fbs_arm_admin_id'],
+            "logged_id"     => (isset($_SESSION['fbs_arm_admin_id'])) ? $_SESSION['fbs_arm_admin_id'] : 1, // for cron set 1
             "user_id"       => $user_id,
             "email"         => $email,
             "mail_type"     => $mail_type,

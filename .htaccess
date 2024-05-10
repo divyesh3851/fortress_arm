@@ -81,4 +81,12 @@ Options -MultiViews
 
 	RewriteRule ^admin/calendar?$ admin/calendar.php [NC,L]
 	RewriteRule ^admin/important-links-list?$ admin/important-links-list.php [NC,L]
+
+	RewriteRule ^admin/settings/indexed-universal-life?$ admin/settings/indexed-universal-life.php [NC,L]
+	RewriteRule ^admin/settings/term?$ admin/settings/term.php [NC,L]
+	RewriteRule ^admin/settings/whole-life?$ admin/settings/whole-life.php [NC,L]
+	RewriteRule ^admin/settings/advanced-planning?$ admin/settings/advanced-planning.php [NC,L]
+	RewriteRule ^admin/settings/fixed-indexed-annuities?$ admin/settings/fixed-indexed-annuities.php [NC,L]
+	RewriteRule ^admin/settings/long-term-care?$ admin/settings/long-term-care.php [NC,L]
+	RewriteRule ^admin/settings/life-settlements?$ admin/settings/life-settlements.php [NC,L]
 </IfModule>

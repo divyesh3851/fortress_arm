@@ -428,6 +428,124 @@
                                     <span class="menu-title">Markets</span>
                                 </a>
                                 <!--end:Menu link-->
+
+                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion <?php echo ($sub_page_name == 'indexed-universal-life' || $sub_page_name == 'term' || $sub_page_name == 'whole_life' || $sub_page_name == 'advanced_planing' || $sub_page_name == 'fixed_indexed_annuities' || $sub_page_name == 'long_term_care' || $sub_page_name == 'life_settlements') ? 'hover show' : ''; ?> ">
+                                    <!--begin:Menu link-->
+                                    <span class="menu-link">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Interest Communication</span>
+                                        <span class="menu-arrow"></span>
+                                    </span>
+                                    <!--end:Menu link-->
+                                    <!--begin:Menu sub-->
+                                    <div class="menu-sub menu-sub-accordion">
+                                        <!--begin:Menu item-->
+                                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                            <!--begin:Menu link-->
+                                            <span class="menu-link">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Life Insurance</span>
+                                                <span class="menu-arrow"></span>
+                                            </span>
+                                            <!--end:Menu link-->
+                                            <!--begin:Menu sub-->
+                                            <div class="menu-sub menu-sub-accordion menu-active-bg <?php echo ($sub_page_name == 'indexed-universal-life' || $sub_page_name == 'term' || $sub_page_name == 'whole_life' || $sub_page_name == 'advanced_planing') ? 'show' : ''; ?> ">
+                                                <!--begin:Menu item-->
+                                                <div class="menu-item">
+                                                    <!--begin:Menu link-->
+                                                    <a class="menu-link <?php echo ($sub_page_name == 'indexed-universal-life') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/indexed-universal-life">
+                                                        <span class="menu-bullet">
+                                                            <span class="bullet bullet-dot"></span>
+                                                        </span>
+                                                        <span class="menu-title">Indexed Universal Life</span>
+                                                    </a>
+                                                    <!--end:Menu link-->
+                                                </div>
+                                                <!--end:Menu item-->
+                                                <!--begin:Menu item-->
+                                                <div class="menu-item">
+                                                    <!--begin:Menu link-->
+                                                    <a class="menu-link <?php echo ($sub_page_name == 'term') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/term">
+                                                        <span class="menu-bullet">
+                                                            <span class="bullet bullet-dot"></span>
+                                                        </span>
+                                                        <span class="menu-title">Term</span>
+                                                    </a>
+                                                    <!--end:Menu link-->
+                                                </div>
+                                                <!--end:Menu item-->
+                                                <!--begin:Menu item-->
+                                                <div class="menu-item">
+                                                    <!--begin:Menu link-->
+                                                    <a class="menu-link <?php echo ($sub_page_name == 'whole_life') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/whole-life">
+                                                        <span class="menu-bullet">
+                                                            <span class="bullet bullet-dot"></span>
+                                                        </span>
+                                                        <span class="menu-title">Whole Life</span>
+                                                    </a>
+                                                    <!--end:Menu link-->
+                                                </div>
+                                                <!--end:Menu item-->
+                                                <!--begin:Menu item-->
+                                                <div class="menu-item">
+                                                    <!--begin:Menu link-->
+                                                    <a class="menu-link <?php echo ($sub_page_name == 'advanced_planing') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/advanced-planning">
+                                                        <span class="menu-bullet">
+                                                            <span class="bullet bullet-dot"></span>
+                                                        </span>
+                                                        <span class="menu-title">Advanced Planning</span>
+                                                    </a>
+                                                    <!--end:Menu link-->
+                                                </div>
+                                                <!--end:Menu item-->
+                                            </div>
+                                            <!--end:Menu sub-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'fixed_indexed_annuities') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/fixed-indexed-annuities">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Fixed Indexed Annuities </span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'long_term_care') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/long-term-care">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Long-Term Care Insurance</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'life_settlements') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/life-settlements">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Life Settlements</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                    </div>
+                                    <!--end:Menu sub-->
+
+                                </div>
                                 <!--begin:Menu link-->
                                 <a class="menu-link <?php echo ($sub_page_name == 'mail-setting') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/mail-setting">
                                     <span class="menu-bullet">
