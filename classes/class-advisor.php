@@ -1340,7 +1340,7 @@ class Advisor
 
         $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
 
-        if (!$advisor_id || !sipost("preferred_name") || !sipost('first_name') || !sipost('last_name') || !sipost('email')) {
+        if (!$advisor_id || !sipost('first_name') || !sipost('last_name') || !sipost('email')) {
             return false;
         }
 
@@ -1407,6 +1407,7 @@ class Advisor
         $old_advisor_data['advisor_meta'] = $this->get_advisor_meta($advisor_id);
 
         $wpdb->update("advisor", $advisor_info, array("id" => $advisor_id));
+        $advisor_info['advisor_meta'] = $this->get_advisor_meta($advisor_id);
 
         if (!empty(sipost('contact_info_row_list'))) {
 
@@ -1419,35 +1420,35 @@ class Advisor
 
             $need_to_delete = array();
 
-            $i = 0;
+            $i = 1;
+
             foreach ($_POST['contact_info_row_list'] as $row_no) {
 
-                if (!sipost("contact_type_" . $row_no) && (!sipost("mobile_no_" . $row_no) || !sipost("email_" . $row_no))) {
+                if ((!sipost("mobile_no_" . $row_no) || !sipost("email_" . $row_no))) {
                     continue;
                 }
 
+                $extra_email = (sipost("email_" . $row_no)) ? trim(strtolower(sipost("email_" . $row_no))) : '';
+
                 $advisor_contact = array(
                     "advisor_id"    => $advisor_id,
-                    "contact_type"  => sipost("contact_type_" . $row_no),
                     "mobile_no"     => sipost("mobile_no_" . $row_no),
-                    "email"         => $email,
+                    "email"         => $extra_email,
                 );
 
                 if (sipost("contact_id_"  . $row_no)) {
 
                     if (in_array(sipost("contact_id_"  . $row_no), $old_ids)) {
 
-                        $email = trim(strtolower(sipost("email_" . $row_no)));
-
-                        //$wpdb->update("advisor_extra_contact", $advisor_contact, array("id" => sipost("contact_id_"  . $row_no)));
+                        $wpdb->update("advisor_extra_contact", $advisor_contact, array("id" => sipost("contact_id_"  . $row_no)));
 
                         $need_to_delete[] = sipost("contact_id_"  . $row_no);
                     }
                 } else {
-                    $check_contact = $wpdb->get_var("SELECT id FROM advisor_extra_contact WHERE contact_type = '" . sipost("contact_type_" . $row_no) . "' AND ( mobile_no = '" . sipost("mobile_no_" . $row_no) . "' || email = '" . $email . "')");
+                    $check_contact = $wpdb->get_var("SELECT id FROM advisor_extra_contact WHERE mobile_no = '" . sipost("mobile_no_" . $row_no) . "' OR email = '" . $extra_email . "'");
 
                     if (!$check_contact) {
-                        //$wpdb->insert("advisor_extra_contact", $advisor_contact);
+                        $wpdb->insert("advisor_extra_contact", $advisor_contact);
                     }
                 }
 
@@ -1560,12 +1561,50 @@ class Advisor
             $interest_info['updated_at'] = current_time('mysql');
             $wpdb->update("interest", $interest_info, array("id" => $check_interest->id));
         } else {
+            $current_time = current_time('mysql'); // Get current time
+            $one_hour_later = date('Y-m-d H:i:s', strtotime($current_time . ' +1 hour')); // Add 1 hour
+
             $interest_info['created_at'] = current_time('mysql');
+
+            if (!empty($life_insurance)) {
+                if (in_array("1", sipost('life_insurance'))) {
+                    $interest_info['iul_mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'iul_current_mail_reminder_step', 1);
+                }
+                if (in_array("2", sipost('life_insurance'))) {
+                    $interest_info['term_mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'term_current_mail_reminder_step', 1);
+                }
+                if (in_array("3", sipost('life_insurance'))) {
+                    $interest_info['wl_mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'wl_current_mail_reminder_step', 1);
+                }
+                if (in_array("4", sipost('life_insurance'))) {
+                    $interest_info['ap_mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'ap_current_mail_reminder_step', 1);
+                }
+            }
+
+            if (!empty($annuities)) {
+                $interest_info['fia_mail_reminder'] = (!empty($annuities)) ? $one_hour_later : '';
+                Advisor()->update_advisor_meta($advisor_id, 'fia_current_mail_reminder_step', 1);
+            }
+
+            if (!empty($long_term_care_insurance)) {
+                $interest_info['ltc_mail_reminder'] = (!empty($long_term_care_insurance)) ? $one_hour_later : '';
+                Advisor()->update_advisor_meta($advisor_id, 'ltc_current_mail_reminder_step', 1);
+            }
+
+            if (!empty($critical_illness)) {
+                $interest_info['ls_mail_reminder']  = (!empty($critical_illness)) ? $one_hour_later : '';
+                Advisor()->update_advisor_meta($advisor_id, 'ls_current_mail_reminder_step', 1);
+            }
+
             $wpdb->insert("interest", $interest_info);
         }
         /**** End Save Interest ****/
 
-        if ($_FILES['advisor_profile'] && $_FILES['advisor_profile']['error'] == 0) {
+        if (isset($_FILES['advisor_profile'])  && $_FILES['advisor_profile']['error'] == 0) {
 
             $file_name  = $_FILES['advisor_profile']['name'];
 
@@ -1583,8 +1622,6 @@ class Advisor
                 $this->update_advisor_meta($advisor_id, 'profile_img', 'blank.png'); // default profile
             }
         }
-
-        $advisor_info['advisor_meta'] = $this->get_advisor_meta($advisor_id);
 
         Admin()->create_track_log_activity($advisor_id, $advisor_id, 'advisor update', 'advisor_update', $old_advisor_data, $advisor_info, 'advisor has been updated', 'advisor');
 
@@ -1668,7 +1705,6 @@ class Advisor
             "created_at"        => current_time('mysql'),
             "created_by"        => $created_by,
             "created_by_type"   => $created_by_type,
-            "mail_reminder"     => current_time('mysql'),
         );
 
         $wpdb->insert("advisor", $advisor_info);
@@ -1722,7 +1758,7 @@ class Advisor
 
             $this->update_advisor_meta($last_id, 'profile_img', 'blank.png'); // default profile
 
-            if ($_FILES['advisor_profile'] && $_FILES['advisor_profile']['error'] == 0) {
+            if (isset($_FILES['advisor_profile']) && $_FILES['advisor_profile']['error'] == 0) {
 
                 $file_name  = $_FILES['advisor_profile']['name'];
 
@@ -1739,7 +1775,52 @@ class Advisor
                 }
             }
 
+            Advisor()->update_advisor_meta($last_id, 'iul_step_1_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'iul_step_2_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'iul_step_3_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'iul_step_4_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'iul_step_5_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'iul_step_6_email_enable', 1);
+
+            Advisor()->update_advisor_meta($last_id, 'term_step_1_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'term_step_2_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'term_step_3_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'term_step_4_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'term_step_5_email_enable', 1);
+
+            Advisor()->update_advisor_meta($last_id, 'wl_step_1_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'wl_step_2_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'wl_step_3_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'wl_step_4_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'wl_step_5_email_enable', 1);
+
+            Advisor()->update_advisor_meta($last_id, 'ap_step_1_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ap_step_2_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ap_step_3_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ap_step_4_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ap_step_5_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ap_step_6_email_enable', 1);
+
+            Advisor()->update_advisor_meta($last_id, 'fia_step_1_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'fia_step_2_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'fia_step_3_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'fia_step_4_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'fia_step_5_email_enable', 1);
+
+            Advisor()->update_advisor_meta($last_id, 'ltc_step_1_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ltc_step_2_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ltc_step_3_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ltc_step_4_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ltc_step_5_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ltc_step_6_email_enable', 1);
+
+            Advisor()->update_advisor_meta($last_id, 'ls_step_1_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ls_step_2_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ls_step_3_email_enable', 1);
+            Advisor()->update_advisor_meta($last_id, 'ls_step_4_email_enable', 1);
+
             $advisor_info['advisor_meta'] = $this->get_advisor_meta($last_id);
+
             Admin()->create_track_log_activity($last_id, $last_id, 'advisor add', 'advisor_add', $advisor_info, '', 'advisor has been added', 'advisor');
 
             return true;

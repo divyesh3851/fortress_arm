@@ -556,10 +556,10 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                             <div class="row mb-7">
                                 <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
-                                    <label class=" fw-semibold fs-6 mb-2">Phone Number</label>
+                                    <label class="required fw-semibold fs-6 mb-2">Phone Number</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="mobile_no" id="mobile_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Phone Number" />
+                                    <input type="text" name="mobile_no" id="mobile_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Phone Number" required />
                                     <!--end::Input-->
                                 </div>
                                 <div class="col-md-4 fv-row">
@@ -841,7 +841,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                 return `<div class="d-flex">  
                                             <a href="tel:${data.mobile_no}" data-bs-toggle="tooltip" title="Call Contact">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-3 fw-bold text-gray-700">
+                                                    <div class="fs-3 fw-bold text-gray-700"> 
                                                         <i class="las la-phone-volume fs-2 text-success"></i>
                                                     </div>
                                                 </div>
@@ -853,6 +853,13 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                                     </div>
                                                 </div> 
                                             </a>
+                                            <a href="<?php echo site_url(); ?>/admin/advisor/advisor-email-settings/${data.record_id}" data-bs-toggle="tooltip" title="Call Contact">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-3 fw-bold text-gray-700"> 
+                                                        <i class="las la-user-cog fs-2 text-success"></i> 
+                                                    </div>
+                                                </div>
+                                            </a> 
                                             <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.record_id}" data-bs-toggle="tooltip" title="View Quick Info">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">

@@ -75,9 +75,9 @@ $selected_long_term_care_insurance = ($get_selected_advisor_interest && $get_sel
 $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_advisor_interest->critical_illness) ? explode(",", $get_selected_advisor_interest->critical_illness) : array();
 
 
-$birth_date = ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '';
+$birth_date = ($selected_advisor_data->birth_date && $selected_advisor_data->birth_date != '0000-00-00') ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '';
 
-$anniversary_date = ($selected_advisor_data->anniversary_date) ? date("m/d/Y", strtotime($selected_advisor_data->anniversary_date)) : '';
+$anniversary_date = ($selected_advisor_data->anniversary_date && $selected_advisor_data->birth_date != '0000-00-00') ? date("m/d/Y", strtotime($selected_advisor_data->anniversary_date)) : '';
 
 $spouses_birthdate = (Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate")) ? date("m/d/Y", strtotime(Advisor()->get_advisor_meta($selected_advisor_data->id, "spouses_birthdate"))) : '';
 
@@ -327,10 +327,10 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                     </div>
                                                                     <div class="fv-row col-md-3 mb-7">
                                                                         <!--begin::Label-->
-                                                                        <label class="required fw-semibold fs-6 mb-2">Preferred Name</label>
+                                                                        <label class="fw-semibold fs-6 mb-2">Preferred Name</label>
                                                                         <!--end::Label-->
                                                                         <!--begin::Input-->
-                                                                        <input type="text" name="preferred_name" id="preferred_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Preferred Name" value="<?php echo $selected_advisor_data->preferred_name; ?>" required />
+                                                                        <input type="text" name="preferred_name" id="preferred_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Preferred Name" value="<?php echo $selected_advisor_data->preferred_name; ?>" />
                                                                         <!--end::Input-->
                                                                     </div>
                                                                     <div class="fv-row col-md-3 mb-7">
@@ -401,18 +401,18 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
 
                                                             <div class="col-md-3 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Birthdate</label>
+                                                                <label class="fw-semibold fs-6 mb-2">Birthdate</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <input type="text" name="birth_date" id="birth_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Birthdate" value="<?php echo $birth_date; ?>" required />
+                                                                <input type="text" name="birth_date" id="birth_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="mm/dd/yyyy" value="<?php echo $birth_date; ?>" />
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-3 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Gender</label>
+                                                                <label class="fw-semibold fs-6 mb-2">Gender</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <select name="gender" id="gender" data-control="select2" data-placeholder="Select a Gender..." class="form-select form-select-solid is_empty" required>
+                                                                <select name="gender" id="gender" data-control="select2" data-placeholder="Select a Gender..." class="form-select form-select-solid is_empty">
                                                                     <option value="">Select Gender</option>
                                                                     <?php foreach (Settings()->get_gender_type_list() as $gender_result) { ?>
                                                                         <option <?php echo ($selected_advisor_data->gender ==  $gender_result) ? 'selected' : '';  ?> value="<?php echo $gender_result; ?>"><?php echo $gender_result; ?></option>
@@ -472,10 +472,10 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                             </div>
                                                             <div class="col-md-3 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Marital Status</label>
+                                                                <label class="fw-semibold fs-6 mb-2">Marital Status</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <select name="marital_status" id="marital_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty" required>
+                                                                <select name="marital_status" id="marital_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty">
                                                                     <option value="">Select Status</option>
                                                                     <option <?php echo ($selected_advisor_data->marital_status == 'Married') ? 'selected' : ''; ?> value="Married">Married</option>
                                                                     <option <?php echo ($selected_advisor_data->marital_status == 'Unmarried') ? 'selected' : ''; ?> value="Unmarried">Unmarried</option>
@@ -489,7 +489,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <label class="fw-semibold fs-6 mb-2">Wedding Anniversary</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <input type="text" name="anniversary_date" id="anniversary_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Wedding Anniversary" value="<?php echo $anniversary_date; ?>" />
+                                                                <input type="text" name="anniversary_date" id="anniversary_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="mm/dd/YYYY" value="<?php echo $anniversary_date; ?>" />
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-3 fv-row">
@@ -726,7 +726,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                                     </a>
                                                                                 </div>
                                                                                 <input type="hidden" name="contact_info_row_list[]" id="contact_info_row_list" class="contact_info_row_list" value="<?php echo $i; ?>">
-                                                                                <input type="hidden" name="contact_id_<?php echo $contact_results->id; ?>" id="contact_id_<?php echo $contact_results->id; ?>" class="" value="<?php echo $contact_results->id; ?>">
+                                                                                <input type="hidden" name="contact_id_<?php echo $i; ?>" id="contact_id_<?php echo $i; ?>" class="" value="<?php echo $contact_results->id; ?>">
                                                                             </div>
                                                                         <?php $i++;
                                                                         }
