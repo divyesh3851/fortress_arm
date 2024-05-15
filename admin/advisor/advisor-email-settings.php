@@ -64,15 +64,9 @@ if (isset($_POST['save_setting'])) {
 
 $get_advisor_interest = $wpdb->get_row("SELECT * FROM interest WHERE advisor_id = " . $selected_advisor_data->id);
 
-$iul_current_mail_reminder_step = Advisor()->get_advisor_meta(
-	$selected_advisor_data->id,
-	'iul_current_mail_reminder_step'
-);
+$iul_current_mail_reminder_step = Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_current_mail_reminder_step');
 
-$term_current_mail_reminder_step = Advisor()->get_advisor_meta(
-	$selected_advisor_data->id,
-	'term_current_mail_reminder_step'
-);
+$term_current_mail_reminder_step = Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_current_mail_reminder_step');
 
 $wl_current_mail_reminder_step = Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_current_mail_reminder_step');
 
@@ -143,7 +137,7 @@ $ls_current_mail_reminder_step = Advisor()->get_advisor_meta($selected_advisor_d
 									<!--begin::Page title-->
 									<div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
 										<!--begin::Title-->
-										<h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0"> Email Automation Settings </h1>
+										<h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0"> Email Automation Notification Settings </h1>
 										<!--end::Title-->
 									</div>
 									<!--end::Page title-->
@@ -168,777 +162,645 @@ $ls_current_mail_reminder_step = Advisor()->get_advisor_meta($selected_advisor_d
 										</div>
 									</div>
 								<?php } ?>
+
 								<form method="post">
 									<!--begin::Layout-->
+									<!--end::Notifications-->
 									<div class="row">
 										<div class="col-md-3">
-											<h4 class="">Life Insurance</h4>
-											<div class="row">
-												<div class="">
-													<h6 class="mt-5">Indexed Universal Life</h6>
-													<div class="mt-5 mb-3">
-														<div class="d-flex">
-															<div class="d-flex justify-content-end">
-																<!--begin::Switch-->
-																<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-																	<!--begin::Input-->
-																	<input class="form-check-input" name="iul_step_1_email_enable" type="checkbox" value="1" id="iul_step_1_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_1_email_enable')) ? 'checked' : ''; ?> />
-																	<!--end::Input-->
-																	<!--begin::Label-->
-																	<span class="form-check-label fw-semibold text-muted" for="iul_step_1_email_enable"></span>
-																	<!--end::Label-->
-																</label>
-																<!--end::Switch-->
-															</div>
-															<div class="d-flex">
-																<div class="d-flex flex-column">
-																	<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 1 Email</span>
-																</div>
-															</div>
-														</div>
-														<div class="d-flex mt-2">
-															<div class="d-flex justify-content-end">
-																<!--begin::Switch-->
-																<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-																	<!--begin::Input-->
-																	<input class="form-check-input" name="iul_step_2_email_enable" type="checkbox" value="1" id="iul_step_2_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_2_email_enable')) ? 'checked' : ''; ?> />
-																	<!--end::Input-->
-																	<!--begin::Label-->
-																	<span class="form-check-label fw-semibold text-muted" for="iul_step_2_email_enable"></span>
-																	<!--end::Label-->
-																</label>
-																<!--end::Switch-->
-															</div>
-															<div class="d-flex">
-																<div class="d-flex flex-column">
-																	<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 2 Email</span>
-																</div>
-															</div>
-														</div>
-														<div class="d-flex mt-2">
-															<div class="d-flex justify-content-end">
-																<!--begin::Switch-->
-																<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-																	<!--begin::Input-->
-																	<input class="form-check-input" name="iul_step_3_email_enable" type="checkbox" value="1" id="iul_step_3_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_3_email_enable')) ? 'checked' : ''; ?> />
-																	<!--end::Input-->
-																	<!--begin::Label-->
-																	<span class="form-check-label fw-semibold text-muted" for="iul_step_3_email_enable"></span>
-																	<!--end::Label-->
-																</label>
-																<!--end::Switch-->
-															</div>
-															<div class="d-flex">
-																<div class="d-flex flex-column">
-																	<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 3 Email</span>
-																</div>
-															</div>
-														</div>
-														<div class="d-flex mt-2">
-															<div class="d-flex justify-content-end">
-																<!--begin::Switch-->
-																<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-																	<!--begin::Input-->
-																	<input class="form-check-input" name="iul_step_4_email_enable" type="checkbox" value="1" id="iul_step_4_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_4_email_enable')) ? 'checked' : ''; ?> />
-																	<!--end::Input-->
-																	<!--begin::Label-->
-																	<span class="form-check-label fw-semibold text-muted" for="iul_step_4_email_enable"></span>
-																	<!--end::Label-->
-																</label>
-																<!--end::Switch-->
-															</div>
-															<div class="d-flex">
-																<div class="d-flex flex-column">
-																	<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 4 Email</span>
-																</div>
-															</div>
-														</div>
-														<div class="d-flex mt-2">
-															<div class="d-flex justify-content-end">
-																<!--begin::Switch-->
-																<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-																	<!--begin::Input-->
-																	<input class="form-check-input" name="iul_step_5_email_enable" type="checkbox" value="1" id="iul_step_5_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_5_email_enable')) ? 'checked' : ''; ?> />
-																	<!--end::Input-->
-																	<!--begin::Label-->
-																	<span class="form-check-label fw-semibold text-muted" for="iul_step_5_email_enable"></span>
-																	<!--end::Label-->
-																</label>
-																<!--end::Switch-->
-															</div>
-															<div class="d-flex">
-																<div class="d-flex flex-column">
-																	<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 5 Email</span>
-																</div>
-															</div>
-														</div>
-														<div class="d-flex mt-2">
-															<div class="d-flex justify-content-end">
-																<!--begin::Switch-->
-																<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-																	<!--begin::Input-->
-																	<input class="form-check-input" name="iul_step_6_email_enable" type="checkbox" value="1" id="iul_step_6_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_6_email_enable')) ? 'checked' : ''; ?> />
-																	<!--end::Input-->
-																	<!--begin::Label-->
-																	<span class="form-check-label fw-semibold text-muted" for="iul_step_6_email_enable"></span>
-																	<!--end::Label-->
-																</label>
-																<!--end::Switch-->
-															</div>
-															<div class="d-flex">
-																<div class="d-flex flex-column">
-																	<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 6 Email</span>
-																</div>
-															</div>
+											<div class="card mb-5 mb-xl-10">
+												<!--begin::Card body-->
+												<div class="card-body px-9 pt-1 pb-0">
+													<!--begin::Table-->
+													<div class="">
+														<table class="table border-gray-300 align-middle gy-3">
+															<tbody class="fs-6 fw-semibold">
+																<!--begin::Table row-->
+																<tr>
+																	<td class="min-w-250px fs-4 fw-bold">Indexed Universal Life </td>
+																	<td class="w-125px">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" value="" id="iul_notification_email" data-kt-check="true" data-kt-check-target="[data-kt-iul-notification=email]" checked="checked" />
+																			<label class="form-check-label ps-2" for="iul_notification_email"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 1 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="iul_step_1_email_enable" id="iul_step_1_email_enable" value="1" data-kt-iul-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_1_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="iul_step_1_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 2 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="iul_step_2_email_enable" id="iul_step_2_email_enable" value="1" data-kt-iul-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_2_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="iul_step_2_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 3 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="iul_step_3_email_enable" id="iul_step_3_email_enable" value="1" data-kt-iul-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_3_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="iul_step_3_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 4 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="iul_step_4_email_enable" id="iul_step_4_email_enable" value="1" data-kt-iul-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_4_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="iul_step_4_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 5 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="iul_step_5_email_enable" id="iul_step_5_email_enable" value="1" data-kt-iul-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_5_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="iul_step_5_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 6 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="iul_step_6_email_enable" id="iul_step_6_email_enable" value="1" data-kt-iul-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_step_6_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="iul_step_6_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+															</tbody>
+														</table>
+														<div class="text-center pb-3">
+															<?php if ($iul_current_mail_reminder_step) { ?>
+																<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $iul_current_mail_reminder_step; ?></span>
+															<?php } ?>
 														</div>
 													</div>
-													<?php if ($iul_current_mail_reminder_step) { ?>
-														<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $iul_current_mail_reminder_step; ?></span>
-													<?php } ?>
+													<!--end::Table-->
 												</div>
+												<!--end::Card body-->
 											</div>
 										</div>
 										<div class="col-md-3">
-											<h6 class="mt-12">Term</h6>
-											<div class="row mt-5 mb-3">
-												<div class="d-flex">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="term_step_1_email_enable" type="checkbox" value="1" id="term_step_1_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_1_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="term_step_1_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 1 Email</span>
+											<div class="card mb-5 mb-xl-10">
+												<!--begin::Card body-->
+												<div class="card-body px-9 pt-1 pb-0">
+													<!--begin::Table-->
+													<div class="">
+														<table class="table border-gray-300 align-middle gy-3">
+															<tbody class="fs-6 fw-semibold">
+																<!--begin::Table row-->
+																<tr>
+																	<td class="min-w-250px fs-4 fw-bold">Term </td>
+																	<td class="w-125px">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" value="" id="term_notification_email" data-kt-check="true" data-kt-check-target="[data-kt-term-notification=email]" checked="checked" />
+																			<label class="form-check-label ps-2" for="term_notification_email"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 1 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="term_step_1_email_enable" id="term_step_1_email_enable" value="1" data-kt-term-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_1_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="term_step_1_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 2 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="term_step_2_email_enable" id="term_step_2_email_enable" value="1" data-kt-term-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_2_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="term_step_2_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 3 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="term_step_3_email_enable" id="term_step_3_email_enable" value="1" data-kt-term-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_3_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="term_step_3_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 4 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="term_step_4_email_enable" id="term_step_4_email_enable" value="1" data-kt-term-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_4_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="term_step_4_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 5 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="term_step_5_email_enable" id="term_step_5_email_enable" value="1" data-kt-term-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_5_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="term_step_5_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+															</tbody>
+														</table>
+														<div class="text-center pb-3">
+															<?php if ($term_current_mail_reminder_step) { ?>
+																<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $term_current_mail_reminder_step; ?></span>
+															<?php } ?>
 														</div>
 													</div>
+													<!--end::Table-->
 												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="term_step_2_email_enable" type="checkbox" value="1" id="term_step_2_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_2_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="term_step_2_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 2 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="term_step_3_email_enable" type="checkbox" value="1" id="term_step_3_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_3_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="term_step_3_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 3 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="term_step_4_email_enable" type="checkbox" value="1" id="term_step_4_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_4_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="term_step_4_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 4 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="term_step_5_email_enable" type="checkbox" value="1" id="term_step_5_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'term_step_5_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="term_step_5_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 5 Email</span>
-														</div>
-													</div>
-												</div>
+												<!--end::Card body-->
 											</div>
-											<?php if ($term_current_mail_reminder_step) { ?>
-												<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $term_current_mail_reminder_step; ?></span>
-											<?php } ?>
 										</div>
 										<div class="col-md-3">
-											<h6 class="mt-12">Whole Life</h6>
-											<div class="row mt-5 mb-3">
-												<div class="d-flex">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="wl_step_1_email_enable" type="checkbox" value="1" id="wl_step_1_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_1_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="wl_step_1_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 1 Email</span>
+											<div class="card mb-5 mb-xl-10">
+												<!--begin::Card body-->
+												<div class="card-body px-9 pt-1 pb-0">
+													<!--begin::Table-->
+													<div class="">
+														<table class="table border-gray-300 align-middle gy-3">
+															<tbody class="fs-6 fw-semibold">
+																<!--begin::Table row-->
+																<tr>
+																	<td class="min-w-250px fs-4 fw-bold"> Whole Life </td>
+																	<td class="w-125px">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" value="" id="wl_notification_email" data-kt-check="true" data-kt-check-target="[data-kt-wl-notification=email]" checked="checked" />
+																			<label class="form-check-label ps-2" for="wl_notification_email"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 1 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="wl_step_1_email_enable" id="wl_step_1_email_enable" value="1" data-kt-wl-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_1_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="wl_step_1_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 2 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="wl_step_2_email_enable" id="wl_step_2_email_enable" value="1" data-kt-wl-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_2_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="wl_step_2_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 3 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="wl_step_3_email_enable" id="wl_step_3_email_enable" value="1" data-kt-wl-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_3_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="wl_step_3_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 4 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="wl_step_4_email_enable" id="wl_step_4_email_enable" value="1" data-kt-wl-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_4_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="wl_step_4_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 5 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="wl_step_5_email_enable" id="wl_step_5_email_enable" value="1" data-kt-wl-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_5_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="wl_step_5_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+															</tbody>
+														</table>
+														<div class="text-center pb-3">
+															<?php if ($wl_current_mail_reminder_step) { ?>
+																<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $wl_current_mail_reminder_step; ?></span>
+															<?php } ?>
 														</div>
 													</div>
+													<!--end::Table-->
 												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="wl_step_2_email_enable" type="checkbox" value="1" id="wl_step_2_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_2_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="wl_step_2_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 2 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="wl_step_3_email_enable" type="checkbox" value="1" id="wl_step_3_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_3_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="wl_step_3_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 3 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="wl_step_4_email_enable" type="checkbox" value="1" id="wl_step_4_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_4_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="wl_step_4_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 4 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="wl_step_5_email_enable" type="checkbox" value="1" id="wl_step_5_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'wl_step_5_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="wl_step_5_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 5 Email</span>
-														</div>
-													</div>
-												</div>
+												<!--end::Card body-->
 											</div>
-											<?php if ($wl_current_mail_reminder_step) { ?>
-												<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $wl_current_mail_reminder_step; ?></span>
-											<?php } ?>
 										</div>
 										<div class="col-md-3">
-											<h6 class="mt-12">Advanced Planning</h6>
-											<div class="row mt-5 mb-3">
-												<div class="d-flex">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ap_step_1_email_enable" type="checkbox" value="1" id="ap_step_1_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_1_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ap_step_1_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 1 Email</span>
+											<div class="card mb-5 mb-xl-10">
+												<!--begin::Card body-->
+												<div class="card-body px-9 pt-1 pb-0">
+													<!--begin::Table-->
+													<div class="">
+														<table class="table border-gray-300 align-middle gy-3">
+															<tbody class="fs-6 fw-semibold">
+																<!--begin::Table row-->
+																<tr>
+																	<td class="min-w-250px fs-4 fw-bold"> Advanced Planning </td>
+																	<td class="w-125px">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" value="" id="ap_notification_email" data-kt-check="true" data-kt-check-target="[data-kt-ap-notification=email]" checked="checked" />
+																			<label class="form-check-label ps-2" for="ap_notification_email"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 1 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ap_step_1_email_enable" id="ap_step_1_email_enable" value="1" data-kt-ap-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_1_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ap_step_1_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 2 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ap_step_2_email_enable" id="ap_step_2_email_enable" value="1" data-kt-ap-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_2_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ap_step_2_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 3 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ap_step_3_email_enable" id="ap_step_3_email_enable" value="1" data-kt-ap-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_3_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ap_step_3_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 4 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ap_step_4_email_enable" id="ap_step_4_email_enable" value="1" data-kt-ap-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_4_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ap_step_4_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 5 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ap_step_5_email_enable" id="ap_step_5_email_enable" value="1" data-kt-ap-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_5_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ap_step_5_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 6 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ap_step_6_email_enable" id="ap_step_6_email_enable" value="1" data-kt-ap-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_6_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ap_step_6_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+															</tbody>
+														</table>
+														<div class="text-center pb-3">
+															<?php if ($ap_current_mail_reminder_step) { ?>
+																<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $ap_current_mail_reminder_step; ?></span>
+															<?php } ?>
 														</div>
 													</div>
+													<!--end::Table-->
 												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ap_step_2_email_enable" type="checkbox" value="1" id="ap_step_2_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_2_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ap_step_2_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 2 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ap_step_3_email_enable" type="checkbox" value="1" id="ap_step_3_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_3_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ap_step_3_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 3 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ap_step_4_email_enable" type="checkbox" value="1" id="ap_step_4_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_4_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ap_step_4_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 4 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ap_step_5_email_enable" type="checkbox" value="1" id="ap_step_5_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_5_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ap_step_5_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 5 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ap_step_6_email_enable" type="checkbox" value="1" id="ap_step_6_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ap_step_6_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ap_step_6_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 6 Email</span>
-														</div>
-													</div>
-												</div>
+												<!--end::Card body-->
 											</div>
-											<?php if ($ap_current_mail_reminder_step) { ?>
-												<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $ap_current_mail_reminder_step; ?></span>
-											<?php } ?>
 										</div>
 									</div>
+
 									<div class="row mt-10">
 										<div class="col-md-3">
-											<h4 class="">Fixed Indexed Annuities</h4>
-											<div class="row mt-5 mb-3">
-												<div class="d-flex">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="fia_step_1_email_enable" type="checkbox" value="1" id="fia_step_1_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_1_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="fia_step_1_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 1 Email</span>
+											<div class="card mb-5 mb-xl-10">
+												<!--begin::Card body-->
+												<div class="card-body px-9 pt-1 pb-0">
+													<!--begin::Table-->
+													<div class="">
+														<table class="table border-gray-300 align-middle gy-3">
+															<tbody class="fs-6 fw-semibold">
+																<!--begin::Table row-->
+																<tr>
+																	<td class="min-w-250px fs-4 fw-bold"> Fixed Indexed Annuities </td>
+																	<td class="w-125px">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" value="" id="fia_notification_email" data-kt-check="true" data-kt-check-target="[data-kt-fia-notification=email]" checked="checked" />
+																			<label class="form-check-label ps-2" for="fia_notification_email"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 1 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="fia_step_1_email_enable" id="fia_step_1_email_enable" value="1" data-kt-fia-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_1_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="fia_step_1_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 2 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="fia_step_2_email_enable" id="fia_step_2_email_enable" value="1" data-kt-fia-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_2_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="fia_step_2_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 3 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="fia_step_3_email_enable" id="fia_step_3_email_enable" value="1" data-kt-fia-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_3_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="fia_step_3_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 4 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="fia_step_4_email_enable" id="fia_step_4_email_enable" value="1" data-kt-fia-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_4_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="fia_step_4_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 5 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="fia_step_5_email_enable" id="fia_step_5_email_enable" value="1" data-kt-fia-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_5_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="fia_step_5_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+															</tbody>
+														</table>
+														<div class="text-center pb-3">
+															<?php if ($fia_current_mail_reminder_step) { ?>
+																<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $fia_current_mail_reminder_step; ?></span>
+															<?php } ?>
 														</div>
 													</div>
+													<!--end::Table-->
 												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="fia_step_2_email_enable" type="checkbox" value="1" id="fia_step_2_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_2_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="fia_step_2_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 2 Email</span>
-														</div>
-													</div>
-												</div>
-
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="fia_step_3_email_enable" type="checkbox" value="1" id="fia_step_3_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_3_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="fia_step_3_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 3 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="fia_step_4_email_enable" type="checkbox" value="1" id="fia_step_4_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_4_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="fia_step_4_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 4 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="fia_step_5_email_enable" type="checkbox" value="1" id="fia_step_5_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'fia_step_5_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="fia_step_5_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 5 Email</span>
-														</div>
-													</div>
-												</div>
+												<!--end::Card body-->
 											</div>
-											<?php if ($fia_current_mail_reminder_step) { ?>
-												<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $fia_current_mail_reminder_step; ?></span>
-											<?php } ?>
 										</div>
 										<div class="col-md-3">
-											<h4 class="">Long-Term Care Insurance</h4>
-											<div class="row mt-5 mb-3">
-												<div class="d-flex">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ltc_step_1_email_enable" type="checkbox" value="1" id="ltc_step_1_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_1_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ltc_step_1_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 1 Email</span>
+											<div class="card mb-5 mb-xl-10">
+												<!--begin::Card body-->
+												<div class="card-body px-9 pt-1 pb-0">
+													<!--begin::Table-->
+													<div class="">
+														<table class="table border-gray-300 align-middle gy-3">
+															<tbody class="fs-6 fw-semibold">
+																<!--begin::Table row-->
+																<tr>
+																	<td class="min-w-250px fs-4 fw-bold"> Long-Term Care Insurance </td>
+																	<td class="w-125px">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" value="" id="ltc_notification_email" data-kt-check="true" data-kt-check-target="[data-kt-ltc-notification=email]" checked="checked" />
+																			<label class="form-check-label ps-2" for="ltc_notification_email"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 1 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ltc_step_1_email_enable" id="ltc_step_1_email_enable" value="1" data-kt-ltc-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_1_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ltc_step_1_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 2 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ltc_step_2_email_enable" id="ltc_step_2_email_enable" value="1" data-kt-ltc-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_2_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ltc_step_2_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 3 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ltc_step_3_email_enable" id="ltc_step_3_email_enable" value="1" data-kt-ltc-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_3_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ltc_step_3_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 4 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ltc_step_4_email_enable" id="ltc_step_4_email_enable" value="1" data-kt-ltc-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_4_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ltc_step_4_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 5 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ltc_step_5_email_enable" id="ltc_step_5_email_enable" value="1" data-kt-ltc-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_5_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ltc_step_5_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 6 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ltc_step_6_email_enable" id="ltc_step_6_email_enable" value="1" data-kt-ltc-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_6_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ltc_step_6_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+															</tbody>
+														</table>
+														<div class="text-center pb-3">
+															<?php if ($ltc_current_mail_reminder_step) { ?>
+																<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $ltc_current_mail_reminder_step; ?></span>
+															<?php } ?>
 														</div>
 													</div>
+													<!--end::Table-->
 												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ltc_step_2_email_enable" type="checkbox" value="1" id="ltc_step_2_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_2_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ltc_step_2_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 2 Email</span>
-														</div>
-													</div>
-												</div>
-
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ltc_step_3_email_enable" type="checkbox" value="1" id="ltc_step_3_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_3_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ltc_step_3_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 3 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ltc_step_4_email_enable" type="checkbox" value="1" id="ltc_step_4_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_4_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ltc_step_4_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 4 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ltc_step_5_email_enable" type="checkbox" value="1" id="ltc_step_5_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_5_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ltc_step_5_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 5 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ltc_step_6_email_enable" type="checkbox" value="1" id="ltc_step_6_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ltc_step_6_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ltc_step_6_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 6 Email</span>
-														</div>
-													</div>
-												</div>
+												<!--end::Card body-->
 											</div>
-											<?php if ($ltc_current_mail_reminder_step) { ?>
-												<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $ltc_current_mail_reminder_step; ?></span>
-											<?php } ?>
 										</div>
-										<div class="col-md-3">
-											<h4 class="">Life Settlements</h4>
-											<div class="row mt-5 mb-3">
-												<div class="d-flex">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ls_step_1_email_enable" type="checkbox" value="1" id="ls_step_1_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_1_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ls_step_1_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 1 Email</span>
-														</div>
-													</div>
-												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ls_step_2_email_enable" type="checkbox" value="1" id="ls_step_2_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_2_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ls_step_2_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 2 Email</span>
-														</div>
-													</div>
-												</div>
 
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ls_step_3_email_enable" type="checkbox" value="1" id="ls_step_3_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_3_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ls_step_3_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 3 Email</span>
+										<div class="col-md-3">
+											<div class="card mb-5 mb-xl-10">
+												<!--begin::Card body-->
+												<div class="card-body px-9 pt-1 pb-0">
+													<!--begin::Table-->
+													<div class="">
+														<table class="table border-gray-300 align-middle gy-3">
+															<tbody class="fs-6 fw-semibold">
+																<!--begin::Table row-->
+																<tr>
+																	<td class="min-w-250px fs-4 fw-bold"> Life Settlements </td>
+																	<td class="w-125px">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" value="" id="ls_notification_email" data-kt-check="true" data-kt-check-target="[data-kt-ls-notification=email]" checked="checked" />
+																			<label class="form-check-label ps-2" for="ls_notification_email"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 1 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ls_step_1_email_enable" id="ls_step_1_email_enable" value="1" data-kt-ls-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_1_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ls_step_1_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 2 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ls_step_2_email_enable" id="ls_step_2_email_enable" value="1" data-kt-ls-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_2_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ls_step_2_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td>Step 3 Email</td>
+																	<td>
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ls_step_3_email_enable" id="ls_step_3_email_enable" value="1" data-kt-ls-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_3_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ls_step_3_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+																<!--begin::Table row-->
+																<tr>
+																	<td class="border-bottom-0">Step 4 Email</td>
+																	<td class="border-bottom-0">
+																		<div class="form-check form-check-custom form-check-solid">
+																			<input class="form-check-input" type="checkbox" name="ls_step_4_email_enable" id="ls_step_4_email_enable" value="1" data-kt-ls-notification="email" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_4_email_enable')) ? 'checked' : ''; ?> />
+																			<label class="form-check-label ps-2" for="ls_step_4_email_enable"></label>
+																		</div>
+																	</td>
+																</tr>
+																<!--begin::Table row-->
+															</tbody>
+														</table>
+														<div class="text-center pb-3">
+															<?php if ($ls_current_mail_reminder_step) { ?>
+																<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $ls_current_mail_reminder_step; ?></span>
+															<?php } ?>
 														</div>
 													</div>
+													<!--end::Table-->
 												</div>
-												<div class="d-flex mt-2">
-													<div class="d-flex justify-content-end">
-														<!--begin::Switch-->
-														<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-															<!--begin::Input-->
-															<input class="form-check-input" name="ls_step_4_email_enable" type="checkbox" value="1" id="ls_step_4_email_enable" <?php echo (Advisor()->get_advisor_meta($selected_advisor_data->id, 'ls_step_4_email_enable')) ? 'checked' : ''; ?> />
-															<!--end::Input-->
-															<!--begin::Label-->
-															<span class="form-check-label fw-semibold text-muted" for="ls_step_4_email_enable"></span>
-															<!--end::Label-->
-														</label>
-														<!--end::Switch-->
-													</div>
-													<div class="d-flex">
-														<div class="d-flex flex-column">
-															<span class="fs-5 text-gray-900 text-hover-primary fw-bold">Step 4 Email</span>
-														</div>
-													</div>
-												</div>
+												<!--end::Card body-->
 											</div>
-											<?php if ($ls_current_mail_reminder_step) { ?>
-												<span class="badge badge-light-danger fw-bold me-auto px-4 py-3">Current Step : <?php echo $ls_current_mail_reminder_step; ?></span>
-											<?php } ?>
 										</div>
 
 									</div>

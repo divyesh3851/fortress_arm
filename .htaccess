@@ -92,4 +92,10 @@ Options -MultiViews
 	RewriteRule ^admin/settings/cron-setting?$ admin/settings/cron-setting.php [NC,L]
 
 	RewriteRule ^admin/advisor/advisor-email-settings/([^/]+)$ admin/advisor/advisor-email-settings.php?advisor_id=$1 [NC,L]
+
+	RewriteRule ^admin/forgot-password?$ admin/forgot-password.php [NC,L]
+	RewriteRule ^admin/reset-password/([^/]+)$ admin/reset-password.php?key=$1 [NC,L]
+
+	RewriteRule ^advisor/forgot-password?$ advisor/forgot-password.php [NC,L]
+	RewriteRule ^advisor/reset-password/([^/]+)$ advisor/reset-password.php?key=$1 [NC,L]
 </IfModule>

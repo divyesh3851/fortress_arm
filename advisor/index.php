@@ -121,6 +121,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <h4 class="mb-1 text-danger">The password provided is invalid.</h4>
                                 </div>
                             </div>
+
+                        <?php }
+                        if (isset($_SESSION['reset_password_success'])) {
+                            unset($_SESSION['reset_password_success']) ?>
+                            <div class="alert alert-success d-flex align-items-center p-5">
+                                <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
+                                <div class="d-flex flex-column">
+                                    <h4 class="mb-1 text-success">Password updated successfully.</h4>
+                                </div>
+                            </div>
                         <?php } ?>
                         <!--begin::Logo-->
                         <div class="mb-7">
@@ -150,6 +160,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <!--end::Password-->
                             </div>
                             <!--end::Input group=-->
+                            <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+                                <div></div>
+
+                                <!--begin::Link-->
+                                <a href="<?php echo site_url(); ?>/advisor/forgot-password" class="link-primary">
+                                    Forgot Password ?
+                                </a>
+                                <!--end::Link-->
+                            </div>
                             <!--begin::Submit button-->
                             <div class="d-grid mb-10">
                                 <button type="submit" id="kt_sign_in_submit" name="kt_sign_in_submit" value="Sign In" class="btn btn-primary">

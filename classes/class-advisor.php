@@ -1976,6 +1976,74 @@ class Advisor
         return 'email_not_found';
     }
 
+    public function update_password($key)
+    {
+        global $wpdb;
+
+        if (!$key) {
+            return false;
+        }
+
+        $user_info = $wpdb->get_row("SELECT id FROM advisor WHERE reset_password_key = '" . $key . "'");
+
+        if (!$user_info) {
+            return false;
+        }
+
+        $password = md5(sipost('password') . AUTH_SALT);
+
+        $status = $wpdb->update("advisor", array("password" => $password, "updated_at" => current_time('mysql')), array("id" => $user_info->id));
+
+        if ($status) {
+
+            $wpdb->update("advisor", array("reset_password_key" => ''), array("id" => $user_info->id));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function send_reset_password_mail($user_id)
+    {
+        global $wpdb;
+
+        if (!$user_id) {
+            return false;
+        }
+
+        $user_info = $wpdb->get_row("SELECT first_name,last_name,email FROM advisor WHERE id = " . $user_id);
+
+        if (!$user_info) {
+            return false;
+        }
+
+        $hash_key = generate_hash();
+
+        $subject = "Password Reset";
+
+        $reset_link = site_url() . "/advisor/reset-password/" . $hash_key;
+
+        $mail_body = "Hi " . $user_info->first_name . ' ' . $user_info->last_name . ',<br><br>';
+
+        $mail_body .= "To reset your password, click on the below link <br>";
+
+        $mail_body .= $reset_link . "<br><br>";
+
+        $mail_body .= FBS_FIRST_NAME . ' ' . FBS_LAST_NAME . '<br>';
+        $mail_body .= '<img src="' . FBS_LOGO . '"><br>';
+        $mail_body .= '<a href="tel:' . FBS_PHONE_NO . '">' . FBS_PHONE_NO . '</a><br>';
+        $mail_body .= FBS_EMAIL;
+
+        $_SESSION['use_smtp'] = true;
+        $status = send_mail($user_info->email, $subject, $mail_body);
+        if ($status) {
+            $wpdb->update("advisor", array("reset_password_key" => $hash_key), array("id" => $user_id));
+        }
+        unset($_SESSION['use_smtp']);
+
+        return true;
+    }
 
     /**
      * Make Log Out Process

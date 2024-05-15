@@ -4,34 +4,37 @@ $page_name = 'login';
 // Checked User Already Login Or Not
 if (isset($_SESSION) && isset($_SESSION['is_fbs_arm_admin_login']) && isset($_SESSION['fbs_arm_admin_id'])) {
 
-    wp_redirect(admin_url('dashboard'));
+    wp_redirect(site_url() . '/admin/dashboard');
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST['password_reset'])) {
 
-
-    if (!sipost('email') || !sipost('password')) {
-        return;
+    if (!sipost('email')) {
+        $_SESSION['invalid_email'] = true;
+        wp_redirect(site_url() . '/admin/forgot-password');
+        die();
     }
 
-    // Checked User Login Success Or Not
-    $response = Admin()->login(sipost('email'), sipost('password'));
+    $email = strtolower(sipost('email'));
 
-    if ($response == 'email_not_found') {
+    $check_user = $wpdb->get_var("SELECT id FROM admin WHERE email = '" . $email . "' AND status = 0");
+
+    if (!$check_user) {
         $_SESSION['invalid_email'] = true;
-        wp_redirect(admin_url());
+        wp_redirect(site_url() . '/admin/forgot-password');
         die();
-    } else if ($response == 'password_wrong') {
-        $_SESSION['invalid_password'] = true;
-        wp_redirect(admin_url());
-        die();
-    } else if ($response == 'success') {
-        wp_redirect(admin_url('dashboard'));
+    }
+
+    $response = Admin()->send_reset_password_mail($check_user);
+
+    if ($response) {
+        $_SESSION['process_success'] = true;
+        wp_redirect(site_url() . '/admin/forgot-password');
         die();
     } else {
         $_SESSION['invalid_email'] = true;
-        wp_redirect(admin_url());
+        wp_redirect(site_url() . '/admin/forgot-password');
         die();
     }
 } ?>
@@ -112,26 +115,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                             </div>
                         <?php }
-
-                        if (isset($_SESSION['invalid_password'])) {
-                            unset($_SESSION['invalid_password']) ?>
-                            <div class="alert alert-danger d-flex align-items-center p-5">
-                                <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                <div class="d-flex flex-column">
-                                    <h4 class="mb-1 text-danger">The password provided is invalid.</h4>
-                                </div>
-                            </div>
-                        <?php }
-
-                        if (isset($_SESSION['reset_password_success'])) {
-                            unset($_SESSION['reset_password_success']) ?>
+                        if (isset($_SESSION['process_success'])) {
+                            unset($_SESSION['process_success']) ?>
                             <div class="alert alert-success d-flex align-items-center p-5">
                                 <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
                                 <div class="d-flex flex-column">
-                                    <h4 class="mb-1 text-success">Password updated successfully.</h4>
+                                    <h4 class="mb-1 text-success">Password reset link sent to your email.</h4>
                                 </div>
                             </div>
-                        <?php } ?>
+                        <?php }  ?>
                         <!--begin::Logo-->
                         <div class="mb-7">
                             <a href="" class="">
@@ -139,49 +131,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </a>
                         </div>
                         <!--end::Logo-->
-                        <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="" method="post">
+                        <form class="form w-100" method="post">
                             <!--begin::Heading-->
-                            <div class="text-center mb-11">
+                            <div class="text-center mb-10">
                                 <!--begin::Title-->
-                                <h1 class="text-gray-900 fw-bolder mb-3">Sign In</h1>
+                                <h1 class="text-gray-900 fw-bolder mb-3">Forgot Password ?</h1>
                                 <!--end::Title-->
+                                <!--begin::Link-->
+                                <div class="text-gray-500 fw-semibold fs-6">Enter your email to reset your password.</div>
+                                <!--end::Link-->
                             </div>
                             <!--begin::Heading-->
                             <!--begin::Input group=-->
-                            <div class="fv-row mb-4">
+                            <div class="fv-row mb-8">
                                 <!--begin::Email-->
-                                <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+                                <input type="email" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" required />
                                 <!--end::Email-->
                             </div>
-                            <!--end::Input group=-->
-                            <div class="fv-row mb-3">
-                                <!--begin::Password-->
-                                <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
-                                <!--end::Password-->
-                            </div>
-                            <!--end::Input group=-->
-                            <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-                                <div></div>
-
-                                <!--begin::Link-->
-                                <a href="<?php echo site_url(); ?>/admin/forgot-password" class="link-primary">
-                                    Forgot Password ?
-                                </a>
-                                <!--end::Link-->
-                            </div>
-                            <!--begin::Submit button-->
-                            <div class="d-grid mb-10">
-                                <button type="submit" id="kt_sign_in_submit" name="kt_sign_in_submit" value="Sign In" class="btn btn-primary">
+                            <!--begin::Actions-->
+                            <div class="d-flex flex-wrap justify-content-center pb-lg-0">
+                                <button type="submit" id="password_reset" name="password_reset" class="btn btn-primary me-4">
                                     <!--begin::Indicator label-->
-                                    <span class="indicator-label">Sign In</span>
+                                    <span class="indicator-label">Submit</span>
                                     <!--end::Indicator label-->
                                     <!--begin::Indicator progress-->
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                     <!--end::Indicator progress-->
                                 </button>
+                                <a href="<?php echo site_url(); ?>/admin" class="btn btn-light">Cancel</a>
                             </div>
-                            <!--end::Submit button-->
+                            <!--end::Actions-->
                         </form>
                     </div>
                 </div>
@@ -203,86 +183,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="<?php echo site_url(); ?>/assets/plugins/global/plugins.bundle.js"></script>
     <script src="<?php echo site_url(); ?>/assets/js/scripts.bundle.js"></script>
     <!--end::Global Javascript Bundle-->
-    <!--end::Javascript-->
-    <script>
-        // Define form element
-        const form = document.getElementById('kt_sign_in_form');
-
-        // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
-        var validator = FormValidation.formValidation(
-            form, {
-                fields: {
-                    'email': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Email address is required'
-                            }
-                        }
-                    },
-                    'password': {
-                        validators: {
-                            notEmpty: {
-                                message: 'The password is required'
-                            }
-                        }
-                    },
-                },
-
-                plugins: {
-                    trigger: new FormValidation.plugins.Trigger(),
-                    bootstrap: new FormValidation.plugins.Bootstrap5({
-                        rowSelector: '.fv-row',
-                        eleInvalidClass: '',
-                        eleValidClass: ''
-                    })
-                }
-            }
-        );
-
-        // Submit button handler
-        const submitButton = document.getElementById('kt_sign_in_submit');
-        submitButton.addEventListener('click', function(e) {
-            // Prevent default button action
-            e.preventDefault();
-
-            // Validate form before submit
-            if (validator) {
-                validator.validate().then(function(status) {
-
-                    if (status == 'Valid') {
-                        // Show loading indication
-                        submitButton.setAttribute('data-kt-indicator', 'on');
-
-                        // Disable button to avoid multiple click
-                        submitButton.disabled = true;
-
-                        // Simulate form submission. 
-                        setTimeout(function() {
-                            // Remove loading indication
-                            submitButton.removeAttribute('data-kt-indicator');
-
-                            // Enable button
-                            submitButton.disabled = false;
-
-                            // Show popup confirmation
-                            /*
-                            Swal.fire({
-                                text: "Login successfully!",
-                                icon: "success",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn btn-primary"
-                                }
-                            });
-                            */
-                            form.submit(); // Submit form
-                        }, 2000);
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 <!--end::Body-->
 
