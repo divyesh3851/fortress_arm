@@ -9,6 +9,10 @@ if (siget('user_type')) {
     $AND = ' AND created_by = ' . siget('fbs_arm_admin_id') . ' AND created_by_type = "admin" ';
 }
 
+if (siget('advisor_status')) {
+    $AND .= ' AND advisor_status = ' . siget('advisor_status');
+}
+
 $advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 ' . $AND . ' ORDER BY id DESC');
 
 foreach ($advisor_list as $advisor_result) {

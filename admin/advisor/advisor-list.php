@@ -223,14 +223,14 @@ if (isset($_POST['advisor_import_submit'])) {
 
                 if ($last_id) {
                     Advisor()->update_advisor_meta($last_id, 'profile_img', 'blank.png'); // default profile
-                    Admin()->create_track_log_activity($created_by, $last_id, 'advisor import', 'advisor_import', $advisor_info, '', 'advisor has been import', $created_by_type);
+                    Admin()->create_track_log_activity($created_by, $last_id, 'advisor import', 'advisor_import', $advisor_data, '', 'advisor has been import', $created_by_type);
                 }
             }
         }
     }
 
-    $_SESSION['process_success'] = true;
-    wp_redirect(site_url() . '/admin/advisor/advisor-list.php');
+    $_SESSION['import_process_success'] = true;
+    wp_redirect(site_url() . '/admin/advisor/advisor-list');
     die();
 }
 
@@ -358,8 +358,8 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                     </div>
                                 <?php }
 
-                                if (isset($_SESSION['process_success'])) {
-                                    unset($_SESSION['process_success']); ?>
+                                if (isset($_SESSION['import_process_success'])) {
+                                    unset($_SESSION['import_process_success']); ?>
 
                                     <div class="alert alert-success d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
@@ -943,6 +943,9 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                     },
                     ajax: {
                         url: "<?php echo site_url(); ?>/admin/advisor/advisor-list-ajax.php",
+                        data: {
+                            advisor_status: '<?php echo siget('advisor_status'); ?>'
+                        }
                     },
                     columns: [{
                             data: 'record_id'

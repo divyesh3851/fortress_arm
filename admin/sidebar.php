@@ -19,21 +19,6 @@
                 <!--end:Menu item-->
 
                 <!--begin:Menu item-->
-                <?php if (Admin()->check_for_page_access('advisor')) { ?>
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link <?php echo ($page_name == 'advisor') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/advisor/advisor-list">
-                            <span class="menu-icon">
-                                <i class="las la-user-friends fs-2x"></i>
-                            </span>
-                            <span class="menu-title">Contacts</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                <?php } ?>
-                <!--end:Menu item-->
-
-                <!--begin:Menu item-->
                 <?php if (Admin()->check_for_page_access('messages')) { ?>
                     <div class="menu-item">
                         <!--begin:Menu link-->
@@ -74,6 +59,21 @@
                     </a>
                     <!--end:Menu link-->
                 </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <?php if (Admin()->check_for_page_access('advisor')) { ?>
+                    <div class="menu-item">
+                        <!--begin:Menu link-->
+                        <a class="menu-link <?php echo ($page_name == 'advisor') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/advisor/advisor-list">
+                            <span class="menu-icon">
+                                <i class="las la-user-friends fs-2x"></i>
+                            </span>
+                            <span class="menu-title">Contacts</span>
+                        </a>
+                        <!--end:Menu link-->
+                    </div>
+                <?php } ?>
                 <!--end:Menu item-->
 
                 <!--begin:Menu item-->
@@ -223,6 +223,7 @@
                 </div>
                 <!--end:Menu item-->
 
+                <?php /* 
                 <!--begin:Menu item-->
                 <?php if (Admin()->check_for_page_access('notes')) { ?>
                     <div class="menu-item">
@@ -298,7 +299,7 @@
                     <!--end:Menu item-->
                 <?php } ?>
 
-
+                */ ?>
 
 
                 <!--begin:Menu item-->

@@ -36,7 +36,7 @@ $get_today_activity = Advisor()->get_today_activity($_SESSION['fbs_arm_admin_id'
 
 $get_advisor_upcoming_activity_list = Advisor()->get_upcoming_activity($_SESSION['fbs_arm_admin_id']);
 
-$get_advisor_note_list = Advisor()->get_note_list(2);
+$get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1075,27 +1075,29 @@ $get_advisor_note_list = Advisor()->get_note_list(2);
                                                     <div class="w_20 col-sm-2 mb-xl-10">
                                                         <!--begin::Card widget 2-->
                                                         <div class="card h-lg-100">
-                                                            <!--begin::Body-->
-                                                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                                                <!--begin::Icon-->
-                                                                <div class="m-0">
-                                                                    <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
-                                                                </div>
-                                                                <!--end::Icon-->
-                                                                <!--begin::Section-->
-                                                                <div class="d-flex flex-column my-7 mb-2">
-                                                                    <!--begin::Number-->
-                                                                    <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_new_advisor; ?></span>
-                                                                    <!--end::Number-->
-                                                                    <!--begin::Follower-->
+                                                            <a href="<?php echo site_url(); ?>/admin/advisor/advisor-list/1">
+                                                                <!--begin::Body-->
+                                                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                                                    <!--begin::Icon-->
                                                                     <div class="m-0">
-                                                                        <span class="fw-semibold fs-6 text-gray-500">New Contacts</span>
+                                                                        <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
                                                                     </div>
-                                                                    <!--end::Follower-->
+                                                                    <!--end::Icon-->
+                                                                    <!--begin::Section-->
+                                                                    <div class="d-flex flex-column my-7 mb-2">
+                                                                        <!--begin::Number-->
+                                                                        <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_new_advisor; ?></span>
+                                                                        <!--end::Number-->
+                                                                        <!--begin::Follower-->
+                                                                        <div class="m-0">
+                                                                            <span class="fw-semibold fs-6 text-gray-500">New Contacts</span>
+                                                                        </div>
+                                                                        <!--end::Follower-->
+                                                                    </div>
+                                                                    <!--end::Section-->
                                                                 </div>
-                                                                <!--end::Section-->
-                                                            </div>
-                                                            <!--end::Body-->
+                                                                <!--end::Body-->
+                                                            </a>
                                                         </div>
                                                         <!--end::Card widget 2-->
                                                     </div>
@@ -1103,56 +1105,29 @@ $get_advisor_note_list = Advisor()->get_note_list(2);
                                                     <div class="w_20 col-sm-2 mb-xl-10">
                                                         <!--begin::Card widget 2-->
                                                         <div class="card h-lg-100">
-                                                            <!--begin::Body-->
-                                                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                                                <!--begin::Icon-->
-                                                                <div class="m-0">
-                                                                    <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
-                                                                </div>
-                                                                <!--end::Icon-->
-                                                                <!--begin::Section-->
-                                                                <div class="d-flex flex-column my-7 mb-2">
-                                                                    <!--begin::Number-->
-                                                                    <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_cold_advisor; ?></span>
-                                                                    <!--end::Number-->
-                                                                    <!--begin::Follower-->
+                                                            <a href="<?php echo site_url(); ?>/admin/advisor/advisor-list/2">
+                                                                <!--begin::Body-->
+                                                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                                                    <!--begin::Icon-->
                                                                     <div class="m-0">
-                                                                        <span class="fw-semibold fs-6 text-gray-500">Cold Contacts</span>
+                                                                        <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
                                                                     </div>
-                                                                    <!--end::Follower-->
-                                                                </div>
-                                                                <!--end::Section-->
-                                                            </div>
-                                                            <!--end::Body-->
-                                                        </div>
-                                                        <!--end::Card widget 2-->
-                                                    </div>
-                                                    <!--end::Col-->
-                                                    <!--begin::Col-->
-                                                    <div class="w_20 col-sm-2 mb-xl-10">
-                                                        <!--begin::Card widget 2-->
-                                                        <div class="card h-lg-100">
-                                                            <!--begin::Body-->
-                                                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                                                <!--begin::Icon-->
-                                                                <div class="m-0">
-                                                                    <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
-                                                                </div>
-                                                                <!--end::Icon-->
-                                                                <!--begin::Section-->
-                                                                <div class="d-flex flex-column my-7 mb-2">
-                                                                    <!--begin::Number-->
-                                                                    <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_warm_advisor; ?></span>
-                                                                    <!--end::Number-->
-                                                                    <!--begin::Follower-->
-                                                                    <div class="m-0">
-                                                                        <span class="fw-semibold fs-6 text-gray-500">Warm Contacts</span>
+                                                                    <!--end::Icon-->
+                                                                    <!--begin::Section-->
+                                                                    <div class="d-flex flex-column my-7 mb-2">
+                                                                        <!--begin::Number-->
+                                                                        <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_cold_advisor; ?></span>
+                                                                        <!--end::Number-->
+                                                                        <!--begin::Follower-->
+                                                                        <div class="m-0">
+                                                                            <span class="fw-semibold fs-6 text-gray-500">Cold Contacts</span>
+                                                                        </div>
+                                                                        <!--end::Follower-->
                                                                     </div>
-                                                                    <!--end::Follower-->
+                                                                    <!--end::Section-->
                                                                 </div>
-                                                                <!--end::Section-->
-                                                            </div>
-                                                            <!--end::Body-->
+                                                                <!--end::Body-->
+                                                            </a>
                                                         </div>
                                                         <!--end::Card widget 2-->
                                                     </div>
@@ -1161,27 +1136,29 @@ $get_advisor_note_list = Advisor()->get_note_list(2);
                                                     <div class="w_20 col-sm-2 mb-xl-10">
                                                         <!--begin::Card widget 2-->
                                                         <div class="card h-lg-100">
-                                                            <!--begin::Body-->
-                                                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                                                <!--begin::Icon-->
-                                                                <div class="m-0">
-                                                                    <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
-                                                                </div>
-                                                                <!--end::Icon-->
-                                                                <!--begin::Section-->
-                                                                <div class="d-flex flex-column my-7 mb-2">
-                                                                    <!--begin::Number-->
-                                                                    <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_hot_advisor; ?></span>
-                                                                    <!--end::Number-->
-                                                                    <!--begin::Follower-->
+                                                            <a href="<?php echo site_url(); ?>/admin/advisor/advisor-list/3">
+                                                                <!--begin::Body-->
+                                                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                                                    <!--begin::Icon-->
                                                                     <div class="m-0">
-                                                                        <span class="fw-semibold fs-6 text-gray-500">Hot Contacts</span>
+                                                                        <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
                                                                     </div>
-                                                                    <!--end::Follower-->
+                                                                    <!--end::Icon-->
+                                                                    <!--begin::Section-->
+                                                                    <div class="d-flex flex-column my-7 mb-2">
+                                                                        <!--begin::Number-->
+                                                                        <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_warm_advisor; ?></span>
+                                                                        <!--end::Number-->
+                                                                        <!--begin::Follower-->
+                                                                        <div class="m-0">
+                                                                            <span class="fw-semibold fs-6 text-gray-500">Warm Contacts</span>
+                                                                        </div>
+                                                                        <!--end::Follower-->
+                                                                    </div>
+                                                                    <!--end::Section-->
                                                                 </div>
-                                                                <!--end::Section-->
-                                                            </div>
-                                                            <!--end::Body-->
+                                                                <!--end::Body-->
+                                                            </a>
                                                         </div>
                                                         <!--end::Card widget 2-->
                                                     </div>
@@ -1190,27 +1167,60 @@ $get_advisor_note_list = Advisor()->get_note_list(2);
                                                     <div class="w_20 col-sm-2 mb-xl-10">
                                                         <!--begin::Card widget 2-->
                                                         <div class="card h-lg-100">
-                                                            <!--begin::Body-->
-                                                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                                                <!--begin::Icon-->
-                                                                <div class="m-0">
-                                                                    <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
-                                                                </div>
-                                                                <!--end::Icon-->
-                                                                <!--begin::Section-->
-                                                                <div class="d-flex flex-column my-7 mb-2">
-                                                                    <!--begin::Number-->
-                                                                    <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_won_advisor; ?></span>
-                                                                    <!--end::Number-->
-                                                                    <!--begin::Follower-->
+                                                            <a href="<?php echo site_url(); ?>/admin/advisor/advisor-list/4">
+                                                                <!--begin::Body-->
+                                                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                                                    <!--begin::Icon-->
                                                                     <div class="m-0">
-                                                                        <span class="fw-semibold fs-6 text-gray-500">Won</span>
+                                                                        <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
                                                                     </div>
-                                                                    <!--end::Follower-->
+                                                                    <!--end::Icon-->
+                                                                    <!--begin::Section-->
+                                                                    <div class="d-flex flex-column my-7 mb-2">
+                                                                        <!--begin::Number-->
+                                                                        <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_hot_advisor; ?></span>
+                                                                        <!--end::Number-->
+                                                                        <!--begin::Follower-->
+                                                                        <div class="m-0">
+                                                                            <span class="fw-semibold fs-6 text-gray-500">Hot Contacts</span>
+                                                                        </div>
+                                                                        <!--end::Follower-->
+                                                                    </div>
+                                                                    <!--end::Section-->
                                                                 </div>
-                                                                <!--end::Section-->
-                                                            </div>
-                                                            <!--end::Body-->
+                                                                <!--end::Body-->
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Card widget 2-->
+                                                    </div>
+                                                    <!--end::Col-->
+                                                    <!--begin::Col-->
+                                                    <div class="w_20 col-sm-2 mb-xl-10">
+                                                        <!--begin::Card widget 2-->
+                                                        <div class="card h-lg-100">
+                                                            <a href="<?php echo site_url(); ?>/admin/advisor/advisor-list/5">
+                                                                <!--begin::Body-->
+                                                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                                                    <!--begin::Icon-->
+                                                                    <div class="m-0">
+                                                                        <i class="ki-outline ki-chart-simple fs-2hx text-gray-600"></i>
+                                                                    </div>
+                                                                    <!--end::Icon-->
+                                                                    <!--begin::Section-->
+                                                                    <div class="d-flex flex-column my-7 mb-2">
+                                                                        <!--begin::Number-->
+                                                                        <span class="fw-semibold fs-2x text-gray-800 lh-1 ls-n2"><?php echo $total_won_advisor; ?></span>
+                                                                        <!--end::Number-->
+                                                                        <!--begin::Follower-->
+                                                                        <div class="m-0">
+                                                                            <span class="fw-semibold fs-6 text-gray-500">Won</span>
+                                                                        </div>
+                                                                        <!--end::Follower-->
+                                                                    </div>
+                                                                    <!--end::Section-->
+                                                                </div>
+                                                                <!--end::Body-->
+                                                            </a>
                                                         </div>
                                                         <!--end::Card widget 2-->
                                                     </div>

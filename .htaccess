@@ -19,6 +19,7 @@ Options -MultiViews
 	RewriteRule ^advisor/login?$ advisor/index.php [NC,L]
 
 	RewriteRule ^admin/advisor/advisor-list?$ admin/advisor/advisor-list.php [NC,L]
+	RewriteRule ^admin/advisor/advisor-list/([^/]+)$ admin/advisor/advisor-list.php?advisor_status=$1 [NC,L]
 	RewriteRule ^advisor/advisor-list?$ advisor/advisor-list.php [NC,L]
 
 	RewriteRule ^admin/advisor/add-advisor?$ admin/advisor/advisor.php [NC,L]
@@ -98,4 +99,6 @@ Options -MultiViews
 
 	RewriteRule ^advisor/forgot-password?$ advisor/forgot-password.php [NC,L]
 	RewriteRule ^advisor/reset-password/([^/]+)$ advisor/reset-password.php?key=$1 [NC,L]
+
+	RewriteRule ^admin/opportunities?$ admin/opportunities.php [NC,L]
 </IfModule>

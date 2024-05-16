@@ -905,6 +905,10 @@ class Advisor
 
         $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
 
+        if (!$advisor_id) {
+            return false;
+        }
+
         $WHERE = '';
         if ($advisor_id) {
             $WHERE = ' WHERE advisor_id = ' . $advisor_id;
