@@ -168,6 +168,72 @@ if (isset($_POST['advisor_export_submit'])) {
     }
 }
 
+if (isset($_POST['advisor_import_submit'])) {
+
+    if ($_FILES['import_file'] && $_FILES['import_file']['error'] == 0) {
+
+        $csv_file    = $_FILES['import_file']['tmp_name'];
+
+        $handle = fopen($csv_file, 'r');
+        $i      = 0;
+
+        while (($data = fgetcsv($handle)) !== FALSE) {
+
+            $i++;
+
+            if ($i == 1) {
+                continue;
+            }
+
+            if ($data) {
+
+                $first_name = ($data[0]) ? ucfirst($data[0]) : '';
+                $last_name  = ($data[1]) ? ucfirst($data[1]) : '';
+                $email      = ($data[2]) ? strtolower(trim($data[2])) : '';
+                $mobile_no  = ($data[3]) ? $data[3] : '';
+
+                $check_advisor = $wpdb->get_row("SELECT id FROM advisor WHERE ( LOWER(email) = '" . $email . "' ) AND status = 0 ");
+
+                if ($check_advisor) {
+                    continue;
+                }
+
+                $created_by = '';
+                if (isset($_SESSION['fbs_advisor_id'])) {
+                    $created_by = $_SESSION['fbs_advisor_id'];
+                    $created_by_type = 'advisor';
+                } else if (isset($_SESSION['fbs_arm_admin_id'])) {
+                    $created_by = $_SESSION['fbs_arm_admin_id'];
+                    $created_by_type = 'admin';
+                }
+
+                $advisor_data = array(
+                    "first_name"    => $first_name,
+                    "last_name"     => $last_name,
+                    "email"         => $email,
+                    "mobile_no"     => $mobile_no,
+                    "city"          => $data[4],
+                    "created_at"    => current_time('mysql'),
+                    "created_by"    => $created_by,
+                    "created_by_type"   => $created_by_type,
+                );
+
+                $wpdb->insert("advisor", $advisor_data);
+                $last_id = $wpdb->insert_id;
+
+                if ($last_id) {
+                    Advisor()->update_advisor_meta($last_id, 'profile_img', 'blank.png'); // default profile
+                    Admin()->create_track_log_activity($created_by, $last_id, 'advisor import', 'advisor_import', $advisor_info, '', 'advisor has been import', $created_by_type);
+                }
+            }
+        }
+    }
+
+    $_SESSION['process_success'] = true;
+    wp_redirect(site_url() . '/admin/advisor/advisor-list.php');
+    die();
+}
+
 $get_state_list = Settings()->get_state_list();
 
 $get_lead_source_list = Settings()->get_lead_source_list();
@@ -290,6 +356,17 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                             <h4 class="mb-1 text-danger">The advisor has been save failed.</h4>
                                         </div>
                                     </div>
+                                <?php }
+
+                                if (isset($_SESSION['process_success'])) {
+                                    unset($_SESSION['process_success']); ?>
+
+                                    <div class="alert alert-success d-flex align-items-center p-5">
+                                        <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
+                                        <div class="d-flex flex-column">
+                                            <h4 class="mb-1 text-success">The advisor import process has been successfully.</h4>
+                                        </div>
+                                    </div>
                                 <?php } ?>
 
                                 <!--begin::Card-->
@@ -374,6 +451,8 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                                 <!--begin::Export-->
                                                 <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_advisor_export_modal">
                                                     <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
+                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_advisor_import_modal">
+                                                    <i class="ki-outline ki-exit-down fs-2"></i>Import</button>
                                                 <!--end::Export-->
                                                 <!--begin::Add Advisor-->
                                                 <?php /*
@@ -617,7 +696,60 @@ $get_lead_source_list = Settings()->get_lead_source_list();
     </div>
     <!--end::Modal - Advisor -->
 
-    <!--begin::Modal - Adjust Balance-->
+
+    <!--begin::Modal - Settings-->
+    <div class="modal fade" id="kt_modal_user_settings" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog mw-700px p-9">
+            <!--begin::Modal content-->
+            <div class="modal-content modal-rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header py-7 d-flex justify-content-between">
+                    <!--begin::Modal title-->
+                    <h2>Campaign</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--begin::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body  m-5">
+                    <!--begin::Form-->
+                    <form id="" class="form" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id" id="id" class="is_empty">
+                        <!--begin::Scroll-->
+                        <div class="d-flex flex-column  px-5 px-lg-10">
+
+                            <!--begin::Input group-->
+                            <div class="row mb-7">
+                                <div class="col-md-12 fv-row">
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                        </div>
+                        <!--end::Scroll-->
+                        <!--begin::Actions-->
+                        <div class="text-center pt-10">
+                            <button type="submit" name="save_lead_source" id="save_lead_source" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                <span class="indicator-label">Submit</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--begin::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - Settings-->
+
+    <!--begin::Modal-->
     <div class="modal fade" id="kt_advisor_export_modal" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -700,7 +832,56 @@ $get_lead_source_list = Settings()->get_lead_source_list();
         </div>
         <!--end::Modal dialog-->
     </div>
-    <!--end::Modal - New Card-->
+    <div class="modal fade" id="kt_advisor_import_modal" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header">
+                    <!--begin::Modal title-->
+                    <h2 class="fw-bold">Import Advisor</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div id="kt_advisor_export_close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y mx-5 mx-xl-10 my-7">
+                    <!--begin::Form-->
+                    <form method="post" enctype="multipart/form-data">
+                        <!--begin::Input group-->
+                        <div class="fv-row col-md-12 mb-7">
+                            <!--begin::Label-->
+                            <label class="fw-semibold fs-6 mb-2">Upload File</label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input type="file" name="import_file" id="import_file" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Upload File" />
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Actions-->
+                        <div class="text-center mt-7">
+                            <button type="submit" id="advisor_import_submit" name="advisor_import_submit" class="btn btn-primary">
+                                <span class="indicator-label">Submit</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal -->
 
     <!--begin::Javascript-->
     <script>
@@ -853,7 +1034,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                                     </div>
                                                 </div> 
                                             </a>
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/advisor-email-settings/${data.record_id}" data-bs-toggle="tooltip" title="Call Contact">
+                                            <a href="#" id="${data.record_id}" class="menu-link lead_source_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_user_settings" data-kt-docs-table-filter="edit_row">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700"> 
                                                         <i class="las la-user-cog fs-2 text-success"></i> 

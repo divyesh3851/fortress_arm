@@ -5,117 +5,6 @@ Admin()->check_login();
 
 require SITE_DIR . '/vendor/autoload.php';
 
-if (isset($_POST['market_export_submit'])) {
-
-    $format = (sipost('format')) ? sipost('format') : '';
-
-    if (!$format) {
-        return false;
-    }
-
-    $get_market_list = Settings()->get_market_list();
-
-    if ($format == 'excel') {
-
-        $spreadsheet    = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-
-        $sheet    = $spreadsheet->getActiveSheet();
-
-        $styleArray = [
-            'font' => [
-                'bold' => true,
-            ],
-        ];
-
-        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->applyFromArray($styleArray);
-
-        // Set the value of header cell 
-        $column         = 1;
-
-        //$highestRow = $sheet->getHighestRow();
-
-        $highestRow     = 1;
-
-        $headings       =  array("No", "Type");
-
-        foreach ($headings as $key  => $heading) {
-
-            $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
-            $sheet->setCellValue($highestColumn . $highestRow, $heading);
-            $column++;
-        }
-
-        $i = 1;
-
-        foreach ($get_market_list as $result) {
-
-            $fields     = array($i, $result->type);
-
-            $column         = 1;
-            $highestRow     = $sheet->getHighestRow();
-            $highestRow     = $highestRow + 1;
-
-            foreach ($fields as $column_value) {
-
-                $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
-                $sheet->setCellValue($highestColumn . $highestRow, $column_value);
-                $column++;
-            }
-
-            $i++;
-        }
-
-        $filename    = "Market List - " . date('Y_m_d') . ".csv";
-
-        // Output an .xlsx file  
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        header('Content-Encoding: UTF-8');
-        header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8');
-        header('Content-Disposition: attachment; filename=' . $filename);
-        $writer->save('php://output');
-        die();
-        exit;
-    } else if ($format == 'pdf') {
-        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4', 'margin_left' => '5', 'margin_right' => '5', 'margin_top' => '10', 'margin_bottom' => '10', 'margin_header' => '5', 'margin_footer' => '5', 'defaultheaderline' => 0, 'defaulfooterline' => 0]);
-        $html = '<html> 
-                    <body>
-                        <div class="col-md-12">
-                            <p class="category" style="text-align:center; font-size: 18px;">
-                                <b>Market List</b>
-                            </p>	
-                            <table class="table" width="100%" border="1" cellpadding="4" style="border-collapse: collapse; text-align:left; font-size:13px;">
-                                <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th align="left">Type</th> 
-                                    </tr>
-                                </thead>
-                                <tbody>';
-        $j = 1;
-        foreach ($get_market_list as $result) {
-            $html .= "<tr>
-                        <td>" . $j . "</td>
-                        <td>" . $result->type . "</td>
-                    </tr>";
-            $j++;
-        }
-
-        $html .= '</tbody>
-                            </table>
-                        </div>
-                    </body>
-                 </html>';
-
-        $stylesheet = file_get_contents(site_url() . '/assets/css/pdf.css'); // external css
-
-        $mpdf->WriteHTML($stylesheet, 1);
-        $mpdf->WriteHTML($html);
-
-        $path = "Market List - " . date('Y_m_d') . ".pdf";
-
-        $mpdf->Output($path, 'D');
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -205,7 +94,7 @@ if (isset($_POST['market_export_submit'])) {
                                             <!--begin::Search-->
                                             <div class="d-flex align-items-center position-relative my-1">
                                                 <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span class="path1"></span><span class="path2"></span></i>
-                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Volume" />
+                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Link" />
                                             </div>
                                             <!--end::Search-->
                                         </div>
@@ -315,14 +204,6 @@ if (isset($_POST['market_export_submit'])) {
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
-                        <div class="text-center">
-                            <button type="reset" id="market_export_cancel" class="btn btn-light me-3">Discard</button>
-                            <button type="submit" id="market_export_submit" name="market_export_submit" class="btn btn-primary">
-                                <span class="indicator-label">Submit</span>
-                                <span class="indicator-progress">Please wait...
-                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
-                        </div>
                         <!--end::Actions-->
                     </form>
                     <!--end::Form-->

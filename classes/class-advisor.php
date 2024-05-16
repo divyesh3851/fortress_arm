@@ -1775,6 +1775,7 @@ class Advisor
                 }
             }
 
+            /*
             Advisor()->update_advisor_meta($last_id, 'iul_step_1_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'iul_step_2_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'iul_step_3_email_enable', 1);
@@ -1818,6 +1819,7 @@ class Advisor
             Advisor()->update_advisor_meta($last_id, 'ls_step_2_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'ls_step_3_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'ls_step_4_email_enable', 1);
+            */
 
             $advisor_info['advisor_meta'] = $this->get_advisor_meta($last_id);
 

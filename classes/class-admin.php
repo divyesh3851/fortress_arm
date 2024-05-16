@@ -597,7 +597,7 @@ class Admin
 
         $mail_body .= $reset_link . "<br><br>";
 
-        $mail_body .= FBS_LAST_NAME . ' ' . FBS_LAST_NAME . '<br>';
+        $mail_body .= FBS_FIRST_NAME . ' ' . FBS_LAST_NAME . '<br>';
         $mail_body .= '<img src="' . FBS_LOGO . '"><br>';
         $mail_body .= '<a href="tel:' . FBS_PHONE_NO . '">' . FBS_PHONE_NO . '</a><br>';
         $mail_body .= FBS_EMAIL;

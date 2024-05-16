@@ -1562,17 +1562,10 @@ $get_advisor_note_list = Advisor()->get_note_list(2);
     <script src="//cdn.amcharts.com/lib/5/percent.js"></script>
     <script src="//cdn.amcharts.com/lib/5/radar.js"></script>
     <script src="//cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-    <script src="//cdn.amcharts.com/lib/5/map.js"></script>
-    <script src="//cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
-    <script src="//cdn.amcharts.com/lib/5/geodata/continentsLow.js"></script>
-    <script src="//cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
-    <script src="//cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
-    <script src="//cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>
 
     <script src="<?php echo site_url(); ?>/assets/js/widgets.bundle.js"></script>
     <script src="<?php echo site_url(); ?>/assets/js/custom/widgets.js"></script>
-    <script src="<?php echo site_url(); ?>/assets/js/custom/apps/chat/chat.js"></script>
 
     <script type="text/javascript">
         <?php if (siget('access') == 1) { ?>
