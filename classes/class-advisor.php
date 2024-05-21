@@ -43,6 +43,176 @@ class Advisor
 
         add_action('wp_ajax_delete_activity', array($this, 'delete_activity'));
     }
+    public function get_advisor_name_initial($advisor_name = '')
+    {
+        $advisor_name = (sipost('advisor_name')) ? sipost('advisor_name') : $advisor_name;
+
+        if (!$advisor_name) {
+            return;
+        }
+
+        $advisor_name_word_count = str_word_count($advisor_name);
+
+        if ($advisor_name_word_count >= 2) {
+
+            $name_exploded = explode(' ', $advisor_name);
+
+            $first_name = mb_substr($name_exploded[0], 0, 1);
+
+            $last_name  = mb_substr($name_exploded[1], 0, 1);
+
+            return $first_name . ' ' . $last_name . '';
+        }
+
+        return $advisor_name;
+    }
+
+    public function get_interest_recent_users($interest_id = '')
+    {
+        global $wpdb;
+
+        $interest_id = (sipost('interest_id')) ? sipost('interest_id') : $interest_id;
+
+        if (!$interest_id) {
+            return;
+        }
+
+        return $wpdb->get_results("SELECT * FROM user_interest WHERE interest_id = " . $interest_id . " AND status = 0 ORDER BY id DESC LIMIT 0,5");
+    }
+
+    public function get_interest_user_total_count($interest_id = '')
+    {
+        global $wpdb;
+
+        $interest_id = (sipost('interest_id')) ? sipost('interest_id') : $interest_id;
+
+        if (!$interest_id) {
+            return;
+        }
+
+        return $wpdb->get_var("SELECT COUNT(id) FROM user_interest WHERE interest_id = " . $interest_id);
+    }
+
+    public function update_user_interest()
+    {
+        global $wpdb;
+
+        if (!sipost('interest_advisor_id') || !sipost('interest')) {
+            return false;
+        }
+
+        $current_interest_type = sipost('interest');
+        $advisor_id = sipost('interest_advisor_id');
+
+        $interest_info = array(
+            'user_id'   => $advisor_id
+        );
+
+        $get_current_interest_info = $wpdb->get_row("SELECT id, interest_id, mail_reminder, is_close FROM user_interest WHERE user_id = " . $advisor_id);
+
+        if ($get_current_interest_info && $get_current_interest_info->is_close == 1) {
+            return false;
+        }
+
+        if ($current_interest_type == 'close_all') {
+
+            if ($get_current_interest_info) {
+                $wpdb->update(
+                    "user_interest",
+                    array(
+                        'is_close'  => 1,
+                        'updated_at' => current_time('mysql')
+                    ),
+                    array("id" => $get_current_interest_info->id, "user_id" => $advisor_id)
+                );
+            } else {
+                $wpdb->insert(
+                    "user_interest",
+                    array(
+                        'is_close'  => 1,
+                        'created_at' => current_time('mysql')
+                    )
+
+                );
+            }
+
+            return true;
+        }
+
+
+        $one_hour_later = date('Y-m-d H:i:s', strtotime(current_time('mysql') . ' +1 hour')); // Add 1 hour
+
+        if (4 == sipost('interest')) {
+
+            $interest_info['mail_reminder'] = $one_hour_later;
+            Advisor()->update_advisor_meta($advisor_id, 'iul_current_mail_reminder_step', 1);
+
+            /*
+            if (1 == $current_interest_sub_id) {
+            }
+
+            if (2 == $current_interest_sub_id) {
+                $interest_info['term_mail_reminder'] = $one_hour_later;
+                Advisor()->update_advisor_meta($advisor_id, 'term_current_mail_reminder_step', 1);
+            }
+
+            if (3 == $current_interest_sub_id) {
+                $interest_info['wl_mail_reminder'] = $one_hour_later;
+                Advisor()->update_advisor_meta($advisor_id, 'wl_current_mail_reminder_step', 1);
+            }
+
+            if (4 == $current_interest_sub_id) {
+                $interest_info['ap_mail_reminder'] = $one_hour_later;
+                Advisor()->update_advisor_meta($advisor_id, 'ap_current_mail_reminder_step', 1);
+            }
+            */
+        }
+
+        if (3 == $current_interest_type) {
+            $interest_info['mail_reminder'] = $one_hour_later;
+            Advisor()->update_advisor_meta($advisor_id, 'fia_current_mail_reminder_step', 1);
+        }
+
+        if (2 == $current_interest_type) {
+            $interest_info['mail_reminder'] = $one_hour_later;
+            Advisor()->update_advisor_meta($advisor_id, 'ltc_current_mail_reminder_step', 1);
+        }
+
+        if (1 == $current_interest_type) {
+            $interest_info['mail_reminder'] = $one_hour_later;
+            Advisor()->update_advisor_meta($advisor_id, 'ls_current_mail_reminder_step', 1);
+        }
+
+        $interest_info['interest_id'] = $current_interest_type;
+        $interest_info['sub_id']      = 1;
+
+        if (!$get_current_interest_info) {
+
+            $interest_info['created_at'] = current_time('mysql');
+
+            $wpdb->insert('user_interest', $interest_info);
+            $last_id = $wpdb->insert_id;
+
+            Admin()->create_track_log_activity($last_id, $advisor_id, 'interest added', 'interest_add', $interest_info, $interest_info, 'interest has been added');
+        } else {
+
+            $interest_info['updated_at'] = current_time('mysql');
+
+            $wpdb->update(
+                "user_interest",
+                array(
+                    'mail_reminder'  => '',
+                ),
+                array("user_id" => $advisor_id)
+            );
+
+            $wpdb->update("user_interest", $interest_info, array("user_id" => $advisor_id));
+
+            Admin()->create_track_log_activity($get_current_interest_info->id, $advisor_id, 'interest updated', 'interest_update', $get_current_interest_info, $interest_info, 'interest has been updated');
+        }
+
+        return true;
+    }
 
     public function delete_activity($activity_id = '')
     {
@@ -1133,7 +1303,7 @@ class Advisor
             return false;
         }
 
-        return $wpdb->get_row("SELECT * FROM interest WHERE advisor_id = " . $advisor_id);
+        return $wpdb->get_row("SELECT * FROM user_interest WHERE user_id = " . $advisor_id);
     }
 
     public function update_interest($advisor_id)
@@ -1146,7 +1316,7 @@ class Advisor
             return false;
         }
 
-        $check_interest = $wpdb->get_row("SELECT * FROM interest WHERE advisor_id = " . $advisor_id);
+        $check_interest = $wpdb->get_row("SELECT * FROM interest1 WHERE advisor_id = " . $advisor_id);
 
         $life_insurance     = (sipost('life_insurance')) ? implode(',', sipost('life_insurance')) : '';
         $annuities          = (sipost('annuities')) ? implode(',', sipost('annuities')) : '';
@@ -1544,8 +1714,19 @@ class Advisor
         /**** End Save Employement ****/
 
         /**** Save Interest ****/
-        $check_interest = $wpdb->get_row("SELECT id FROM interest WHERE advisor_id = " . $advisor_id);
+        $check_interest = $wpdb->get_row("SELECT id FROM user_interest WHERE user_id = " . $advisor_id);
 
+        $current_interest = (sipost('current_interest')) ? explode('|', sipost('current_interest')) : '';
+
+        $current_interest_type   = ($current_interest) ? trim($current_interest[0]) : '';
+
+        if ($current_interest_type) {
+            $current_interest_type = $wpdb->get_var("SELECT id FROM interest WHERE name = '" . $current_interest_type . "'");
+        }
+
+        $current_interest_sub_id = ($current_interest) ? trim($current_interest[1]) : '';
+
+        /*
         $life_insurance     = (sipost('life_insurance')) ? implode(',', sipost('life_insurance')) : '';
         $annuities          = (sipost('annuities')) ? implode(',', sipost('annuities')) : '';
         $long_term_care_insurance = (sipost('long_term_care_insurance')) ? implode(',', sipost('long_term_care_insurance')) : '';
@@ -1560,16 +1741,68 @@ class Advisor
             'disability_income' => sipost('disability_income'),
             'group_insurance'   => sipost('group_insurance'),
         );
+        */
+
+        $interest_info = array(
+            'user_id'    => $advisor_id,
+            'disability_income' => sipost('disability_income'),
+            'group_insurance'   => sipost('group_insurance'),
+        );
 
         if ($check_interest) {
-            $interest_info['updated_at'] = current_time('mysql');
-            $wpdb->update("interest", $interest_info, array("id" => $check_interest->id));
+            $interest_info['interest_id']   = $current_interest_type;
+            $interest_info['sub_id']        = $current_interest_sub_id;
+            $interest_info['updated_at']    = current_time('mysql');
+            $wpdb->update("user_interest", $interest_info, array("id" => $check_interest->id));
         } else {
+
+            $interest_info['interest_id']   = $current_interest_type;
+
+            $interest_info['sub_id'] = $current_interest_sub_id;
+
             $current_time = current_time('mysql'); // Get current time
             $one_hour_later = date('Y-m-d H:i:s', strtotime($current_time . ' +1 hour')); // Add 1 hour
 
             $interest_info['created_at'] = current_time('mysql');
 
+            if (4 == $current_interest_type) {
+                if (1 == $current_interest_sub_id) {
+                    $interest_info['mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'iul_current_mail_reminder_step', 1);
+                }
+
+                if (2 == $current_interest_sub_id) {
+                    $interest_info['mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'term_current_mail_reminder_step', 1);
+                }
+
+                if (3 == $current_interest_sub_id) {
+                    $interest_info['mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'wl_current_mail_reminder_step', 1);
+                }
+
+                if (4 == $current_interest_sub_id) {
+                    $interest_info['mail_reminder'] = $one_hour_later;
+                    Advisor()->update_advisor_meta($advisor_id, 'ap_current_mail_reminder_step', 1);
+                }
+            }
+
+            if (3 == $current_interest_type) {
+                $interest_info['mail_reminder'] = $one_hour_later;
+                Advisor()->update_advisor_meta($advisor_id, 'fia_current_mail_reminder_step', 1);
+            }
+
+            if (2 == $current_interest_type) {
+                $interest_info['mail_reminder'] = $one_hour_later;
+                Advisor()->update_advisor_meta($advisor_id, 'ltc_current_mail_reminder_step', 1);
+            }
+
+            if (1 == $current_interest_type) {
+                $interest_info['mail_reminder'] = $one_hour_later;
+                Advisor()->update_advisor_meta($advisor_id, 'ls_current_mail_reminder_step', 1);
+            }
+
+            /*
             if (!empty($life_insurance)) {
                 if (in_array("1", sipost('life_insurance'))) {
                     $interest_info['iul_mail_reminder'] = $one_hour_later;
@@ -1603,8 +1836,9 @@ class Advisor
                 $interest_info['ls_mail_reminder']  = (!empty($critical_illness)) ? $one_hour_later : '';
                 Advisor()->update_advisor_meta($advisor_id, 'ls_current_mail_reminder_step', 1);
             }
+            */
 
-            $wpdb->insert("interest", $interest_info);
+            $wpdb->insert("user_interest", $interest_info);
         }
         /**** End Save Interest ****/
 
@@ -1779,7 +2013,6 @@ class Advisor
                 }
             }
 
-            /*
             Advisor()->update_advisor_meta($last_id, 'iul_step_1_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'iul_step_2_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'iul_step_3_email_enable', 1);
@@ -1823,7 +2056,6 @@ class Advisor
             Advisor()->update_advisor_meta($last_id, 'ls_step_2_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'ls_step_3_email_enable', 1);
             Advisor()->update_advisor_meta($last_id, 'ls_step_4_email_enable', 1);
-            */
 
             $advisor_info['advisor_meta'] = $this->get_advisor_meta($last_id);
 

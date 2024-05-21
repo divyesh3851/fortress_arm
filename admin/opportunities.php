@@ -1,5 +1,5 @@
 <?php require '../config.php';
-$page_name = 'important_links';
+$page_name = 'opportunities';
 $sub_page_name = '';
 Admin()->check_login();
 

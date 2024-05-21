@@ -1,6 +1,6 @@
 <?php require '../../config.php';
-$page_name = 'campaigns';
-$sub_page_name = 'campaigns-list';
+$page_name = 'marketing';
+$sub_page_name = 'marketing';
 Admin()->check_login();
 // page permition for admin user
 if (Admin()->check_for_page_access("campaigns", true)) {
@@ -8,20 +8,41 @@ if (Admin()->check_for_page_access("campaigns", true)) {
     die();
 }
 
-if (siget('id') == 1) {
-    $campaign_name = 'Life Insurance';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.advisor_id WHERE interest.life_insurance != '' AND ( interest.iul_mail_reminder IS NOT NULL OR interest.term_mail_reminder IS NOT NULL OR interest.wl_mail_reminder IS NOT NULL OR interest.ap_mail_reminder IS NOT NULL ) AND ( interest.iul_mail_reminder != '0000-00-00 00:00:00' OR interest.term_mail_reminder != '0000-00-00 00:00:00' OR interest.wl_mail_reminder != '0000-00-00 00:00:00' OR interest.ap_mail_reminder != '0000-00-00 00:00:00')  AND ad.advisor_status = 2 AND ad.status = 0 ");
-} else if (siget('id') == 2) {
-    $campaign_name = 'Fixed Indexed Annuities';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.advisor_id WHERE interest.annuities != '' AND interest.fia_mail_reminder IS NOT NULL AND interest.fia_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
-} else if (siget('id') == 3) {
-    $campaign_name = 'Long-Term Care Insurance';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.advisor_id WHERE interest.long_term_care_insurance != '' AND interest.ltc_mail_reminder IS NOT NULL AND interest.ltc_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
-} else if (siget('id') == 4) {
-    $campaign_name = 'Life Settlements';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.advisor_id WHERE interest.critical_illness != '' AND interest.ls_mail_reminder IS NOT NULL AND interest.ls_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
+if (!siget('id')) {
+    wp_redirect(site_url() . '/admin/campaigns/list');
+    return;
 }
 
+$get_selected_interest_info = Settings()->get_selected_interest_info(siget('id'));
+
+if (!$get_selected_interest_info) {
+    wp_redirect(site_url() . '/admin/campaigns/list');
+    return;
+}
+
+$campaign_name = $get_selected_interest_info->name;
+
+$get_interest_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type, user_interest.id as user_interest_tbl_id,user_interest.sub_id FROM advisor as ad INNER JOIN user_interest ON ad.id = user_interest.user_id WHERE user_interest.interest_id = " . siget('id') . " AND ad.status = 0 ");
+
+$count_total_user = Advisor()->get_interest_user_total_count($get_selected_interest_info->id);
+
+$get_interest_recent_users = Advisor()->get_interest_recent_users($get_selected_interest_info->id);
+
+/*
+if (siget('id') == 1) {
+    $campaign_name = 'Life Insurance';
+    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.life_insurance != '' AND ( interest.iul_mail_reminder IS NOT NULL OR interest.term_mail_reminder IS NOT NULL OR interest.wl_mail_reminder IS NOT NULL OR interest.ap_mail_reminder IS NOT NULL ) AND ( interest.iul_mail_reminder != '0000-00-00 00:00:00' OR interest.term_mail_reminder != '0000-00-00 00:00:00' OR interest.wl_mail_reminder != '0000-00-00 00:00:00' OR interest.ap_mail_reminder != '0000-00-00 00:00:00')  AND ad.advisor_status = 2 AND ad.status = 0 ");
+} else if (siget('id') == 2) {
+    $campaign_name = 'Fixed Indexed Annuities';
+    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.annuities != '' AND interest.fia_mail_reminder IS NOT NULL AND interest.fia_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
+} else if (siget('id') == 3) {
+    $campaign_name = 'Long-Term Care Insurance';
+    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.long_term_care_insurance != '' AND interest.ltc_mail_reminder IS NOT NULL AND interest.ltc_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
+} else if (siget('id') == 4) {
+    $campaign_name = 'Life Settlements';
+    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.critical_illness != '' AND interest.ls_mail_reminder IS NOT NULL AND interest.ls_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
+}
+*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -139,24 +160,11 @@ if (siget('id') == 1) {
                                                         <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
                                                             <!--begin::Number-->
                                                             <div class="d-flex align-items-center">
-                                                                <div class="fs-4 fw-bold">29 Jan, 2024</div>
+                                                                <div class="fs-4 fw-bold"><?php echo date("m/d/Y", strtotime($get_selected_interest_info->created_at)); ?></div>
                                                             </div>
                                                             <!--end::Number-->
                                                             <!--begin::Label-->
-                                                            <div class="fw-semibold fs-6 text-gray-500">Due Date</div>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Stat-->
-                                                        <!--begin::Stat-->
-                                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                                            <!--begin::Number-->
-                                                            <div class="d-flex align-items-center">
-                                                                <i class="ki-outline ki-arrow-down fs-3 text-danger me-2"></i>
-                                                                <div class="fs-4 fw-bold" data-kt-countup="true" data-kt-countup-value="75">0</div>
-                                                            </div>
-                                                            <!--end::Number-->
-                                                            <!--begin::Label-->
-                                                            <div class="fw-semibold fs-6 text-gray-500">Open Tasks</div>
+                                                            <div class="fw-semibold fs-6 text-gray-500">Created Date</div>
                                                             <!--end::Label-->
                                                         </div>
                                                         <!--end::Stat-->
@@ -165,11 +173,11 @@ if (siget('id') == 1) {
                                                             <!--begin::Number-->
                                                             <div class="d-flex align-items-center">
                                                                 <i class="ki-outline ki-arrow-up fs-3 text-success me-2"></i>
-                                                                <div class="fs-4 fw-bold" data-kt-countup="true" data-kt-countup-value="15000" data-kt-countup-prefix="$">0</div>
+                                                                <div class="fs-4 fw-bold" data-kt-countup="true" data-kt-countup-value="<?php echo $count_total_user; ?>" data-kt-countup-prefix="">0</div>
                                                             </div>
                                                             <!--end::Number-->
                                                             <!--begin::Label-->
-                                                            <div class="fw-semibold fs-6 text-gray-500">Budget Spent</div>
+                                                            <div class="fw-semibold fs-6 text-gray-500">Total Users</div>
                                                             <!--end::Label-->
                                                         </div>
                                                         <!--end::Stat-->
@@ -178,50 +186,32 @@ if (siget('id') == 1) {
                                                     <!--begin::Users-->
                                                     <div class="symbol-group symbol-hover mb-3">
                                                         <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Alan Warden">
-                                                            <span class="symbol-label bg-warning text-inverse-warning fw-bold">A</span>
-                                                        </div>
+                                                        <?php
+                                                        if ($get_interest_recent_users) {
+
+                                                            foreach ($get_interest_recent_users as $recent_user_result) {
+
+                                                                $advisor_info = Advisor()->get_selected_advisor_general_details($recent_user_result->user_id);
+
+                                                                $advisor_profile = Advisor()->get_advisor_meta($recent_user_result->user_id, 'profile_img'); ?>
+
+                                                                <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="<?php echo $advisor_info->first_name . ' ' . $advisor_info->last_name; ?>">
+                                                                    <?php if ($advisor_profile) { ?>
+                                                                        <img alt="Pic" src="<?php echo site_url(); ?>/uploads/advisor/<?php echo $advisor_profile; ?>" />
+                                                                    <?php } else { ?>
+                                                                        <span class="symbol-label bg-primary text-inverse-primary fw-bold"><?php echo Advisor()->get_advisor_name_initial($advisor_info->first_name . ' ' . $advisor_info->last_name); ?></span>
+                                                                    <?php } ?>
+                                                                </div>
+                                                        <?php }
+                                                        } ?>
                                                         <!--end::User-->
-                                                        <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                                                            <img alt="Pic" src="<?php echo site_url(); ?>/assets/media/avatars/300-11.jpg" />
-                                                        </div>
-                                                        <!--end::User-->
-                                                        <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michelle Swanston">
-                                                            <img alt="Pic" src="<?php echo site_url(); ?>/assets/media/avatars/300-7.jpg" />
-                                                        </div>
-                                                        <!--end::User-->
-                                                        <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Francis Mitcham">
-                                                            <img alt="Pic" src="<?php echo site_url(); ?>/assets/media/avatars/300-20.jpg" />
-                                                        </div>
-                                                        <!--end::User-->
-                                                        <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
-                                                            <span class="symbol-label bg-primary text-inverse-primary fw-bold">S</span>
-                                                        </div>
-                                                        <!--end::User-->
-                                                        <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Melody Macy">
-                                                            <img alt="Pic" src="<?php echo site_url(); ?>/assets/media/avatars/300-2.jpg" />
-                                                        </div>
-                                                        <!--end::User-->
-                                                        <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Perry Matthew">
-                                                            <span class="symbol-label bg-info text-inverse-info fw-bold">P</span>
-                                                        </div>
-                                                        <!--end::User-->
-                                                        <!--begin::User-->
-                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Barry Walter">
-                                                            <img alt="Pic" src="<?php echo site_url(); ?>/assets/media/avatars/300-12.jpg" />
-                                                        </div>
-                                                        <!--end::User-->
-                                                        <!--begin::All users-->
-                                                        <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-                                                            <span class="symbol-label bg-dark text-inverse-dark fs-8 fw-bold" data-bs-toggle="tooltip" data-bs-trigger="hover" title="View more users">+42</span>
-                                                        </a>
-                                                        <!--end::All users-->
+                                                        <?php if ($count_total_user > 5) { ?>
+                                                            <!--begin::All users-->
+                                                            <a href="#" class="symbol symbol-35px symbol-circle">
+                                                                <span class="symbol-label bg-dark text-inverse-dark fs-8 fw-bold" data-bs-toggle="tooltip" data-bs-trigger="hover" title="View More Users">+<?php echo $count_total_user - 1; ?></span>
+                                                            </a>
+                                                            <!--end::All users-->
+                                                        <?php } ?>
                                                     </div>
                                                     <!--end::Users-->
                                                 </div>
@@ -394,17 +384,17 @@ if (siget('id') == 1) {
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                foreach ($get_advisor_list as $advisor_result) {
+                                                foreach ($get_interest_user_list as $user_result) {
 
-                                                    if (siget('id') == 1) {
+                                                    if (siget('id') == 4) {
 
-                                                        $iul_step = Advisor()->get_advisor_meta($advisor_result->id, 'iul_current_mail_reminder_step');
+                                                        $iul_step = Advisor()->get_advisor_meta($user_result->id, 'iul_current_mail_reminder_step');
 
-                                                        $term_step = Advisor()->get_advisor_meta($advisor_result->id, 'term_current_mail_reminder_step');
+                                                        $term_step = Advisor()->get_advisor_meta($user_result->id, 'term_current_mail_reminder_step');
 
-                                                        $wl_step = Advisor()->get_advisor_meta($advisor_result->id, 'wl_current_mail_reminder_step');
+                                                        $wl_step = Advisor()->get_advisor_meta($user_result->id, 'wl_current_mail_reminder_step');
 
-                                                        $ap_step = Advisor()->get_advisor_meta($advisor_result->id, 'ap_current_mail_reminder_step');
+                                                        $ap_step = Advisor()->get_advisor_meta($user_result->id, 'ap_current_mail_reminder_step');
 
                                                         $current_step = '';
                                                         if ($iul_step) {
@@ -419,19 +409,19 @@ if (siget('id') == 1) {
                                                         if ($ap_step) {
                                                             $current_step .= 'AP : ' . $ap_step . ', ';
                                                         }
-                                                    } else if (siget('id') == 2) {
-                                                        $current_step = Advisor()->get_advisor_meta($advisor_result->id, 'fia_current_mail_reminder_step');
                                                     } else if (siget('id') == 3) {
-                                                        $current_step = Advisor()->get_advisor_meta($advisor_result->id, 'ltc_current_mail_reminder_step');
-                                                    } else if (siget('id') == 4) {
-                                                        $current_step = Advisor()->get_advisor_meta($advisor_result->id, 'ls_current_mail_reminder_step');
+                                                        $current_step = Advisor()->get_advisor_meta($user_result->id, 'fia_current_mail_reminder_step');
+                                                    } else if (siget('id') == 2) {
+                                                        $current_step = Advisor()->get_advisor_meta($user_result->id, 'ltc_current_mail_reminder_step');
+                                                    } else if (siget('id') == 1) {
+                                                        $current_step = Advisor()->get_advisor_meta($user_result->id, 'ls_current_mail_reminder_step');
                                                     }
 
                                                 ?>
                                                     <tr>
-                                                        <td><?php echo $advisor_result->first_name . ' ' . $advisor_result->last_name; ?></td>
-                                                        <td><?php echo $advisor_result->email; ?></td>
-                                                        <td><?php echo $advisor_result->mobile_no; ?></td>
+                                                        <td><?php echo $user_result->first_name . ' ' . $user_result->last_name; ?></td>
+                                                        <td><?php echo $user_result->email; ?></td>
+                                                        <td><?php echo $user_result->mobile_no; ?></td>
                                                         <td><?php echo $current_step; ?></td>
                                                     </tr>
                                                 <?php } ?>

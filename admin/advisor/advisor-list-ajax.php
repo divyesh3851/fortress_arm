@@ -15,6 +15,10 @@ class DataTableApi
         'state'     => true,
         'lead_source' => true,
         'created_at' => true,
+        'user_interest_tbl_id' => true,
+        'interest_id' => true,
+        'interest_sub_id' => true,
+        'is_close'      => true,
     ];
 
     public function __construct()

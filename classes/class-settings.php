@@ -278,6 +278,28 @@ class Settings
         );
     }
 
+    public function get_interest_list()
+    {
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM interest WHERE status = 0 ORDER BY id DESC");
+    }
+
+
+    public function get_selected_interest_info($id = '')
+    {
+        global $wpdb;
+
+        $id = (sipost('id')) ? sipost('id') : $id;
+
+        if (!$id) {
+            return false;
+        }
+
+        return $wpdb->get_row("SELECT * FROM interest WHERE id = " . $id);
+    }
+
+
     public function get_selected_multiple_market_name($ids)
     {
         global $wpdb;

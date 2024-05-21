@@ -62,7 +62,7 @@ $get_interest_disability_income_list = Settings()->get_interest_disability_incom
 $get_interest_group_insurance_list = Settings()->get_interest_group_insurance();
 
 $get_selected_advisor_interest = Advisor()->get_selected_advisor_interest($selected_advisor_data->id);
-
+/*
 $selected_life_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->life_insurance) ? explode(",", $get_selected_advisor_interest->life_insurance) : array();
 
 $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_interest->annuities) ? explode(",", $get_selected_advisor_interest->annuities) : array();
@@ -70,7 +70,7 @@ $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_i
 $selected_long_term_care_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->long_term_care_insurance) ? explode(",", $get_selected_advisor_interest->long_term_care_insurance) : array();
 
 $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_advisor_interest->critical_illness) ? explode(",", $get_selected_advisor_interest->critical_illness) : array();
-
+*/
 
 $birth_date = ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '';
 
@@ -90,7 +90,9 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
 
 $get_last_employment = Advisor()->get_advisor_last_employment($selected_advisor_data->id);
 
-$emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->assistant_contact) ? unserialize($get_last_employment->assistant_contact)  : ''; ?>
+$emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->assistant_contact) ? unserialize($get_last_employment->assistant_contact)  : '';
+
+$get_current_interest = $wpdb->get_row("SELECT interest_id,sub_id FROM user_interest WHERE user_id = " . $selected_advisor_data->id); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -213,9 +215,11 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 5-->
                                                 <!--begin::Step 6-->
+                                                <?php /*
                                                 <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <h3 class="stepper-title">Employement</h3>
                                                 </div>
+                                                */ ?>
                                                 <!--end::Step 6-->
                                                 <!--begin::Step 7-->
                                                 <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
@@ -303,10 +307,10 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                             </div>
                                                             <div class="col-md-4 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Preferred Name</label>
+                                                                <label class="fw-semibold fs-6 mb-2">Preferred Name</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <input type="text" name="preferred_name" id="preferred_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Preferred Name" value="<?php echo $selected_advisor_data->preferred_name; ?>" required />
+                                                                <input type="text" name="preferred_name" id="preferred_name" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Preferred Name" value="<?php echo $selected_advisor_data->preferred_name; ?>" />
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-3 fv-row">
@@ -380,10 +384,10 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                             </div>
                                                             <div class="col-md-3 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Gender</label>
+                                                                <label class="fw-semibold fs-6 mb-2">Gender</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <select name="gender" id="gender" data-control="select2" data-placeholder="Select a Gender..." class="form-select form-select-solid is_empty" required>
+                                                                <select name="gender" id="gender" data-control="select2" data-placeholder="Select a Gender..." class="form-select form-select-solid is_empty">
                                                                     <option value="">Select Gender</option>
                                                                     <?php foreach (Settings()->get_gender_type_list() as $gender_result) { ?>
                                                                         <option <?php echo ($selected_advisor_data->gender ==  $gender_result) ? 'selected' : '';  ?> value="<?php echo $gender_result; ?>"><?php echo $gender_result; ?></option>
@@ -430,10 +434,10 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                             </div>
                                                             <div class="col-md-3 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-semibold fs-6 mb-2">Marital Status</label>
+                                                                <label class="fw-semibold fs-6 mb-2">Marital Status</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                <select name="marital_status" id="marital_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty" required>
+                                                                <select name="marital_status" id="marital_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty">
                                                                     <option value="">Select Status</option>
                                                                     <option <?php echo ($selected_advisor_data->marital_status == 'Married') ? 'selected' : ''; ?> value="Married">Married</option>
                                                                     <option <?php echo ($selected_advisor_data->marital_status == 'Unmarried') ? 'selected' : ''; ?> value="Unmarried">Unmarried</option>
@@ -620,6 +624,10 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <div data-repeater-list="kt_docs_repeater_basic">
                                                                     <div data-repeater-item>
                                                                         <div class="form-group row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <h4>Primary Phone Number</h4>
+                                                                            </div>
+                                                                            <?php /*
                                                                             <div class="col-md-2">
                                                                                 <label class="required form-label">Type</label>
                                                                                 <select name="contact_type" data-control="select2" data-placeholder="Select a type..." class="form-select form-select-solid is_empty" required>
@@ -629,6 +637,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                                     <?php } ?>
                                                                                 </select>
                                                                             </div>
+                                                                            */ ?>
                                                                             <div class="col-md-3">
                                                                                 <label class="required form-label">Primary Phone Number</label>
                                                                                 <input type="text" name="mobile_no" class="form-control mb-2 mb-md-0 " placeholder="Enter Primary Phone Number" value="<?php echo $selected_advisor_data->mobile_no;  ?>" required />
@@ -645,11 +654,15 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
 
                                                             <!--begin::Form group-->
                                                             <div id="contact_info_multi_row" style="display: block">
+                                                                <div class="mb-2 ">
+                                                                    <h4>Additional Phone Number</h4>
+                                                                </div>
                                                                 <div class="extra_contact">
                                                                     <?php if (!empty($get_advisor_extra_contact)) {
                                                                         $i = 1;
                                                                         foreach ($get_advisor_extra_contact as $contact_results) { ?>
                                                                             <div class="form-group row mb-5" id="row_id_<?php echo $i; ?>">
+                                                                                <?php /* 
                                                                                 <div class="col-md-2">
                                                                                     <label class="form-label">Type</label>
                                                                                     <select id="contact_type_1" name="contact_type_1" data-control="select2" data-placeholder="Select a type..." class="form-select form-select-solid is_empty">
@@ -659,6 +672,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                                         <?php } ?>
                                                                                     </select>
                                                                                 </div>
+                                                                                */ ?>
                                                                                 <div class="col-md-3">
                                                                                     <label class="form-label">Additional Phone Number</label>
                                                                                     <input type="text" name="mobile_no_<?php echo $i; ?>" class="form-control mb-2 mb-md-0" placeholder="Enter Additional Phone Number" value="<?php echo $contact_results->mobile_no; ?>" />
@@ -771,6 +785,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
                                                                 <textarea name="organization" id="organization" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Are you active within the leadership of any of these organizations, locally or nationally?" /><?php echo Advisor()->get_advisor_meta($selected_advisor_data->id, "organization"); ?></textarea>
+                                                                <em>Are you active within the leadership of any of these organizations, locally or nationally? </em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -822,7 +837,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($carrier_result->id, $carrier_with_business)) ? 'selected' : ''; ?> value="<?php echo $carrier_result->id; ?>"><?php echo $carrier_result->name; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -873,7 +887,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($production_percentage_result->id, $production_percentages)) ? 'selected' : ''; ?> value="<?php echo $production_percentage_result->id; ?>"><?php echo $production_percentage_result->type; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                             <div class="col-md-4 fv-row">
@@ -887,7 +900,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <option <?php echo (in_array($market_result->id, $markets)) ? 'selected' : ''; ?> value="<?php echo $market_result->id; ?>"><?php echo $market_result->type; ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <em>Please check all that apply and indicate a percentage totaling 100%</em>
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -911,6 +923,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 5-->
                                                 <!--begin::Step 6-->
+                                                <?php /*
                                                 <div data-kt-stepper-element="content">
                                                     <div class="w-100">
                                                         <!--begin::Input group-->
@@ -1185,6 +1198,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                         </div>
                                                     </div>
                                                 </div>
+                                                */ ?>
                                                 <!--end:: Step 6 -->
                                                 <!--begin::Step 7-->
                                                 <div data-kt-stepper-element="content">
@@ -1193,106 +1207,98 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                             <h3 class="fw-bold m-0">What is the agent's current interest in selling in the industry?
                                                             </h3>
                                                         </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Life Insurance
-                                                        </h3>
                                                         <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_life_insurance_list as $key => $life_insurance_result) { ?>
-                                                                <div class="col-md-4 fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="life_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_life_insurance)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $life_insurance_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Life Insurance
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_life_insurance_list as $key => $life_insurance_result) {  ?>
+                                                                    <div class=" fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="radio" name="current_interest" value="Life Insurance | <?php echo $key; ?>" <?php echo ($get_current_interest && ($get_current_interest->interest_id ==  4 && $get_current_interest->sub_id == $key)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $life_insurance_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Annuities
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_annuities_list as $key => $annuities_result) { ?>
+                                                                    <div class="fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="radio" name="current_interest" value="Annuities | <?php echo $key; ?>" <?php echo ($get_current_interest && ($get_current_interest->interest_id == 3 && $get_current_interest->sub_id == $key)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $annuities_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Long-Term Care Insurance
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_long_term_care_insurance_list as $key => $long_term_care_result) { ?>
+                                                                    <div class="fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="radio" name="current_interest" value="Long-Term Care | <?php echo $key; ?>" <?php echo ($get_current_interest && ($get_current_interest->interest_id == 2 && $get_current_interest->sub_id == $key)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $long_term_care_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <div class="col-md-3 fv-row">
+                                                                <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
+                                                                    Critical Illness
+                                                                </h3>
+                                                                <?php
+                                                                foreach ($get_interest_critical_illness_list as $key => $critical_illness_result) { ?>
+                                                                    <div class="fv-row">
+                                                                        <!--begin::Option-->
+                                                                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                                                                            <!--begin::Input-->
+                                                                            <input class="form-check-input me-3" type="radio" name="current_interest" value="Critical Illness | <?php echo $key; ?>" <?php echo ($get_current_interest && ($get_current_interest->interest_id == 1 && $get_current_interest->sub_id == $key)) ? 'checked' : ''; ?> />
+                                                                            <!--end::Input-->
+                                                                            <!--begin::Label-->
+                                                                            <span class="form-label d-flex flex-column align-items-start">
+                                                                                <span class="fw-bold fs-5 mb-0"><?php echo $critical_illness_result; ?></span>
+                                                                            </span>
+                                                                            <!--end::Label-->
+                                                                        </label>
+                                                                        <!--end::Option-->
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
                                                         </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Annuities
-                                                        </h3>
-                                                        <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_annuities_list as $key => $annuities_result) { ?>
-                                                                <div class="col-md-4 fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="annuities[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_annuities)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $annuities_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Long-Term Care Insurance
-                                                        </h3>
-                                                        <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_long_term_care_insurance_list as $key => $long_term_care_result) { ?>
-                                                                <div class="col-md-4 fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="long_term_care_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_long_term_care_insurance)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $long_term_care_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                        <h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-                                                            Critical Illness
-                                                        </h3>
-                                                        <div class="row mb-7">
-                                                            <?php
-                                                            foreach ($get_interest_critical_illness_list as $key => $critical_illness_result) { ?>
-                                                                <div class="col-md-4 fv-row">
-                                                                    <!--begin::Option-->
-                                                                    <label class="form-check form-check-custom form-check-solid align-items-start">
-                                                                        <!--begin::Input-->
-                                                                        <input class="form-check-input me-3" type="checkbox" name="critical_illness[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_critical_illness)) ? 'checked' : ''; ?> />
-                                                                        <!--end::Input-->
-                                                                        <!--begin::Label-->
-                                                                        <span class="form-check-label d-flex flex-column align-items-start">
-                                                                            <span class="fw-bold fs-5 mb-0"><?php echo $critical_illness_result; ?></span>
-                                                                        </span>
-                                                                        <!--end::Label-->
-                                                                    </label>
-                                                                    <!--end::Option-->
-                                                                    <!--begin::Option-->
-                                                                    <div class="separator separator-dashed my-6"></div>
-                                                                    <!--end::Option-->
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
+
+
                                                         <div class="row mb-7">
                                                             <!--begin::Input wrapper-->
                                                             <div class="col-md-6 fv-row">
@@ -1325,7 +1331,6 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                             </div>
                                                             <!--end::Input wrapper-->
                                                         </div>
-                                                        <!--end::Repeater-->
                                                         <div class="row mt-7">
                                                             <div class="mb-0">
                                                                 <button type="submit" name="save_step" class="btn btn-primary" id="">

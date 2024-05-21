@@ -65,7 +65,7 @@ $get_interest_disability_income_list = Settings()->get_interest_disability_incom
 $get_interest_group_insurance_list = Settings()->get_interest_group_insurance();
 
 $get_selected_advisor_interest = Advisor()->get_selected_advisor_interest($selected_advisor_data->id);
-
+/*
 $selected_life_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->life_insurance) ? explode(",", $get_selected_advisor_interest->life_insurance) : array();
 
 $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_interest->annuities) ? explode(",", $get_selected_advisor_interest->annuities) : array();
@@ -73,7 +73,7 @@ $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_i
 $selected_long_term_care_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->long_term_care_insurance) ? explode(",", $get_selected_advisor_interest->long_term_care_insurance) : array();
 
 $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_advisor_interest->critical_illness) ? explode(",", $get_selected_advisor_interest->critical_illness) : array();
-
+*/
 
 $birth_date = ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '';
 
@@ -93,7 +93,9 @@ $get_advisor_extra_contact = Advisor()->get_advisor_extra_contact($selected_advi
 
 $get_last_employment = Advisor()->get_advisor_last_employment($selected_advisor_data->id);
 
-$emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->assistant_contact) ? unserialize($get_last_employment->assistant_contact)  : ''; ?>
+$emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->assistant_contact) ? unserialize($get_last_employment->assistant_contact)  : '';
+
+$get_current_interest = $wpdb->get_row("SELECT interest_id,sub_id FROM user_interest WHERE user_id = " . $selected_advisor_data->id); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -1241,7 +1243,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <!--begin::Option-->
                                                                         <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                             <!--begin::Input-->
-                                                                            <input class="form-check-input me-3" type="checkbox" name="life_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_life_insurance)) ? 'checked' : ''; ?> />
+                                                                            <input class="form-check-input me-3" type="radio" name="current_interest" value="Life Insurance | <?php echo $key; ?>" <?php echo ($get_current_interest && $get_current_interest->interest_id ==  4 && $get_current_interest->sub_id == $key) ? 'checked' : ''; ?> />
                                                                             <!--end::Input-->
                                                                             <!--begin::Label-->
                                                                             <span class="form-label d-flex flex-column align-items-start">
@@ -1263,7 +1265,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <!--begin::Option-->
                                                                         <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                             <!--begin::Input-->
-                                                                            <input class="form-check-input me-3" type="checkbox" name="annuities[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_annuities)) ? 'checked' : ''; ?> />
+                                                                            <input class="form-check-input me-3" type="radio" name="current_interest" value="Annuities | <?php echo $key; ?>" <?php echo ($get_current_interest && $get_current_interest->interest_id ==  3 && $get_current_interest->sub_id == $key) ? 'checked' : ''; ?> />
                                                                             <!--end::Input-->
                                                                             <!--begin::Label-->
                                                                             <span class="form-label d-flex flex-column align-items-start">
@@ -1285,7 +1287,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <!--begin::Option-->
                                                                         <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                             <!--begin::Input-->
-                                                                            <input class="form-check-input me-3" type="checkbox" name="long_term_care_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_long_term_care_insurance)) ? 'checked' : ''; ?> />
+                                                                            <input class="form-check-input me-3" type="radio" name="current_interest" value="Long-Term Care | <?php echo $key; ?>" <?php echo ($get_current_interest && $get_current_interest->interest_id ==  2 && $get_current_interest->sub_id == $key) ? 'checked' : ''; ?> />
                                                                             <!--end::Input-->
                                                                             <!--begin::Label-->
                                                                             <span class="form-label d-flex flex-column align-items-start">
@@ -1307,7 +1309,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                                         <!--begin::Option-->
                                                                         <label class="form-check form-check-custom form-check-solid align-items-start">
                                                                             <!--begin::Input-->
-                                                                            <input class="form-check-input me-3" type="checkbox" name="critical_illness[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_critical_illness)) ? 'checked' : ''; ?> />
+                                                                            <input class="form-check-input me-3" type="checkbox" name="current_interest" value="Critical Illness | <?php echo $key; ?>" <?php echo ($get_current_interest && $get_current_interest->interest_id ==  1 && $get_current_interest->sub_id == $key) ? 'checked' : ''; ?> />
                                                                             <!--end::Input-->
                                                                             <!--begin::Label-->
                                                                             <span class="form-label d-flex flex-column align-items-start">

@@ -7,7 +7,7 @@ if (!get_option('ls_email_cron')) {
 
 $reminder_time = date('Y-m-d H:i', strtotime(current_time('mysql')));
 
-$get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id, interest.ls_mail_reminder FROM advisor as ad INNER JOIN interest ON ad.id = interest.advisor_id WHERE interest.critical_illness != '' AND ad.advisor_status = 2 AND ad.status = 0 AND interest.ls_mail_reminder LIKE '" . $reminder_time . "%' AND ( interest.ls_mail_reminder != '' OR interest.ls_mail_reminder != NULL OR interest.ls_mail_reminder != '0000-00-00 00:00:00')");
+$get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id, interest.ls_mail_reminder FROM advisor as ad INNER JOIN interest ON ad.id = interest.advisor_id WHERE interest.critical_illness != '' AND ad.advisor_status = 2 AND ad.status = 0 AND interest.ls_mail_reminder LIKE '" . $reminder_time . "%' AND ( interest.ls_mail_reminder != NULL OR interest.ls_mail_reminder != '0000-00-00 00:00:00')");
 
 $_SESSION['use_smtp'] = true;
 foreach ($get_advisor_list as $advisor_result) {

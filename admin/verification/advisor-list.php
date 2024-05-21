@@ -636,6 +636,7 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
     <script>
         $(document).on("click", ".send_verification_mail", function() {
             $("#advisor_id").val($(this).attr("advisor_id"));
+            $("#verification_req_email").val($(this).attr("advisor_email"));
         });
 
         $(document).ready(function() {
@@ -750,11 +751,14 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             render: function(data, type, row) {
 
                                 let send_btn = '';
+                                /*
                                 if (data.send_verification == 1) {
-                                    send_btn = `<a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" target="_blank" class="badge badge-light-info flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer" title="Send Mail">Complete Now</a>`;
+                                    send_btn = `<a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" target="_blank" class="badge badge-light-info flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer" title="Send Mail" advisor_email="${data.email}">Complete Now</a>`;
                                 } else {
-                                    send_btn = `<span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" id="send_verification_mail_btn_${data.record_id}" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Send Mail">Send Mail</span>`;
+                                    send_btn = `<span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" id="send_verification_mail_btn_${data.record_id}" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Send Mail" advisor_email="${data.email}">Send Mail</span>`;
                                 }
+                                */
+                                send_btn = `<span class="badge badge-light-danger flex-shrink-0 align-self-center py-3 px-4 fs-7 me-2 cursor-pointer send_verification_mail" id="send_verification_mail_btn_${data.record_id}" advisor_id="${data.record_id}" data-bs-toggle="modal" data-bs-target="#kt_modal_send_verification_mail_popup" title="Send Mail" advisor_email="${data.email}">Send Mail</span>`;
 
                                 return `<div class="d-flex">
                                             ${send_btn}

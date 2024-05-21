@@ -448,6 +448,9 @@ if (isset($_POST['save_activity'])) {
                 dayMaxEvents: true, // allow "more" link when too many events
                 navLinks: true,
                 selectable: true,
+                selectAllow: function(selectInfo) {
+                    return moment().diff(selectInfo.start) <= 0
+                },
                 select: function(arg) {
 
                     $(".is_empty").val("");

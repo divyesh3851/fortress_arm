@@ -152,6 +152,7 @@ $get_address_type_list = Settings()->get_address_type_list();
 
 $get_selected_advisor_interest = Advisor()->get_selected_advisor_interest($selected_advisor_data->id);
 
+/*
 $selected_life_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->life_insurance) ? explode(",", $get_selected_advisor_interest->life_insurance) : array();
 
 $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_interest->annuities) ? explode(",", $get_selected_advisor_interest->annuities) : array();
@@ -159,6 +160,7 @@ $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_i
 $selected_long_term_care_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->long_term_care_insurance) ? explode(",", $get_selected_advisor_interest->long_term_care_insurance) : array();
 
 $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_advisor_interest->critical_illness) ? explode(",", $get_selected_advisor_interest->critical_illness) : array();
+*/
 
 $personal_interest = ($selected_advisor_data->personal_interest) ? implode(",", (unserialize($selected_advisor_data->personal_interest))) : '';
 
@@ -1044,178 +1046,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 												</div>
 											</div>
 										</div>
-										<!--begin:::Tab content-->
-										<div class="tab-content" id="myTabContent">
-											<!--begin:::Tab pane-->
-											<div class="tab-pane fade active show" id="kt_user_view_overview_personal_info_tab" role="tabpanel">
-											</div>
-											<!--end:::Tab pane-->
-
-											<!--begin:::Tab pane-->
-											<div class="tab-pane fade " id="kt_user_view_overview_interests_tab" role="tabpanel">
-												<div class="card mb-5 mb-xl-10">
-													<!--begin::Card header-->
-													<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_email_preferences" aria-expanded="true" aria-controls="kt_account_email_preferences">
-														<div class="card-title m-0">
-															<h3 class="fw-bold m-0">What is the agent's current interest in selling in the industry?
-															</h3>
-														</div>
-													</div>
-													<!--begin::Card header-->
-													<!--begin::Content-->
-													<div id="" class="">
-														<!--begin::Form-->
-														<form class="form" method="post">
-															<!--begin::Card body-->
-															<div class="card-body border-top px-9 py-5">
-																<h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-																	Life Insurance
-																</h3>
-																<div class="row mb-7">
-																	<?php
-																	foreach ($get_interest_life_insurance_list as $key => $life_insurance_result) { ?>
-																		<div class="col-md-4 fv-row">
-																			<!--begin::Option-->
-																			<label class="form-check form-check-custom form-check-solid align-items-start">
-																				<!--begin::Input-->
-																				<input class="form-check-input me-3" type="checkbox" name="life_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_life_insurance)) ? 'checked' : ''; ?> />
-																				<!--end::Input-->
-																				<!--begin::Label-->
-																				<span class="form-check-label d-flex flex-column align-items-start">
-																					<span class="fw-bold fs-5 mb-0"><?php echo $life_insurance_result; ?></span>
-																				</span>
-																				<!--end::Label-->
-																			</label>
-																			<!--end::Option-->
-																			<!--begin::Option-->
-																			<div class="separator separator-dashed my-6"></div>
-																			<!--end::Option-->
-																		</div>
-																	<?php } ?>
-																</div>
-																<h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-																	Annuities
-																</h3>
-																<div class="row mb-7">
-																	<?php
-																	foreach ($get_interest_annuities_list as $key => $annuities_result) { ?>
-																		<div class="col-md-4 fv-row">
-																			<!--begin::Option-->
-																			<label class="form-check form-check-custom form-check-solid align-items-start">
-																				<!--begin::Input-->
-																				<input class="form-check-input me-3" type="checkbox" name="annuities[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_annuities)) ? 'checked' : ''; ?> />
-																				<!--end::Input-->
-																				<!--begin::Label-->
-																				<span class="form-check-label d-flex flex-column align-items-start">
-																					<span class="fw-bold fs-5 mb-0"><?php echo $annuities_result; ?></span>
-																				</span>
-																				<!--end::Label-->
-																			</label>
-																			<!--end::Option-->
-																			<!--begin::Option-->
-																			<div class="separator separator-dashed my-6"></div>
-																			<!--end::Option-->
-																		</div>
-																	<?php } ?>
-																</div>
-																<h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-																	Long-Term Care Insurance
-																</h3>
-																<div class="row mb-7">
-																	<?php
-																	foreach ($get_interest_long_term_care_insurance_list as $key => $long_term_care_result) { ?>
-																		<div class="col-md-4 fv-row">
-																			<!--begin::Option-->
-																			<label class="form-check form-check-custom form-check-solid align-items-start">
-																				<!--begin::Input-->
-																				<input class="form-check-input me-3" type="checkbox" name="long_term_care_insurance[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_long_term_care_insurance)) ? 'checked' : ''; ?> />
-																				<!--end::Input-->
-																				<!--begin::Label-->
-																				<span class="form-check-label d-flex flex-column align-items-start">
-																					<span class="fw-bold fs-5 mb-0"><?php echo $long_term_care_result; ?></span>
-																				</span>
-																				<!--end::Label-->
-																			</label>
-																			<!--end::Option-->
-																			<!--begin::Option-->
-																			<div class="separator separator-dashed my-6"></div>
-																			<!--end::Option-->
-																		</div>
-																	<?php } ?>
-																</div>
-																<h3 class="m-0 text-gray-900 flex-grow-1 mb-6">
-																	Critical Illness
-																</h3>
-																<div class="row mb-7">
-																	<?php
-																	foreach ($get_interest_critical_illness_list as $key => $critical_illness_result) { ?>
-																		<div class="col-md-4 fv-row">
-																			<!--begin::Option-->
-																			<label class="form-check form-check-custom form-check-solid align-items-start">
-																				<!--begin::Input-->
-																				<input class="form-check-input me-3" type="checkbox" name="critical_illness[]" value="<?php echo $key; ?>" <?php echo (in_array($key, $selected_critical_illness)) ? 'checked' : ''; ?> />
-																				<!--end::Input-->
-																				<!--begin::Label-->
-																				<span class="form-check-label d-flex flex-column align-items-start">
-																					<span class="fw-bold fs-5 mb-0"><?php echo $critical_illness_result; ?></span>
-																				</span>
-																				<!--end::Label-->
-																			</label>
-																			<!--end::Option-->
-																			<!--begin::Option-->
-																			<div class="separator separator-dashed my-6"></div>
-																			<!--end::Option-->
-																		</div>
-																	<?php } ?>
-																</div>
-																<div class="row mb-7">
-																	<!--begin::Input wrapper-->
-																	<div class="col-md-6 fv-row">
-																		<!--begin::Label-->
-																		<label class="fw-semibold fs-6 mb-2">Disability Income</label>
-																		<!--end::Label-->
-																		<!--begin::Input-->
-																		<select name="disability_income" id="disability_income_edit" data-control="select2" data-placeholder="Select a Disability Income..." class="form-select form-select-solid is_empty">
-																			<option value="">Select Disability Income</option>
-																			<?php foreach ($get_interest_disability_income_list as $key => $disability_income_result) { ?>
-																				<option <?php echo ($get_selected_advisor_interest && ($key == $get_selected_advisor_interest->disability_income)) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo $disability_income_result; ?></option>
-																			<?php } ?>
-																		</select>
-																		<!--end::Input-->
-																	</div>
-																	<!--end::Input wrapper-->
-																	<!--begin::Input wrapper-->
-																	<div class="col-md-6 fv-row">
-																		<!--begin::Label-->
-																		<label class="fw-semibold fs-6 mb-2">Group Insurance </label>
-																		<!--end::Label-->
-																		<!--begin::Input-->
-																		<select name="group_insurance" id="group_insurance_edit" data-control="select2" data-placeholder="Select a Group Insurance ..." class="form-select form-select-solid is_empty">
-																			<option value="">Select Group Insurance </option>
-																			<?php foreach ($get_interest_group_insurance_list as $key => $group_insurance_result) { ?>
-																				<option <?php echo ($get_selected_advisor_interest && ($key == $get_selected_advisor_interest->group_insurance)) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo $group_insurance_result; ?></option>
-																			<?php } ?>
-																		</select>
-																		<!--end::Input-->
-																	</div>
-																	<!--end::Input wrapper-->
-																</div>
-															</div>
-															<!--end::Card body-->
-															<!--begin::Card footer-->
-															<div class="card-footer d-flex justify-content-end py-6 px-9">
-																<button type="submit" name="update_interest" class="btn btn-primary px-6">Save Changes</button>
-															</div>
-															<!--end::Card footer-->
-														</form>
-														<!--end::Form-->
-													</div>
-													<!--end::Content-->
-												</div>
-											</div>
-											<!--end:::Tab pane-->
-										</div>
-										<!--end:::Tab content-->
 									</div>
 									<!--end::Content-->
 								</div>

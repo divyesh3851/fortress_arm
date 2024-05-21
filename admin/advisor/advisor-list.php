@@ -27,6 +27,20 @@ if (sipost('first_name') || sipost('last_name') || sipost('email')) {
     exit;
 }
 
+if (isset($_POST['save_interest_settings'])) {
+
+    $response = Advisor()->update_user_interest();
+
+    if ($response == 1) {
+        $_SESSION['interest_process_success'] = true;
+    } else {
+        $_SESSION['interest_process_fail'] = true;
+    }
+
+    wp_redirect(site_url() . '/admin/advisor/advisor-list');
+    exit;
+}
+
 if (isset($_POST['advisor_export_submit'])) {
 
     $format = (sipost('format')) ? sipost('format') : '';
@@ -238,6 +252,8 @@ $get_state_list = Settings()->get_state_list();
 
 $get_lead_source_list = Settings()->get_lead_source_list();
 
+$get_interest_list = Settings()->get_interest_list();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -334,6 +350,26 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
                                             <h4 class="mb-1 text-success">The advisor has been save successfully.</h4>
+                                        </div>
+                                    </div>
+                                <?php }
+
+                                if (isset($_SESSION['interest_process_success'])) {
+                                    unset($_SESSION['interest_process_success']); ?>
+                                    <div class="alert alert-success d-flex align-items-center p-5">
+                                        <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
+                                        <div class="d-flex flex-column">
+                                            <h4 class="mb-1 text-success">The campaign has been updated successfully.</h4>
+                                        </div>
+                                    </div>
+                                <?php }
+
+                                if (isset($_SESSION['interest_process_fail'])) {
+                                    unset($_SESSION['interest_process_fail']); ?>
+                                    <div class="alert alert-danger d-flex align-items-center p-5">
+                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
+                                        <div class="d-flex flex-column">
+                                            <h4 class="mb-1 text-danger">The campaign update was unsuccessful.</h4>
                                         </div>
                                     </div>
                                 <?php }
@@ -698,7 +734,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
 
 
     <!--begin::Modal - Settings-->
-    <div class="modal fade" id="kt_modal_user_settings" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="user_settings_modal" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog mw-700px p-9">
             <!--begin::Modal content-->
@@ -719,21 +755,35 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                 <div class="modal-body  m-5">
                     <!--begin::Form-->
                     <form id="" class="form" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="id" id="id" class="is_empty">
+                        <input type="hidden" name="interest_advisor_id" id="interest_advisor_id" class="is_empty">
                         <!--begin::Scroll-->
                         <div class="d-flex flex-column  px-5 px-lg-10">
-
                             <!--begin::Input group-->
                             <div class="row mb-7">
                                 <div class="col-md-12 fv-row">
+                                    <?php foreach ($get_interest_list as $interest_result) { ?>
+                                        <div class="form-check form-check-custom form-check-solid mb-3">
+                                            <input class="form-check-input" type="radio" name="interest" value="<?php echo $interest_result->id; ?>" id="interest_<?php echo $interest_result->id; ?>" />
+                                            <label class="form-check-label text-black fs-4 fw-bold" for="interest_<?php echo $interest_result->id; ?>">
+                                                <?php echo $interest_result->name; ?>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="form-check form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input" type="radio" name="interest" value="close_all" id="interest_close_all" />
+                                        <label class="form-check-label text-black fs-4 fw-bold" for="interest_close_all">
+                                            Close All
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <!--end::Input group-->
                         </div>
                         <!--end::Scroll-->
+
                         <!--begin::Actions-->
-                        <div class="text-center pt-10">
-                            <button type="submit" name="save_lead_source" id="save_lead_source" class="btn btn-primary" data-kt-users-modal-action="submit">
+                        <div class="text-center pt-5">
+                            <button type="submit" name="save_interest_settings" id="save_interest_settings" class="btn btn-primary" data-kt-users-modal-action="submit">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -859,8 +909,11 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                             <label class="fw-semibold fs-6 mb-2">Upload File</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input type="file" name="import_file" id="import_file" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Upload File" />
+                            <input type="file" name="import_file" id="import_file" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Upload File" accept=".csv" required />
                             <!--end::Input-->
+                            <div class=" mt-3">
+                                <a href="<?php echo site_url(); ?>/uploads/sample_files/Sample-Advisor.csv" download="Sample Advisor" class="text-danger fw-semibold">Download Sample File</a>
+                            </div>
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
@@ -895,6 +948,21 @@ $get_lead_source_list = Settings()->get_lead_source_list();
     <!--end::Vendors Javascript-->
     <!--end::Javascript-->
     <script>
+        $(document).on("click", ".user_settings_modal", function() {
+
+            jQuery('.is_empty').val('');
+            jQuery('input[name="interest"]').removeAttr('checked');
+
+            var interest_advisor_id = $(this).attr("id");
+            var current_interest = $(this).attr("current_interest");
+            var current_interest_sub_id = $(this).attr("current_interest_sub_id");
+            var current_interest_status = $(this).attr("current_interest_status");
+
+            jQuery('#interest_advisor_id').val(interest_advisor_id);
+            jQuery('input[name="interest"][value="' + current_interest + '"]').attr('checked', true);
+
+        });
+
         var start = moment().subtract(29, "days");
         var end = moment();
 
@@ -1022,6 +1090,7 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                             orderable: false,
                             className: 'text-start',
                             render: function(data, type, row) {
+
                                 return `<div class="d-flex">  
                                             <a href="tel:${data.mobile_no}" data-bs-toggle="tooltip" title="Call Contact">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
@@ -1036,14 +1105,21 @@ $get_lead_source_list = Settings()->get_lead_source_list();
                                                         <i class="las la-envelope-open-text fs-2  text-success"></i>
                                                     </div>
                                                 </div> 
-                                            </a>
-                                            <a href="#" id="${data.record_id}" class="menu-link lead_source_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_user_settings" data-kt-docs-table-filter="edit_row">
+                                            </a> 
+                                            ${data.is_close == 1 ? `<a href="#" id="${data.record_id}" class="menu-link " data-bs-toggle="tooltip" title="Campaign Closed">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700"> 
-                                                        <i class="las la-user-cog fs-2 text-success"></i> 
+                                                        <i class="las la-bullhorn fs-2 text-danger"></i> 
                                                     </div>
                                                 </div>
-                                            </a> 
+                                            </a>` : `<a href="#" id="${data.record_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_interest="${data.interest_id}" current_interest_sub_id="${data.interest_sub_id}" current_interest_status="${data.is_close}">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-3 fw-bold text-gray-700"> 
+                                                        <i class="las la-bullhorn fs-2 text-primary"></i> 
+                                                    </div>
+                                                </div>
+                                            </a>` }
+                                            
                                             <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.record_id}" data-bs-toggle="tooltip" title="View Quick Info">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700">

@@ -62,7 +62,7 @@ if (isset($_POST['save_setting'])) {
 	exit;
 }
 
-$get_advisor_interest = $wpdb->get_row("SELECT * FROM interest WHERE advisor_id = " . $selected_advisor_data->id);
+//$get_advisor_interest = $wpdb->get_row("SELECT * FROM interest1 WHERE advisor_id = " . $selected_advisor_data->id);
 
 $iul_current_mail_reminder_step = Advisor()->get_advisor_meta($selected_advisor_data->id, 'iul_current_mail_reminder_step');
 

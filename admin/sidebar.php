@@ -79,7 +79,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'opportunities') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'opportunities') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/opportunities">
                         <span class="menu-icon">
                             <i class="las la-compress-arrows-alt fs-2x"></i>
                         </span>
@@ -120,7 +120,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'marketing') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'marketing') ? 'active' : ''; ?>" href="<?php echo site_url() . '/admin/campaigns/list'; ?>">
                         <span class="menu-icon">
                             <i class="las la-bullhorn fs-2x"></i>
                         </span>
