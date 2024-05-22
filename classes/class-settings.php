@@ -68,108 +68,108 @@ class Settings
         $rating_html = '<div class="rating">';
 
         if ($rating == 0) {
-            $rating_html .= '<div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+            $rating_html .= '<div class="rating-label rating_star_1">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="1"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_2">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="2"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_3">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="3"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_4">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="4"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_5">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="5"></i>
                     </div>';
         }
         if ($rating == 1) {
 
-            $rating_html .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+            $rating_html .= '<div class="rating-label checked rating_star_1">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="1"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_2">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="2"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_3">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="3"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_4">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="4"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_5">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="5"></i>
                     </div>';
         }
         if ($rating == 2) {
-            $rating_html .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+            $rating_html .= '<div class="rating-label checked rating_star_1">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="1"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_2">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="2"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_3">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="3"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_4">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="4"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_5">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="5"></i>
                     </div>';
         }
         if ($rating == 3) {
-            $rating_html .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+            $rating_html .= '<div class="rating-label checked rating_star_1">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="1"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_2">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="2"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_3">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="3"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_4">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="4"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_5">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="5"></i>
                     </div>';
         }
 
         if ($rating == 4) {
-            $rating_html .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+            $rating_html .= '<div class="rating-label checked rating_star_1">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="1"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_2">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="2"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_3">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="3"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_4">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="4"></i>
                     </div>
-                    <div class="rating-label ">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label rating_star_5">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="5"></i>
                     </div>';
         }
 
         if ($rating == 5) {
-            $rating_html .= '<div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+            $rating_html .= '<div class="rating-label checked rating_star_1">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="1"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_2">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="2"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_3">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="3"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_4">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="4"></i>
                     </div>
-                    <div class="rating-label checked">
-                        <i class="ki-duotone ki-star fs-6"></i>
+                    <div class="rating-label checked rating_star_5">
+                        <i class="ki-duotone ki-star fs-6 cursor-pointer" rating_no="5"></i>
                     </div>';
         }
         $rating_html .= '</div>';

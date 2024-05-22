@@ -772,7 +772,7 @@ $get_interest_list = Settings()->get_interest_list();
                                     <div class="form-check form-check-custom form-check-solid mb-3">
                                         <input class="form-check-input" type="radio" name="interest" value="close_all" id="interest_close_all" />
                                         <label class="form-check-label text-black fs-4 fw-bold" for="interest_close_all">
-                                            Close All
+                                            Stop Campaigns
                                         </label>
                                     </div>
                                 </div>

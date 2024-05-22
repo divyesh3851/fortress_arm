@@ -42,7 +42,46 @@ class Advisor
         add_action('wp_ajax_remove_bookmark', array($this, 'remove_bookmark'));
 
         add_action('wp_ajax_delete_activity', array($this, 'delete_activity'));
+
+        add_action('wp_ajax_delete_interest_user', array($this, 'delete_interest_user'));
+
+        add_action('wp_ajax_update_advisor_rating', array($this, 'update_advisor_rating'));
     }
+
+    public function update_advisor_rating($advisor_id = '')
+    {
+        global $wpdb;
+
+        $advisor_id = (sipost('advisor_id')) ? sipost('advisor_id') : $advisor_id;
+
+        $rating_no = (sipost('rating_no')) ? sipost('rating_no') : 0;
+
+        if (!$advisor_id) {
+            return;
+        }
+
+        $response = $wpdb->update("advisor", array("rating" => $rating_no), array("id" => $advisor_id));
+
+        echo json_encode(array("status" => $response));
+        die();
+    }
+
+    public function delete_interest_user($id = '')
+    {
+        global $wpdb;
+
+        $id = (sipost('id')) ? sipost('id') : $id;
+
+        if (!$id) {
+            return;
+        }
+
+        $response = $wpdb->delete("user_interest", array("id" => $id));
+
+        echo json_encode(array("status" => $response));
+        die();
+    }
+
     public function get_advisor_name_initial($advisor_name = '')
     {
         $advisor_name = (sipost('advisor_name')) ? sipost('advisor_name') : $advisor_name;
@@ -110,9 +149,11 @@ class Advisor
 
         $get_current_interest_info = $wpdb->get_row("SELECT id, interest_id, mail_reminder, is_close FROM user_interest WHERE user_id = " . $advisor_id);
 
+        /*
         if ($get_current_interest_info && $get_current_interest_info->is_close == 1) {
             return false;
         }
+        */
 
         if ($current_interest_type == 'close_all') {
 
@@ -139,12 +180,9 @@ class Advisor
             return true;
         }
 
-
         $one_hour_later = date('Y-m-d H:i:s', strtotime(current_time('mysql') . ' +1 hour')); // Add 1 hour
 
         if (4 == sipost('interest')) {
-
-            $interest_info['mail_reminder'] = $one_hour_later;
             Advisor()->update_advisor_meta($advisor_id, 'iul_current_mail_reminder_step', 1);
 
             /*
@@ -169,26 +207,25 @@ class Advisor
         }
 
         if (3 == $current_interest_type) {
-            $interest_info['mail_reminder'] = $one_hour_later;
             Advisor()->update_advisor_meta($advisor_id, 'fia_current_mail_reminder_step', 1);
         }
 
         if (2 == $current_interest_type) {
-            $interest_info['mail_reminder'] = $one_hour_later;
             Advisor()->update_advisor_meta($advisor_id, 'ltc_current_mail_reminder_step', 1);
         }
 
         if (1 == $current_interest_type) {
-            $interest_info['mail_reminder'] = $one_hour_later;
             Advisor()->update_advisor_meta($advisor_id, 'ls_current_mail_reminder_step', 1);
         }
 
         $interest_info['interest_id'] = $current_interest_type;
         $interest_info['sub_id']      = 1;
+        $interest_info['is_close']    = 0;
 
         if (!$get_current_interest_info) {
 
-            $interest_info['created_at'] = current_time('mysql');
+            $interest_info['mail_reminder'] = $one_hour_later;
+            $interest_info['created_at']    = current_time('mysql');
 
             $wpdb->insert('user_interest', $interest_info);
             $last_id = $wpdb->insert_id;
@@ -196,12 +233,10 @@ class Advisor
             Admin()->create_track_log_activity($last_id, $advisor_id, 'interest added', 'interest_add', $interest_info, $interest_info, 'interest has been added');
         } else {
 
-            $interest_info['updated_at'] = current_time('mysql');
-
             $wpdb->update(
                 "user_interest",
                 array(
-                    'mail_reminder'  => '',
+                    'updated_at'  => current_time('mysql'),
                 ),
                 array("user_id" => $advisor_id)
             );
@@ -1261,6 +1296,7 @@ class Advisor
         $anniversary_date = ($anniversary_date) ? date('Y-m-d', $anniversary_date) : '';
 
         $advisor_profile = array(
+            'prefix'        => sipost('prefix'),
             'first_name'    => sipost('first_name'),
             'last_name'     => sipost('last_name'),
             'email'         => sipost('email'),
@@ -1269,12 +1305,16 @@ class Advisor
             'gender'        => sipost('gender'),
             'marital_status'    => sipost('marital_status'),
             'anniversary_date'  => $anniversary_date,
+            'advisor_status'    => sipost('advisor_status'),
+            'state'             => sipost('state'),
+            'city'              => sipost('city'),
             'updated_at'        => current_time('mysql')
         );
 
         $advisor_old_info = $wpdb->get_row("SELECT id,first_name,last_name,email,mobile_no,birth_date,gender,marital_status,anniversary_date FROM advisor WHERE id = " . $advisor_id);
 
         $old_advisor_profile = array(
+            'prefix'        => sipost('prefix'),
             'first_name'    => $advisor_old_info->first_name,
             'last_name'     => $advisor_old_info->last_name,
             'email'         => $advisor_old_info->email,
@@ -1283,6 +1323,9 @@ class Advisor
             'gender'        => $advisor_old_info->gender,
             'marital_status'    => $advisor_old_info->marital_status,
             'anniversary_date'  => $advisor_old_info->anniversary_date,
+            'advisor_status'    => sipost('advisor_status'),
+            'state'             => sipost('state'),
+            'city'              => sipost('city'),
         );
 
         if ($wpdb->update("advisor", $advisor_profile, array("id" => $advisor_id))) {

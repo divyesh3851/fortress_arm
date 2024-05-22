@@ -382,6 +382,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Page title-->
 									<!--begin::Actions-->
 									<div class="d-flex align-items-center gap-2 gap-lg-3">
+										<a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/<?php echo siget('advisor_id'); ?>" class="btn btn-sm fw-bold btn-primary">Edit</a>
 										<?php /*  
 										<a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_interests">Add Interests</a>
 										
@@ -446,7 +447,9 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 														<div class="badge badge-lg badge-light-primary d-inline"><?php echo $selected_advisor_data->state; ?></div>
 														<!--begin::Badge-->
 														<!--begin::Badge-->
-														<div class="badge badge-lg badge-light-warning d-inline"><?php echo $selected_advisor_data->gender; ?></div>
+														<?php if ($selected_advisor_data->gender) { ?>
+															<div class="badge badge-lg badge-light-warning d-inline"><?php echo $selected_advisor_data->gender; ?></div>
+														<?php } ?>
 														<!--begin::Badge-->
 													</div>
 													<!--end::Position-->
@@ -1103,7 +1106,19 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 						<div class="w-100">
 							<!--begin::Input group-->
 							<div class="row mb-7">
-								<div class="col-md-6 fv-row">
+								<div class="col-md-4 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">Title</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid is_empty" required>
+										<option value="">Select Title</option>
+										<?php foreach (Settings()->get_name_prefix_list() as $prefix_result) { ?>
+											<option <?php echo ($selected_advisor_data->prefix ==  $prefix_result) ? 'selected' : '';  ?> value="<?php echo $prefix_result; ?>"><?php echo $prefix_result; ?></option>
+										<?php } ?>
+									</select>
+								</div>
+								<div class="col-md-4 fv-row">
 									<!--begin::Label-->
 									<label class="required fw-semibold fs-6 mb-2">First Name</label>
 									<!--end::Label-->
@@ -1112,7 +1127,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Input-->
 								</div>
 
-								<div class="col-md-6 fv-row">
+								<div class="col-md-4 fv-row">
 									<!--begin::Label-->
 									<label class="required fw-semibold fs-6 mb-2">Last Name</label>
 									<!--end::Label-->
@@ -1189,6 +1204,43 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<input type="text" name="anniversary_date" id="anniversary_date" class="flatpickr form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Wedding Anniversary" />
+									<!--end::Input-->
+								</div>
+							</div>
+
+							<div class="row mb-7">
+								<div class="col-md-4 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">Status</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="advisor_status" id="advisor_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty" required>
+										<option value="">Select Status</option>
+										<?php foreach (Settings()->get_advisor_status_list() as $key => $advisor_status_result) { ?>
+											<option <?php echo ($selected_advisor_data->advisor_status ==  $key) ? 'selected' : '';  ?> value="<?php echo $key; ?>"><?php echo $advisor_status_result; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+								<div class="col-md-4 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">State</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<select name="state" id="state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" required>
+										<option value="">Select State</option>
+										<?php foreach ($get_state_list as $state_result) { ?>
+											<option <?php echo ($selected_advisor_data->state ==  $state_result) ? 'selected' : '';  ?> value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
+										<?php } ?>
+									</select>
+									<!--end::Input-->
+								</div>
+								<div class="col-md-4 fv-row">
+									<!--begin::Label-->
+									<label class="required fw-semibold fs-6 mb-2">City</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<input type="text" name="city" id="city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" value="<?php echo $selected_advisor_data->city; ?>" required />
 									<!--end::Input-->
 								</div>
 							</div>
@@ -2188,6 +2240,8 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 				var results = JSON.parse(result);
 
 				if (results) {
+
+					$("#prefix").val(results.advisor_info.prefix).trigger("change");
 					$("#first_name").val(results.advisor_info.first_name);
 					$("#last_name").val(results.advisor_info.last_name);
 					$("#email").val(results.advisor_info.email);
@@ -2201,6 +2255,12 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 					if (results.advisor_info.anniversary_date) {
 						$("#anniversary_date").val(change_ymd_to_dmy_text(results.advisor_info.anniversary_date));
 					}
+
+					$("#advisor_status").val(results.advisor_info.advisor_status).trigger("change");
+
+					$("#state").val(results.advisor_info.state).trigger("change");
+
+					$("#city").val(results.advisor_info.city);
 				}
 
 			});
@@ -2369,6 +2429,44 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 					$("#note").val(results.note_info.note);
 				}
 
+			});
+		});
+
+		$(document).ready(function() {
+			// Add click event listener to each element with the class 'ki-star'
+			$('.ki-star').on('click', function() {
+				// Get the 'rating_no' attribute
+				var rating_no = $(this).attr('rating_no');
+				var $parent = $(this).parent();
+
+				// Check if the first star is clicked and already selected
+				if (rating_no == 1 && $parent.hasClass('checked')) {
+					// Deselect all stars
+					$('.rating-label').removeClass('checked');
+					rating_no = 0;
+				} else {
+
+					// Remove 'checked' class from all rating labels
+					$('.rating-label').removeClass('checked');
+
+					// Add 'checked' class to all stars up to the clicked one
+					for (var i = 1; i <= rating_no; i++) {
+						$('.rating_star_' + i).addClass('checked');
+					}
+				}
+
+				$.post(ajax_url, {
+					action: 'update_advisor_rating',
+					rating_no: rating_no,
+					advisor_id: '<?php echo siget('advisor_id'); ?>',
+					is_ajax: true,
+				}, function(result) {
+
+					var results = JSON.parse(result);
+
+					if (results) {}
+
+				});
 			});
 		});
 	</script>

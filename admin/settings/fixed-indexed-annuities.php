@@ -154,13 +154,27 @@ if (isset($_POST['fia_step_5'])) {
                                     </div>
                                 <?php }  ?>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <!--begin::Card-->
-                                        <div class="card">
-                                            <!--begin::Card body-->
-                                            <div class="card-body">
-                                                <h3 class="mb-5">Step 1 Email</h3>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6">
+                                            <li class="nav-item">
+                                                <a class="nav-link active text-black fw-semibold" data-bs-toggle="tab" href="#kt_tab_pane_1">Step 1 Email </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-black fw-semibold" data-bs-toggle="tab" href="#kt_tab_pane_2">Step 2 Email </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-black fw-semibold" data-bs-toggle="tab" href="#kt_tab_pane_3">Step 3 Email </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-black fw-semibold" data-bs-toggle="tab" href="#kt_tab_pane_4">Step 4 Email </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-black fw-semibold" data-bs-toggle="tab" href="#kt_tab_pane_5">Step 5 Email </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                                                 <form method="POST">
                                                     <div class="mb-5">
                                                         <!--begin::Label-->
@@ -191,16 +205,7 @@ if (isset($_POST['fia_step_5'])) {
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!--end::Card body-->
-                                        </div>
-                                        <!--end::Card-->
-                                    </div>
-                                    <div class="col-md-6">
-                                        <!--begin::Card-->
-                                        <div class="card">
-                                            <!--begin::Card body-->
-                                            <div class="card-body">
-                                                <h3 class="mb-5">Step 2 Email</h3>
+                                            <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                                                 <form method="POST">
                                                     <div class="mb-5">
                                                         <!--begin::Label-->
@@ -231,18 +236,7 @@ if (isset($_POST['fia_step_5'])) {
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!--end::Card body-->
-                                        </div>
-                                        <!--end::Card-->
-                                    </div>
-                                </div>
-                                <div class="row mt-5">
-                                    <div class="col-md-6">
-                                        <!--begin::Card-->
-                                        <div class="card">
-                                            <!--begin::Card body-->
-                                            <div class="card-body">
-                                                <h3 class="mb-5">Step 3 Email</h3>
+                                            <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
                                                 <form method="POST">
                                                     <div class="mb-5">
                                                         <!--begin::Label-->
@@ -273,16 +267,7 @@ if (isset($_POST['fia_step_5'])) {
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!--end::Card body-->
-                                        </div>
-                                        <!--end::Card-->
-                                    </div>
-                                    <div class="col-md-6">
-                                        <!--begin::Card-->
-                                        <div class="card">
-                                            <!--begin::Card body-->
-                                            <div class="card-body">
-                                                <h3 class="mb-5">Step 4 Email</h3>
+                                            <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
                                                 <form method="POST">
                                                     <div class="mb-5">
                                                         <!--begin::Label-->
@@ -313,18 +298,7 @@ if (isset($_POST['fia_step_5'])) {
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!--end::Card body-->
-                                        </div>
-                                        <!--end::Card-->
-                                    </div>
-                                </div>
-                                <div class="row mt-5">
-                                    <div class="col-md-6">
-                                        <!--begin::Card-->
-                                        <div class="card">
-                                            <!--begin::Card body-->
-                                            <div class="card-body">
-                                                <h3 class="mb-5">Step 5 Email</h3>
+                                            <div class="tab-pane fade" id="kt_tab_pane_5" role="tabpanel">
                                                 <form method="POST">
                                                     <div class="mb-5">
                                                         <!--begin::Label-->
@@ -355,11 +329,7 @@ if (isset($_POST['fia_step_5'])) {
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!--end::Card body-->
                                         </div>
-                                        <!--end::Card-->
-                                    </div>
-                                    <div class="col-md-6">
                                     </div>
                                 </div>
                             </div>

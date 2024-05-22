@@ -13,6 +13,20 @@ if (!siget('id')) {
     return;
 }
 
+if (isset($_POST['save_interest_settings'])) {
+
+    $response = Advisor()->update_user_interest();
+
+    if ($response == 1) {
+        $_SESSION['interest_process_success'] = true;
+    } else {
+        $_SESSION['interest_process_fail'] = true;
+    }
+
+    wp_redirect(site_url() . '/admin/campaigns/single/' . siget('id'));
+    exit;
+}
+
 $get_selected_interest_info = Settings()->get_selected_interest_info(siget('id'));
 
 if (!$get_selected_interest_info) {
@@ -27,6 +41,8 @@ $get_interest_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last
 $count_total_user = Advisor()->get_interest_user_total_count($get_selected_interest_info->id);
 
 $get_interest_recent_users = Advisor()->get_interest_recent_users($get_selected_interest_info->id);
+
+$get_interest_list = Settings()->get_interest_list();
 
 /*
 if (siget('id') == 1) {
@@ -110,7 +126,14 @@ if (siget('id') == 1) {
                                     <!--end::Page title-->
                                     <!--begin::Actions-->
                                     <div class="d-flex align-items-center gap-2 gap-lg-3">
+                                        <?php
+                                        $bookmark = Advisor()->check_bookmark(site_url() . '/admin/campaigns/single/' . siget('id'));
 
+                                        if ($bookmark) { ?>
+                                            <i class="bi bi-bookmarks-fill fs-2x cursor-pointer text-primary  bookmark_page" bookmark_url="<?php echo site_url(); ?>/admin/campaigns/single/<?php echo siget('id'); ?>"></i>
+                                        <?php } else { ?>
+                                            <i class="bi bi-bookmarks fs-2x cursor-pointer text-primary bookmark_page" data-bs-toggle="modal" data-bs-target="#kt_modal_bookmark_link" bookmark_name="User Campaign" bookmark_url="<?php echo site_url(); ?>/admin/campaigns/single/<?php echo siget('id'); ?>"></i>
+                                        <?php } ?>
                                     </div>
                                     <!--end::Actions-->
                                 </div>
@@ -227,7 +250,7 @@ if (siget('id') == 1) {
                                 <!--end::Navbar-->
 
                                 <!--begin::Row-->
-                                <div class="row gx-6 gx-xl-9">
+                                <div class="row gx-6 gx-xl-9 mb-6">
                                     <!--begin::Col-->
                                     <div class="col-lg-6">
                                         <!--begin::Summary-->
@@ -295,19 +318,6 @@ if (siget('id') == 1) {
                                                 </div>
                                                 <!--end::Wrapper-->
                                                 <!--begin::Notice-->
-                                                <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6">
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex flex-stack flex-grow-1">
-                                                        <!--begin::Content-->
-                                                        <div class="fw-semibold">
-                                                            <div class="fs-6 text-gray-700">
-                                                                <a href="#" class="fw-bold me-1">Invite New .NET Collaborators</a>to create great outstanding business to business .jsp modutr class scripts
-                                                            </div>
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
                                                 <!--end::Notice-->
                                             </div>
                                             <!--end::Card body-->
@@ -371,64 +381,88 @@ if (siget('id') == 1) {
                                     <!--end::Col-->
                                 </div>
                                 <!--end::Row-->
-                                <div class="row gx-6 gx-xl-9">
-                                    <div class="table-responsive">
-                                        <table id="kt_datatable_dom_positioning" class="table table-striped table-row-bordered gy-5 gs-7 border rounded">
+                                <!--begin::Card-->
+                                <div class="card">
+                                    <!--begin::Card header-->
+                                    <div class="card-header border-0 pt-6">
+                                        <!--begin::Card title-->
+                                        <div class="card-title">
+                                            <!--begin::Search-->
+                                            <div class="d-flex align-items-center position-relative my-1">
+                                                <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span class="path1"></span><span class="path2"></span></i>
+                                                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Advisor" />
+                                            </div>
+                                            <!--end::Search-->
+                                        </div>
+                                        <!--begin::Card title-->
+                                        <!--begin::Card toolbar-->
+                                        <div class="card-toolbar">
+                                            <!--begin::Toolbar-->
+                                            <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
+                                                <!--begin::Filter-->
+                                                <!--begin::Menu 1-->
+
+                                                <!--end::Menu 1-->
+                                                <!--end::Filter-->
+                                                <!--begin::Export-->
+                                                <?php /*
+                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_advisor_export_modal">
+                                                    <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
+                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_advisor_import_modal">
+                                                    <i class="ki-outline ki-exit-down fs-2"></i>Import</button>
+                                                */ ?>
+                                                <!--end::Export-->
+                                                <!--begin::Add Advisor-->
+                                                <?php /*
+                                                <a href="<?php echo site_url() ?>/admin/advisor/add-advisor" class="btn btn-primary" title="Add Advisor">
+                                                    <i class="ki-duotone ki-plus fs-2"></i>
+                                                    Add Advisor
+                                                </a>
+                                                */ ?>
+                                                <button type="button" class="btn btn-primary assign_advisor_modal" data-bs-toggle="modal" data-bs-target="#kt_modal_assign_advisor" title="Assign Advisor">
+                                                    <i class="ki-duotone ki-plus fs-2"></i>
+                                                    Assign Advisor
+                                                </button>
+                                                <!--end::Add Advisor-->
+
+                                            </div>
+                                            <!--end::Toolbar-->
+                                            <!--begin::Group actions-->
+                                            <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
+                                                <div class="fw-bold me-5">
+                                                    <span class="me-2" data-kt-docs-table-select="selected_count"></span>Selected
+                                                </div>
+                                                <button type="button" class="btn btn-danger" data-kt-docs-table-select="delete_selected">Delete Selected</button>
+                                            </div>
+                                            <!--end::Group actions-->
+                                        </div>
+                                        <!--end::Card toolbar-->
+                                    </div>
+                                    <!--end::Card header-->
+                                    <!--begin::Card body-->
+                                    <div class="card-body pt-0">
+                                        <!--begin::Datatable-->
+                                        <table id="kt_datatable_example_1" class="table align-middle table-row-dashed fs-6 gy-5">
                                             <thead>
-                                                <tr class="fw-bold fs-6 text-gray-800 px-7">
+                                                <tr class="text-start text-gray-500 fw-bold fs-7  gs-0">
+                                                    <th class="w-10px pe-2">
+                                                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                                            <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                                                        </div>
+                                                    </th>
                                                     <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Phone No</th>
-                                                    <th>Current Step</th>
+                                                    <th>Current Step </th>
+                                                    <th class="text-start">Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <?php
-                                                foreach ($get_interest_user_list as $user_result) {
-
-                                                    if (siget('id') == 4) {
-
-                                                        $iul_step = Advisor()->get_advisor_meta($user_result->id, 'iul_current_mail_reminder_step');
-
-                                                        $term_step = Advisor()->get_advisor_meta($user_result->id, 'term_current_mail_reminder_step');
-
-                                                        $wl_step = Advisor()->get_advisor_meta($user_result->id, 'wl_current_mail_reminder_step');
-
-                                                        $ap_step = Advisor()->get_advisor_meta($user_result->id, 'ap_current_mail_reminder_step');
-
-                                                        $current_step = '';
-                                                        if ($iul_step) {
-                                                            $current_step .= 'IUL : ' . $iul_step . ', ';
-                                                        }
-                                                        if ($term_step) {
-                                                            $current_step .= 'Term : ' . $term_step . ', ';
-                                                        }
-                                                        if ($wl_step) {
-                                                            $current_step .= 'WL : ' . $wl_step . ', ';
-                                                        }
-                                                        if ($ap_step) {
-                                                            $current_step .= 'AP : ' . $ap_step . ', ';
-                                                        }
-                                                    } else if (siget('id') == 3) {
-                                                        $current_step = Advisor()->get_advisor_meta($user_result->id, 'fia_current_mail_reminder_step');
-                                                    } else if (siget('id') == 2) {
-                                                        $current_step = Advisor()->get_advisor_meta($user_result->id, 'ltc_current_mail_reminder_step');
-                                                    } else if (siget('id') == 1) {
-                                                        $current_step = Advisor()->get_advisor_meta($user_result->id, 'ls_current_mail_reminder_step');
-                                                    }
-
-                                                ?>
-                                                    <tr>
-                                                        <td><?php echo $user_result->first_name . ' ' . $user_result->last_name; ?></td>
-                                                        <td><?php echo $user_result->email; ?></td>
-                                                        <td><?php echo $user_result->mobile_no; ?></td>
-                                                        <td><?php echo $current_step; ?></td>
-                                                    </tr>
-                                                <?php } ?>
+                                            <tbody class="text-gray-600 fw-semibold">
                                             </tbody>
                                         </table>
+                                        <!--end::Datatable-->
                                     </div>
+                                    <!--end::Card body-->
                                 </div>
+                                <!--end::Card-->
                             </div>
                             <!--end::Content container-->
                         </div>
@@ -456,6 +490,119 @@ if (siget('id') == 1) {
     </div>
     <!--end::Scrolltop-->
 
+    <!--begin:: Modal Assign Advisor -->
+    <div class="modal fade" id="kt_modal_assign_advisor" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog mw-700px p-9">
+            <!--begin::Modal content-->
+            <div class="modal-content modal-rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header py-7 d-flex justify-content-between">
+                    <!--begin::Modal title-->
+                    <h2>Assing Contact</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--begin::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body  m-5">
+                    <!--begin::Form-->
+                    <form id="" class="form" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12 fv-row">
+                                <!--begin::Label-->
+                                <label class="fw-semibold fs-6 mb-2">Contact</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select class="form-select form-select-solid" data-placeholder="Select a contact..." data-allow-clear="true" name="assign_contact[]" id="assign_contact" multiple="multiple">
+                                    <option value="">Select Contact</option>
+                                    <option value="1" data-kt-select2-user="<?php echo site_url(); ?>/assets/media/avatars/300-6.jpg">Emma Smith</option>
+                                    <option value="2" data-kt-select2-user="<?php echo site_url(); ?>/assets/media/avatars/300-1.jpg">Max Smith</option>
+                                    ...
+                                </select>
+                                <!--end::Input-->
+                            </div>
+                        </div>
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end:: Modal Assign Advisor -->
+
+    <!--begin::Modal - Settings-->
+    <div class="modal fade" id="user_settings_modal" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog mw-700px p-9">
+            <!--begin::Modal content-->
+            <div class="modal-content modal-rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header py-7 d-flex justify-content-between">
+                    <!--begin::Modal title-->
+                    <h2>Campaign</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--begin::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body  m-5">
+                    <!--begin::Form-->
+                    <form id="" class="form" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="interest_advisor_id" id="interest_advisor_id" class="is_empty">
+                        <!--begin::Scroll-->
+                        <div class="d-flex flex-column  px-5 px-lg-10">
+                            <!--begin::Input group-->
+                            <div class="row mb-7">
+                                <div class="col-md-12 fv-row">
+                                    <?php foreach ($get_interest_list as $interest_result) { ?>
+                                        <div class="form-check form-check-custom form-check-solid mb-3">
+                                            <input class="form-check-input" type="radio" name="interest" value="<?php echo $interest_result->id; ?>" id="interest_<?php echo $interest_result->id; ?>" />
+                                            <label class="form-check-label text-black fs-4 fw-bold" for="interest_<?php echo $interest_result->id; ?>">
+                                                <?php echo $interest_result->name; ?>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="form-check form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input" type="radio" name="interest" value="close_all" id="interest_close_all" />
+                                        <label class="form-check-label text-black fs-4 fw-bold" for="interest_close_all">
+                                            Stop Campaigns
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                        </div>
+                        <!--end::Scroll-->
+
+                        <!--begin::Actions-->
+                        <div class="text-center pt-5">
+                            <button type="submit" name="save_interest_settings" id="save_interest_settings" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                <span class="indicator-label">Submit</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--begin::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - Settings-->
 
     <!--begin::Javascript-->
     <script>
@@ -468,23 +615,478 @@ if (siget('id') == 1) {
     <script src="<?php echo site_url(); ?>/assets/js/widgets.bundle.js"></script>
     <script src="<?php echo site_url(); ?>/assets/js/custom/widgets.js"></script>
     <script src="<?php echo site_url(); ?>/assets/plugins/custom/datatables/datatables.bundle.js"></script>
-
     <script>
-        $("#kt_datatable_dom_positioning").DataTable({
-            "language": {
-                "lengthMenu": "Show _MENU_",
-            },
-            "dom": "<'row mb-2'" +
-                "<'col-sm-6 d-flex align-items-center justify-conten-start dt-toolbar'l>" +
-                "<'col-sm-6 d-flex align-items-center justify-content-end dt-toolbar'f>" +
-                ">" +
+        $(document).on("click", ".user_settings_modal", function() {
 
-                "<'table-responsive'tr>" +
+            jQuery('.is_empty').val('');
+            jQuery('input[name="interest"]').removeAttr('checked');
 
-                "<'row'" +
-                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                ">"
+            var interest_advisor_id = $(this).attr("id");
+            var current_interest = $(this).attr("current_interest");
+            var current_interest_sub_id = $(this).attr("current_interest_sub_id");
+            var current_interest_status = $(this).attr("current_interest_status");
+
+            if (current_interest_status == 1) {
+                current_interest = 'close_all';
+            }
+
+            jQuery('#interest_advisor_id').val(interest_advisor_id);
+            jQuery('input[name="interest"][value="' + current_interest + '"]').attr('checked', true);
+
+        });
+
+        "use strict";
+
+        // Class definition
+        var KTDatatablesServerSide = function() {
+            // Shared variables
+            var table;
+            var dt;
+            var filterAdvisor;
+
+            // Private functions
+            var initDatatable = function() {
+                dt = $("#kt_datatable_example_1").DataTable({
+                    searchDelay: 500,
+                    processing: true,
+                    serverSide: true,
+                    order: [
+                        [0, 'desc']
+                    ],
+                    stateSave: true,
+                    select: {
+                        style: 'multi',
+                        selector: 'td:first-child input[type="checkbox"]',
+                        className: 'row-selected'
+                    },
+                    ajax: {
+                        url: "<?php echo site_url(); ?>/admin/campaigns/interest-user-list-ajax.php",
+                        data: {
+                            interest_id: '<?php echo siget('id'); ?>'
+                        }
+                    },
+                    columns: [{
+                            data: 'record_id'
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'current_step'
+                        },
+                        {
+                            data: null
+                        },
+                    ],
+                    columnDefs: [{
+                            targets: 0,
+                            orderable: true,
+                            render: function(data) {
+                                return `
+                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                <input class="form-check-input" type="checkbox" value="${data}" />
+                            </div>`;
+                            }
+                        },
+                        {
+                            target: 1,
+                            orderable: false,
+                            className: 'd-flex align-items-center'
+                        },
+                        {
+                            target: 2,
+                            orderable: false,
+                        },
+                        {
+                            target: 3,
+                            orderable: false,
+                        },
+                        /*{
+                            targets: 4,
+                            render: function(data, type, row) {
+                                return `<img src="${hostUrl}media/svg/card-logos/${row.CreditCardType}.svg" class="w-35px me-3" alt="${row.CreditCardType}">` + data;
+                            }
+                        },*/
+                        {
+                            targets: -1,
+                            data: null,
+                            orderable: false,
+                            className: 'text-start',
+                            render: function(data, type, row) {
+
+                                return `<div class="d-flex">  
+                                            <a href="tel:${data.mobile_no}" data-bs-toggle="tooltip" title="Call Contact">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-3 fw-bold text-gray-700"> 
+                                                        <i class="las la-phone-volume fs-2 text-success"></i>
+                                                    </div>
+                                                </div>
+                                            </a> 
+                                            <a href="mailto:${data.email}"  data-bs-toggle="tooltip" title="Email Contact">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-envelope-open-text fs-2  text-success"></i>
+                                                    </div>
+                                                </div> 
+                                            </a> 
+                                            ${data.is_close == 1 ? `<a href="#" id="${data.advisor_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_interest="${data.interest_id}" current_interest_sub_id="${data.interest_sub_id}" current_interest_status="${data.is_close}">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-3 fw-bold text-gray-700"> 
+                                                        <i class="las la-bullhorn fs-2 text-danger"></i> 
+                                                    </div>
+                                                </div>
+                                            </a>` : `<a href="#" id="${data.advisor_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_interest="${data.interest_id}" current_interest_sub_id="${data.interest_sub_id}" current_interest_status="${data.is_close}">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-3 fw-bold text-gray-700"> 
+                                                        <i class="las la-bullhorn fs-2 text-primary"></i> 
+                                                    </div>
+                                                </div>
+                                            </a>` }
+                                            
+                                            <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.advisor_id}" data-bs-toggle="tooltip" title="View Quick Info">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-3 fw-bold text-gray-700">
+                                                        <i class="las la-eye fs-2 text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.advisor_id}" data-bs-toggle="tooltip" title="Edit Contact">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-user-edit fs-2 text-primary"></i>
+                                                    </div>
+                                                </div> 
+                                            </a>
+                                            <a href="#" data-kt-docs-table-filter="delete_row" id="${data.record_id}" data-bs-toggle="tooltip" title="Delete contact from this campaign">
+                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700">
+                                                        <i class="las la-trash-alt fs-2 text-primary"></i>
+                                                    </div>
+                                                </div> 
+                                            </a>  
+                                    </div>`;
+                            },
+                        },
+                    ],
+                    // Add data-filter attribute
+                    /*
+                    createdRow: function(row, data, dataIndex) {
+                        $(row).find('td:eq(3)').attr('data-filter', data.CreditCardType);
+                    }
+                    */
+                });
+
+                table = dt.$;
+
+                // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+                dt.on('draw', function() {
+                    initToggleToolbar();
+                    toggleToolbars();
+                    handleDeleteRows();
+                    KTMenu.createInstances();
+                });
+            }
+
+            // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
+            var handleSearchDatatable = function() {
+                const filterSearch = document.querySelector('[data-kt-docs-table-filter="search"]');
+                filterSearch.addEventListener('keyup', function(e) {
+                    dt.search(e.target.value).draw();
+                });
+            }
+
+            // Filter Datatable
+            var handleFilterDatatable = () => {
+                // Select filter options
+                filterAdvisor = document.querySelectorAll('[data-kt-docs-table-filter="advisor_status"] [name="advisor_status"]');
+
+                const filterButton = document.querySelector('[data-kt-docs-table-filter="filter"]');
+
+                // Filter datatable on submit
+                if (filterButton) {
+                    filterButton.addEventListener('click', function() {
+                        // Get filter values
+                        let advisorStatus = '';
+
+                        // Get Advisor value
+                        filterAdvisor.forEach(r => {
+
+                            if (r.checked) {
+                                advisorStatus = r.value;
+                            }
+
+                            // Reset Advisor value if "All" is selected
+                            if (advisorStatus === 'all') {
+                                advisorStatus = '';
+                            }
+                        });
+
+                        // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
+                        dt.search(advisorStatus).draw();
+                    });
+                }
+
+            }
+
+            // Delete Row
+            var handleDeleteRows = () => {
+                // Select all delete buttons
+                const deleteButtons = document.querySelectorAll('[data-kt-docs-table-filter="delete_row"]');
+
+                deleteButtons.forEach(d => {
+                    // Delete button on click
+                    d.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        // Select parent row
+                        const parent = e.target.closest('tr');
+
+                        // Get customer name
+                        const customerName = parent.querySelectorAll('td')[1].innerText;
+
+                        var record_id = d.getAttribute('id');
+
+                        // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                        Swal.fire({
+                            text: "Are you sure you want to delete " + customerName + "?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            buttonsStyling: false,
+                            confirmButtonText: "Yes, delete!",
+                            cancelButtonText: "No, cancel",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-danger",
+                                cancelButton: "btn fw-bold btn-active-light-primary"
+                            }
+                        }).then(function(result) {
+                            if (result.value) {
+                                // Simulate delete request -- for demo purpose only
+                                Swal.fire({
+                                    text: "Deleting " + customerName,
+                                    icon: "info",
+                                    buttonsStyling: false,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                }).then(function() {
+                                    $.post(ajax_url, {
+                                        action: 'delete_interest_user',
+                                        id: record_id
+                                    }, function(result) {
+
+                                    });
+                                    Swal.fire({
+                                        text: "You have deleted " + customerName + "!.",
+                                        icon: "success",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-primary",
+                                        }
+                                    }).then(function() {
+                                        // delete row data from server and re-draw datatable 
+
+                                        dt.draw();
+                                    });
+                                });
+                            } else if (result.dismiss === 'cancel') {
+                                Swal.fire({
+                                    text: customerName + " was not deleted.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                });
+                            }
+                        });
+                    })
+                });
+            }
+
+            // Reset Filter
+            var handleResetForm = () => {
+                // Select reset button
+                const resetButton = document.querySelector('[data-kt-docs-table-filter="reset"]');
+
+                // Reset datatable
+                if (resetButton) {
+                    resetButton.addEventListener('click', function() {
+                        // Reset Advisor type
+                        filterAdvisor[0].checked = true;
+
+                        // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
+                        dt.search('').draw();
+                    });
+                }
+
+            }
+
+            // Init toggle toolbar
+            var initToggleToolbar = function() {
+                // Toggle selected action toolbar
+                // Select all checkboxes
+                const container = document.querySelector('#kt_datatable_example_1');
+                const checkboxes = container.querySelectorAll('[type="checkbox"]');
+
+                // Select elements
+                const deleteSelected = document.querySelector('[data-kt-docs-table-select="delete_selected"]');
+
+                var SelectedRow = [];
+                // Toggle delete selected toolbar
+                checkboxes.forEach(c => {
+                    // Checkbox on click event
+                    c.addEventListener('click', function() {
+                        SelectedRow.push(c.value);
+                        setTimeout(function() {
+                            toggleToolbars();
+                        }, 50);
+                    });
+                });
+
+                // Deleted selected rows
+                if (deleteSelected) {
+
+                    deleteSelected.addEventListener('click', function() {
+                        // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                        Swal.fire({
+                            text: "Are you sure you want to delete selected customers?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            buttonsStyling: false,
+                            showLoaderOnConfirm: true,
+                            confirmButtonText: "Yes, delete!",
+                            cancelButtonText: "No, cancel",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-danger",
+                                cancelButton: "btn fw-bold btn-active-light-primary"
+                            },
+                        }).then(function(result) {
+
+                            if (result.value) {
+                                // Simulate delete request -- for demo purpose only
+                                Swal.fire({
+                                    text: "Deleting selected customers",
+                                    icon: "info",
+                                    buttonsStyling: false,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                }).then(function() {
+                                    Swal.fire({
+                                        text: "You have deleted all selected customers!.",
+                                        icon: "success",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-primary",
+                                        }
+                                    }).then(function() {
+                                        $.post(ajax_url, {
+                                            action: 'delete_multiple_selected_advisor',
+                                            advisor_ids: SelectedRow
+                                        }, function(result) {
+
+                                        });
+                                        // delete row data from server and re-draw datatable
+                                        dt.draw();
+                                    });
+
+                                    // Remove header checked box
+                                    const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
+                                    headerCheckbox.checked = false;
+                                });
+                            } else if (result.dismiss === 'cancel') {
+                                Swal.fire({
+                                    text: "Selected customers was not deleted.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                });
+                            }
+                        });
+                    });
+
+                }
+            }
+
+            // Toggle toolbars
+            var toggleToolbars = function() {
+                // Define variables
+                const container = document.querySelector('#kt_datatable_example_1');
+                const toolbarBase = document.querySelector('[data-kt-docs-table-toolbar="base"]');
+                const toolbarSelected = document.querySelector('[data-kt-docs-table-toolbar="selected"]');
+                const selectedCount = document.querySelector('[data-kt-docs-table-select="selected_count"]');
+
+                // Select refreshed checkbox DOM elements
+                const allCheckboxes = container.querySelectorAll('tbody [type="checkbox"]');
+
+                // Detect checkboxes state & count
+                let checkedState = false;
+                let count = 0;
+
+                // Count checked boxes
+                allCheckboxes.forEach(c => {
+                    if (c.checked) {
+                        checkedState = true;
+                        count++;
+                    }
+                });
+
+                // Toggle toolbars
+                if (checkedState) {
+                    selectedCount.innerHTML = count;
+                    toolbarBase.classList.add('d-none');
+                    toolbarSelected.classList.remove('d-none');
+                } else {
+                    toolbarBase.classList.remove('d-none');
+                    toolbarSelected.classList.add('d-none');
+                }
+            }
+
+            // Public methods
+            return {
+                init: function() {
+                    initDatatable();
+                    handleSearchDatatable();
+                    initToggleToolbar();
+                    handleFilterDatatable();
+                    handleDeleteRows();
+                    handleResetForm();
+                }
+            }
+        }();
+
+        // On document ready
+        KTUtil.onDOMContentLoaded(function() {
+            KTDatatablesServerSide.init();
+        });
+    </script>
+    <script>
+        // Format options
+        var optionFormat = function(item) {
+            if (!item.id) {
+                return item.text;
+            }
+
+            var span = document.createElement('span');
+            var imgUrl = item.element.getAttribute('data-kt-select2-user');
+            var template = '';
+
+            template += '<img src="' + imgUrl + '" class="rounded-circle h-20px me-2" alt="image"/>';
+            template += item.text;
+
+            span.innerHTML = template;
+
+            return $(span);
+        }
+
+        // Init Select2 --- more info: https://select2.org/
+        $('#assign_contact').select2({
+            templateSelection: optionFormat,
+            templateResult: optionFormat
         });
     </script>
 </body>

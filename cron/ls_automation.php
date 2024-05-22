@@ -22,7 +22,7 @@ foreach ($get_advisor_list as $advisor_result) {
     }
 
     $subject    = get_option('ls_step_' . $current_step . '_subject');
-    $mail_body  = get_option('lls_step_' . $current_step . '_mail_body');
+    $mail_body  = get_option('ls_step_' . $current_step . '_mail_body');
 
     $birth_date = ($advisor_result->birth_date) ? date("m/d/Y", strtotime($advisor_result->birth_date)) : '';
 
