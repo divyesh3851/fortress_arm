@@ -48,6 +48,54 @@ class Advisor
         add_action('wp_ajax_update_advisor_rating', array($this, 'update_advisor_rating'));
     }
 
+    public function assign_advisor_to_interest($interest_id = '')
+    {
+        global $wpdb;
+
+        if (!$interest_id || empty(sipost('assign_advisor'))) {
+            return;
+        }
+
+        $one_hour_later = date('Y-m-d H:i:s', strtotime(current_time('mysql') . ' +1 hour')); // Add 1 hour
+
+        foreach (sipost('assign_advisor') as $advisor_result) {
+
+            $interest_info = array(
+                "user_id"       => $advisor_result,
+                "interest_id"   => $interest_id,
+                "sub_id"        => 1,
+                "mail_reminder" => $one_hour_later,
+                "created_at"    => current_time('mysql'),
+            );
+
+            $wpdb->insert("user_interest", $interest_info);
+
+            $last_id = $wpdb->insert_id;
+
+            if ($last_id) {
+
+                if (4 == $interest_id) {
+                    Advisor()->update_advisor_meta($advisor_result, 'iul_current_mail_reminder_step', 1);
+                }
+
+                if (3 == $interest_id) {
+                    Advisor()->update_advisor_meta($advisor_result, 'fia_current_mail_reminder_step', 1);
+                }
+
+                if (2 == $interest_id) {
+                    Advisor()->update_advisor_meta($advisor_result, 'ltc_current_mail_reminder_step', 1);
+                }
+
+                if (1 == $interest_id) {
+                    Advisor()->update_advisor_meta($advisor_result, 'ls_current_mail_reminder_step', 1);
+                }
+
+                Admin()->create_track_log_activity($last_id, $advisor_result, 'interest added', 'interest_add', $interest_info, $interest_info, 'interest has been added from assign user');
+            }
+        }
+        return true;
+    }
+
     public function update_advisor_rating($advisor_id = '')
     {
         global $wpdb;

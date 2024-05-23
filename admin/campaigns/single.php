@@ -13,6 +13,20 @@ if (!siget('id')) {
     return;
 }
 
+if (isset($_POST['save_assign_advisor'])) {
+
+    $response = Advisor()->assign_advisor_to_interest(siget('id'));
+
+    if ($response == 1) {
+        $_SESSION['interest_process_success'] = true;
+    } else {
+        $_SESSION['interest_process_fail'] = true;
+    }
+
+    wp_redirect(site_url() . '/admin/campaigns/single/' . siget('id'));
+    exit;
+}
+
 if (isset($_POST['save_interest_settings'])) {
 
     $response = Advisor()->update_user_interest();
@@ -44,21 +58,8 @@ $get_interest_recent_users = Advisor()->get_interest_recent_users($get_selected_
 
 $get_interest_list = Settings()->get_interest_list();
 
-/*
-if (siget('id') == 1) {
-    $campaign_name = 'Life Insurance';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.life_insurance != '' AND ( interest.iul_mail_reminder IS NOT NULL OR interest.term_mail_reminder IS NOT NULL OR interest.wl_mail_reminder IS NOT NULL OR interest.ap_mail_reminder IS NOT NULL ) AND ( interest.iul_mail_reminder != '0000-00-00 00:00:00' OR interest.term_mail_reminder != '0000-00-00 00:00:00' OR interest.wl_mail_reminder != '0000-00-00 00:00:00' OR interest.ap_mail_reminder != '0000-00-00 00:00:00')  AND ad.advisor_status = 2 AND ad.status = 0 ");
-} else if (siget('id') == 2) {
-    $campaign_name = 'Fixed Indexed Annuities';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.annuities != '' AND interest.fia_mail_reminder IS NOT NULL AND interest.fia_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
-} else if (siget('id') == 3) {
-    $campaign_name = 'Long-Term Care Insurance';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.long_term_care_insurance != '' AND interest.ltc_mail_reminder IS NOT NULL AND interest.ltc_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
-} else if (siget('id') == 4) {
-    $campaign_name = 'Life Settlements';
-    $get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,interest.id as interest_id FROM advisor as ad INNER JOIN interest ON ad.id = interest.user_id WHERE interest.critical_illness != '' AND interest.ls_mail_reminder IS NOT NULL AND interest.ls_mail_reminder != '0000-00-00 00:00:00' AND ad.advisor_status = 2 AND ad.status = 0 ");
-}
-*/
+$get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no, user_interest.id as user_interest_tbl_id,user_interest.sub_id FROM advisor as ad LEFT JOIN user_interest ON ad.id = user_interest.user_id WHERE ad.advisor_status = 2 AND ad.status = 0 AND user_interest.`user_id` IS NULL");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -146,6 +147,26 @@ if (siget('id') == 1) {
                         <div id="kt_app_content" class="app-content flex-column-fluid">
                             <!--begin::Content container-->
                             <div id="kt_app_content_container" class="app-container container-fluid">
+                                <?php
+                                if (isset($_SESSION['interest_process_success'])) {
+                                    unset($_SESSION['interest_process_success']); ?>
+                                    <div class="alert alert-success d-flex align-items-center p-5">
+                                        <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
+                                        <div class="d-flex flex-column">
+                                            <h4 class="mb-1 text-success">The campaign has been updated successfully.</h4>
+                                        </div>
+                                    </div>
+                                <?php }
+
+                                if (isset($_SESSION['interest_process_fail'])) {
+                                    unset($_SESSION['interest_process_fail']); ?>
+                                    <div class="alert alert-danger d-flex align-items-center p-5">
+                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
+                                        <div class="d-flex flex-column">
+                                            <h4 class="mb-1 text-danger">The campaign update was unsuccessful.</h4>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                                 <!--begin::Navbar-->
                                 <div class="card mb-6 mb-xl-9">
                                     <div class="card-body pt-9 pb-0">
@@ -153,7 +174,7 @@ if (siget('id') == 1) {
                                         <div class="d-flex flex-wrap flex-sm-nowrap mb-6">
                                             <!--begin::Image-->
                                             <div class="d-flex flex-center flex-shrink-0 bg-light rounded w-100px h-100px w-lg-150px h-lg-150px me-7 mb-4">
-                                                <img class="mw-50px mw-lg-75px" src="<?php echo site_url(); ?>/assets/media/svg/brand-logos/volicity-9.svg" alt="image" />
+                                                <i class="las la-bullhorn fs-5x text-primary"></i>
                                             </div>
                                             <!--end::Image-->
                                             <!--begin::Wrapper-->
@@ -249,138 +270,6 @@ if (siget('id') == 1) {
                                 </div>
                                 <!--end::Navbar-->
 
-                                <!--begin::Row-->
-                                <div class="row gx-6 gx-xl-9 mb-6">
-                                    <!--begin::Col-->
-                                    <div class="col-lg-6">
-                                        <!--begin::Summary-->
-                                        <div class="card card-flush h-lg-100">
-                                            <!--begin::Card header-->
-                                            <div class="card-header mt-6">
-                                                <!--begin::Card title-->
-                                                <div class="card-title flex-column">
-                                                    <h3 class="fw-bold mb-1">Tasks Summary</h3>
-                                                    <div class="fs-6 fw-semibold text-gray-500">24 Overdue Tasks</div>
-                                                </div>
-                                                <!--end::Card title-->
-                                                <!--begin::Card toolbar-->
-                                                <div class="card-toolbar">
-                                                    <a href="#" class="btn btn-light btn-sm">View Tasks</a>
-                                                </div>
-                                                <!--end::Card toolbar-->
-                                            </div>
-                                            <!--end::Card header-->
-                                            <!--begin::Card body-->
-                                            <div class="card-body p-9 pt-5">
-                                                <!--begin::Wrapper-->
-                                                <div class="d-flex flex-wrap">
-                                                    <!--begin::Chart-->
-                                                    <div class="position-relative d-flex flex-center h-175px w-175px me-15 mb-7">
-                                                        <div class="position-absolute translate-middle start-50 top-50 d-flex flex-column flex-center">
-                                                            <span class="fs-2qx fw-bold">237</span>
-                                                            <span class="fs-6 fw-semibold text-gray-500">Total Tasks</span>
-                                                        </div>
-                                                        <canvas id="project_overview_chart"></canvas>
-                                                    </div>
-                                                    <!--end::Chart-->
-                                                    <!--begin::Labels-->
-                                                    <div class="d-flex flex-column justify-content-center flex-row-fluid pe-11 mb-5">
-                                                        <!--begin::Label-->
-                                                        <div class="d-flex fs-6 fw-semibold align-items-center mb-3">
-                                                            <div class="bullet bg-primary me-3"></div>
-                                                            <div class="text-gray-500">Active</div>
-                                                            <div class="ms-auto fw-bold text-gray-700">30</div>
-                                                        </div>
-                                                        <!--end::Label-->
-                                                        <!--begin::Label-->
-                                                        <div class="d-flex fs-6 fw-semibold align-items-center mb-3">
-                                                            <div class="bullet bg-success me-3"></div>
-                                                            <div class="text-gray-500">Completed</div>
-                                                            <div class="ms-auto fw-bold text-gray-700">45</div>
-                                                        </div>
-                                                        <!--end::Label-->
-                                                        <!--begin::Label-->
-                                                        <div class="d-flex fs-6 fw-semibold align-items-center mb-3">
-                                                            <div class="bullet bg-danger me-3"></div>
-                                                            <div class="text-gray-500">Overdue</div>
-                                                            <div class="ms-auto fw-bold text-gray-700">0</div>
-                                                        </div>
-                                                        <!--end::Label-->
-                                                        <!--begin::Label-->
-                                                        <div class="d-flex fs-6 fw-semibold align-items-center">
-                                                            <div class="bullet bg-gray-300 me-3"></div>
-                                                            <div class="text-gray-500">Yet to start</div>
-                                                            <div class="ms-auto fw-bold text-gray-700">25</div>
-                                                        </div>
-                                                        <!--end::Label-->
-                                                    </div>
-                                                    <!--end::Labels-->
-                                                </div>
-                                                <!--end::Wrapper-->
-                                                <!--begin::Notice-->
-                                                <!--end::Notice-->
-                                            </div>
-                                            <!--end::Card body-->
-                                        </div>
-                                        <!--end::Summary-->
-                                    </div>
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-6">
-                                        <!--begin::Graph-->
-                                        <div class="card card-flush h-lg-100">
-                                            <!--begin::Card header-->
-                                            <div class="card-header mt-6">
-                                                <!--begin::Card title-->
-                                                <div class="card-title flex-column">
-                                                    <h3 class="fw-bold mb-1">Tasks Over Time</h3>
-                                                    <!--begin::Labels-->
-                                                    <div class="fs-6 d-flex text-gray-500 fs-6 fw-semibold">
-                                                        <!--begin::Label-->
-                                                        <div class="d-flex align-items-center me-6">
-                                                            <span class="menu-bullet d-flex align-items-center me-2">
-                                                                <span class="bullet bg-success"></span>
-                                                            </span>Complete
-                                                        </div>
-                                                        <!--end::Label-->
-                                                        <!--begin::Label-->
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="menu-bullet d-flex align-items-center me-2">
-                                                                <span class="bullet bg-primary"></span>
-                                                            </span>Incomplete
-                                                        </div>
-                                                        <!--end::Label-->
-                                                    </div>
-                                                    <!--end::Labels-->
-                                                </div>
-                                                <!--end::Card title-->
-                                                <!--begin::Card toolbar-->
-                                                <div class="card-toolbar">
-                                                    <!--begin::Select-->
-                                                    <select name="status" data-control="select2" data-hide-search="true" class="form-select form-select-solid form-select-sm fw-bold w-100px">
-                                                        <option value="1">2020 Q1</option>
-                                                        <option value="2">2020 Q2</option>
-                                                        <option value="3" selected="selected">2020 Q3</option>
-                                                        <option value="4">2020 Q4</option>
-                                                    </select>
-                                                    <!--end::Select-->
-                                                </div>
-                                                <!--end::Card toolbar-->
-                                            </div>
-                                            <!--end::Card header-->
-                                            <!--begin::Card body-->
-                                            <div class="card-body pt-10 pb-0 px-5">
-                                                <!--begin::Chart-->
-                                                <div id="kt_project_overview_graph" class="card-rounded-bottom" style="height: 300px"></div>
-                                                <!--end::Chart-->
-                                            </div>
-                                            <!--end::Card body-->
-                                        </div>
-                                        <!--end::Graph-->
-                                    </div>
-                                    <!--end::Col-->
-                                </div>
-                                <!--end::Row-->
                                 <!--begin::Card-->
                                 <div class="card">
                                     <!--begin::Card header-->
@@ -518,14 +407,27 @@ if (siget('id') == 1) {
                                 <label class="fw-semibold fs-6 mb-2">Contact</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <select class="form-select form-select-solid" data-placeholder="Select a contact..." data-allow-clear="true" name="assign_contact[]" id="assign_contact" multiple="multiple">
-                                    <option value="">Select Contact</option>
-                                    <option value="1" data-kt-select2-user="<?php echo site_url(); ?>/assets/media/avatars/300-6.jpg">Emma Smith</option>
-                                    <option value="2" data-kt-select2-user="<?php echo site_url(); ?>/assets/media/avatars/300-1.jpg">Max Smith</option>
-                                    ...
+                                <select class="form-select form-select-solid" data-placeholder="Select a contact..." data-allow-clear="true" data-close-on-select="false" name="assign_advisor[]" id="assign_advisor" multiple="multiple">
+                                    <?php
+                                    foreach ($get_user_list as $user_result) {
+
+                                        $profile_img = Advisor()->get_advisor_meta($user_result->id, 'profile_img'); ?>
+
+                                        <option value="<?php echo $user_result->id; ?>" data-kt-select2-user="<?php echo site_url(); ?>/uploads/advisor/<?php echo $profile_img; ?>"><?php echo $user_result->first_name . ' ' . $user_result->last_name . ' - ' . $user_result->email; ?></option>
+
+                                    <?php } ?>
                                 </select>
                                 <!--end::Input-->
                             </div>
+                            <!--begin::Actions-->
+                            <div class="text-center pt-5">
+                                <button type="submit" name="save_assign_advisor" id="save_assign_advisor" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                    <span class="indicator-label">Submit</span>
+                                    <span class="indicator-progress">Please wait...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                </button>
+                            </div>
+                            <!--end::Actions-->
                         </div>
                     </form>
                     <!--end::Form-->
@@ -1084,7 +986,7 @@ if (siget('id') == 1) {
         }
 
         // Init Select2 --- more info: https://select2.org/
-        $('#assign_contact').select2({
+        $('#assign_advisor').select2({
             templateSelection: optionFormat,
             templateResult: optionFormat
         });

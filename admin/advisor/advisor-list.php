@@ -205,6 +205,24 @@ if (isset($_POST['advisor_import_submit'])) {
                 $last_name  = ($data[1]) ? ucfirst($data[1]) : '';
                 $email      = ($data[2]) ? strtolower(trim($data[2])) : '';
                 $mobile_no  = ($data[3]) ? $data[3] : '';
+                $state      = ($data[5]) ? $data[5] : '';
+                $birth_date = ($data[6]) ? $data[6] : '';
+
+                if ($birth_date) {
+                    $timestamp = strtotime($birth_date);
+                    $birth_date = date('Y-m-d', $timestamp);
+                }
+
+                $gender     = ($data[7]) ? ucfirst($data[7]) : '';
+                $marital_status = ($data[8]) ? ucfirst($data[8]) : '';
+                $anniversary_date = ($data[9]) ? $data[9] : '';
+
+                if ($anniversary_date) {
+                    $timestamp = strtotime($anniversary_date);
+                    $anniversary_date = date('Y-m-d', $timestamp);
+                }
+
+                $state_name = ($state) ? Settings()->check_state($state) : "";
 
                 $check_advisor = $wpdb->get_row("SELECT id FROM advisor WHERE ( LOWER(email) = '" . $email . "' ) AND status = 0 ");
 
@@ -226,7 +244,12 @@ if (isset($_POST['advisor_import_submit'])) {
                     "last_name"     => $last_name,
                     "email"         => $email,
                     "mobile_no"     => $mobile_no,
-                    "city"          => $data[4],
+                    "gender"        => $gender,
+                    "city"          => ($data[4]) ? ucfirst($data[4]) : '',
+                    "state"         => ($state_name) ? ucfirst($state_name) : '',
+                    "birth_date"    => $birth_date,
+                    "anniversary_date"  => $anniversary_date,
+                    "marital_status"    => $marital_status,
                     "created_at"    => current_time('mysql'),
                     "created_by"    => $created_by,
                     "created_by_type"   => $created_by_type,
