@@ -182,9 +182,6 @@ if (isset($_POST['term_step_6'])) {
                                             <li class="nav-item">
                                                 <a class="nav-link text-black fw-semibold" data-bs-toggle="tab" href="#kt_tab_pane_5">Step 5 Email </a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link text-black fw-semibold" data-bs-toggle="tab" href="#kt_tab_pane_6">Step 6 Email </a>
-                                            </li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
@@ -328,37 +325,6 @@ if (isset($_POST['term_step_6'])) {
                                                     <div class="row mt-7">
                                                         <div class="mb-0">
                                                             <button type="submit" name="term_step_5" class="btn btn-primary" id="">
-
-                                                                <!--begin::Indicator label-->
-                                                                <span class="indicator-label"> Save </span>
-                                                                <!--end::Indicator label-->
-
-                                                                <!--begin::Indicator progress-->
-                                                                <span class="indicator-progress">
-                                                                    Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                                                </span>
-                                                                <!--end::Indicator progress--> </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="tab-pane fade" id="kt_tab_pane_6" role="tabpanel">
-                                                <form method="POST">
-                                                    <div class="mb-5">
-                                                        <!--begin::Label-->
-                                                        <label class="required fw-semibold fs-6 mb-2">Subject</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="text" name="term_step_6_subject" id="term_step_6_subject" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Subject" required="" value="<?php echo get_option('term_step_6_subject'); ?>">
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--begin::Label-->
-                                                    <label class="required fw-semibold fs-6 mb-2">Mail Body</label>
-                                                    <!--end::Label-->
-                                                    <textarea class="is_empty ck_editor" name="term_step_6_mail_body" id="term_step_6_mail_body"><?php echo get_option('term_step_6_mail_body'); ?></textarea>
-                                                    <div class="row mt-7">
-                                                        <div class="mb-0">
-                                                            <button type="submit" name="term_step_6" class="btn btn-primary" id="">
 
                                                                 <!--begin::Indicator label-->
                                                                 <span class="indicator-label"> Save </span>

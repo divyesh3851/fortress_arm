@@ -1,2 +1,2 @@
-First Name,Last Name,Email,Phone No,City
-example,name,example@example.com,1234567890,example
+First Name,Last Name,Email,Phone No,City,Birthdate(mm/dd/yyyy),Gender,Marital Status,Wedding Anniversary
+example,name,example@example.com,1234567890,example,03/15/1996,Male,Married,03/15/2018

@@ -994,7 +994,6 @@ class Advisor
         $activity_date = ($activity_date) ? date('Y-m-d', $activity_date) : '';
 
         $activity_info = array(
-            'logged_id'     => ADMIN_USER_ID,
             'user_id'       => $user_id,
             'user_type'     => $user_type,
             'title'         => sipost('title'),
@@ -1007,6 +1006,12 @@ class Advisor
             'note'          => sipost('note'),
             'created_at'    => current_time('mysql')
         );
+
+        if (isset($_SESSION['is_fbs_advisor_login'])) {
+            $activity_info['logged_id'] = $_SESSION['fbs_advisor_id'];
+        } else {
+            $activity_info['logged_id'] = ADMIN_USER_ID;
+        }
 
         if ($wpdb->insert("activity", $activity_info)) {
 

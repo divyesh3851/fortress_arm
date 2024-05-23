@@ -1112,7 +1112,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid is_empty" required>
-										<option value="">Select Title</option>
 										<?php foreach (Settings()->get_name_prefix_list() as $prefix_result) { ?>
 											<option <?php echo ($selected_advisor_data->prefix ==  $prefix_result) ? 'selected' : '';  ?> value="<?php echo $prefix_result; ?>"><?php echo $prefix_result; ?></option>
 										<?php } ?>
@@ -1174,7 +1173,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="gender" id="gender" data-control="select2" data-placeholder="Select a Gender..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_profile" required>
-										<option value="">Select Gender</option>
 										<option value="Male">Male</option>
 										<option value="Female">Female</option>
 										<option value="Other">Other</option>
@@ -1191,7 +1189,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="marital_status" id="marital_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_profile" required>
-										<option value="">Select Status</option>
 										<option value="Married">Married</option>
 										<option value="Unmarried">Unmarried</option>
 									</select>
@@ -1215,7 +1212,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="advisor_status" id="advisor_status" data-control="select2" data-placeholder="Select a Status..." class="form-select form-select-solid is_empty" required>
-										<option value="">Select Status</option>
 										<?php foreach (Settings()->get_advisor_status_list() as $key => $advisor_status_result) { ?>
 											<option <?php echo ($selected_advisor_data->advisor_status ==  $key) ? 'selected' : '';  ?> value="<?php echo $key; ?>"><?php echo $advisor_status_result; ?></option>
 										<?php } ?>
@@ -1228,7 +1224,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="state" id="state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" required>
-										<option value="">Select State</option>
 										<?php foreach ($get_state_list as $state_result) { ?>
 											<option <?php echo ($selected_advisor_data->state ==  $state_result) ? 'selected' : '';  ?> value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
 										<?php } ?>
@@ -1327,7 +1322,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="state" id="professional_info_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info" required>
-										<option value="">Select State</option>
 										<?php foreach ($get_state_list as $state_result) { ?>
 											<option value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
 										<?php } ?>
@@ -1344,7 +1338,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="affiliations" id="affiliations" data-control="select2" data-placeholder="Select a Affiliations..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
-										<option value="">Select Affiliation</option>
 										<?php foreach ($get_affiliations_list as $affiliation_result) { ?>
 											<option value="<?php echo $affiliation_result->id; ?>"><?php echo $affiliation_result->type; ?></option>
 										<?php } ?>
@@ -1357,7 +1350,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="designation" id="designation" data-control="select2" data-placeholder="Select a Designation..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
-										<option value="">Select Designation</option>
 										<?php foreach ($get_designation_list as $designation_result) { ?>
 											<option value="<?php echo $designation_result->id; ?>"><?php echo $designation_result->initials . ' - ' . $designation_result->name; ?></option>
 										<?php } ?>
@@ -1374,7 +1366,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="carrier_appointed" id="carrier_appointed" data-control="select2" data-placeholder="Select a Carriers..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
-										<option value="">Select Appointed</option>
 										<?php foreach ($get_carrier_appointed_list as $carrier_appointed_result) { ?>
 											<option value="<?php echo $carrier_appointed_result->id; ?>"><?php echo $carrier_appointed_result->type; ?></option>
 										<?php } ?>
@@ -1388,7 +1379,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="carrier_with_business[]" id="carrier_with_business" class="form-select  form-select-solid" data-control="select2" data-close-on-select="false" data-placeholder="Select an Carrier" data-allow-clear="true" multiple="multiple" data-dropdown-parent="#kt_modal_edit_professional_info">
-										<option value="">Select Carrier</option>
 										<?php foreach ($get_carrier_list as $carrier_result) { ?>
 											<option value="<?php echo $carrier_result->id; ?>"><?php echo $carrier_result->name; ?></option>
 										<?php } ?>
@@ -1404,7 +1394,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="premium_volume" id="premium_volume" data-control="select2" data-placeholder="Select a Premium Volume..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_edit_professional_info">
-										<option value="">Select Volume</option>
 										<?php foreach ($get_premium_volume_list as $premium_volume_result) { ?>
 											<option value="<?php echo $premium_volume_result->id; ?>"><?php echo $premium_volume_result->type; ?></option>
 										<?php } ?>
@@ -1417,7 +1406,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="production_percentages[]" id="production_percentages" data-control="select2" data-close-on-select="false" data-placeholder="Select a Production Percentages..." data-allow-clear="true" multiple="multiple" class="form-select form-select-solid" data-dropdown-parent="#kt_modal_edit_professional_info">
-										<option value="">Select Production Percentages</option>
 										<?php foreach ($get_production_percentage_list as $production_percentage_result) { ?>
 											<option value="<?php echo $production_percentage_result->id; ?>"><?php echo $production_percentage_result->type; ?></option>
 										<?php } ?>
@@ -1433,7 +1421,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="markets[]" id="markets" data-control="select2" data-close-on-select="false" data-placeholder="Select a Markets..." data-allow-clear="true" multiple="multiple" class="form-select form-select-solid" data-dropdown-parent="#kt_modal_edit_professional_info">
-										<option value="">Select Markets</option>
 										<?php foreach ($get_market_list as $market_result) { ?>
 											<option value="<?php echo $market_result->id; ?>"><?php echo $market_result->type; ?></option>
 										<?php } ?>
@@ -1496,7 +1483,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="type" id="type" data-control="select2" data-placeholder="Select a Type..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_address" required>
-										<option value="">Select Type</option>
 										<?php foreach (Settings()->get_address_type_list() as $key => $type_result) { ?>
 											<option value="<?php echo $key; ?>"><?php echo $type_result; ?></option>
 										<?php } ?>
@@ -1549,7 +1535,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="state" id="address_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_address" required>
-										<option value="">Select State</option>
 										<?php foreach ($get_state_list as $state_result) { ?>
 											<option value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
 										<?php } ?>
@@ -1665,8 +1650,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<label class="required fw-semibold fs-6 mb-2">Employment Status</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<select name="emp_status" id="emp_status" data-control="select2" data-placeholder="Select a Employment Status..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_employment" required>
-										<option value="">Select Title</option>
+									<select name="emp_status" id="emp_status" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_employment" required>
 										<?php foreach (Settings()->get_employment_status_list() as $key => $employment_status_result) { ?>
 											<option value="<?php echo $key; ?>"><?php echo $employment_status_result; ?></option>
 										<?php } ?>
@@ -1732,7 +1716,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="emp_state" id="emp_state" data-control="select2" data-placeholder="Select a State..." class="form-select form-select-solid is_empty" data-dropdown-parent="#kt_modal_employment" required>
-										<option value="">Select State</option>
 										<?php foreach ($get_state_list as $state_result) { ?>
 											<option value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
 										<?php } ?>
@@ -1981,7 +1964,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="recurring" id="recurring" data-control="select2" data-placeholder="Select ..." class="form-select form-select-solid is_empty" required>
-										<option value="">Select </option>
 										<option value="once"> Once </option>
 										<option value="weekly"> Weekly </option>
 										<option value="monthly"> Monthly </option>
@@ -2014,7 +1996,6 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 									<!--end::Label-->
 									<!--begin::Input-->
 									<select name="type" id="activity_type" data-control="select2" data-placeholder="Select a Type..." class="form-select form-select-solid is_empty" required>
-										<option value="">Select Type</option>
 										<?php foreach (Settings()->get_activity_type_list() as $key => $type_result) { ?>
 											<option value="<?php echo $key; ?>"><?php echo $type_result; ?></option>
 										<?php } ?>
@@ -2172,7 +2153,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 			update_financial_interest_tag();
 		});
 
-		$(document).on('click', '.financial_interest_tag_section .tagify__tag', function() {
+		$(document).on('click', '.business_interest_tag_section .tagify__tag', function() {
 			update_business_interest_tag();
 		});
 

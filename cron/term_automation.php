@@ -46,22 +46,22 @@ foreach ($get_advisor_list as $advisor_result) {
 
     if ($current_step == 2) {
         $attachment = array(SITE_DIR . '/uploads/email_attachment/Term Enhanced Conversion Riders.pdf');
-        $new_time       = strtotime("+1 week", $current_time);
+        $new_time   = strtotime("+1 week", $current_time);
         $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
     } else if ($current_step == 3) {
         $attachment = array(SITE_DIR . '/uploads/email_attachment/Non-Med Term.pdf');
-        $new_time       = strtotime("+1 week", $current_time);
+        $new_time   = strtotime("+1 week", $current_time);
         $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
     } else if ($current_step == 4) {
         $attachment = array();
-        $new_time       = strtotime("+1 week", $current_time);
+        $new_time   = strtotime("+1 week", $current_time);
         $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
     } else if ($current_step == 5) {
         $attachment = array();
         $next_mail_reminder_date = '';
     } else if ($current_step != '' || $current_step == 1) {
         $attachment = array(SITE_DIR . '/uploads/email_attachment/Term with Living Benefits.pdf');
-        $new_time       = strtotime("+1 week", $current_time);
+        $new_time   = strtotime("+1 week", $current_time);
         $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
     }
 
