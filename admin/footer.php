@@ -1,7 +1,12 @@
+<?php
+$modal_width = '1300px';
+if (count($get_upcoming_birthday_anniversary_list) == 0) {
+    $modal_width = '500px';
+} ?>
 <!--begin::Modal - View Users-->
 <div class="modal fade" id="kt_modal_upcoming_birthday_anniversary" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mw-1300px p-9">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mw-<?php echo $modal_width; ?> p-9">
         <!--begin::Modal content-->
         <div class="modal-content modal-rounded">
             <!--begin::Modal header-->
@@ -18,12 +23,13 @@
             <!--begin::Modal header-->
             <!--begin::Modal body-->
             <div class="modal-body scroll-y m-0">
-                <h4 class="mb-8">Birthdays and Anniversaries</h4>
-                <!--begin::Row-->
-                <div class="row g-6 g-xl-9">
-                    <?php
-                    if (isset($get_upcoming_birthday_anniversary_list)) {
-                        foreach ($get_upcoming_birthday_anniversary_list as $greeting_result) { ?>
+
+                <?php if (!empty($get_upcoming_birthday_anniversary_list)) { ?>
+
+                    <h4 class="mb-8">Birthdays and Anniversaries</h4>
+                    <!--begin::Row-->
+                    <div class="row g-6 g-xl-9">
+                        <?php foreach ($get_upcoming_birthday_anniversary_list as $greeting_result) { ?>
                             <!--begin::Col-->
                             <div class="col-md-6 col-xxl-4">
                                 <?php if ($greeting_result['greeting'] == 'anniversary') { ?>
@@ -91,11 +97,12 @@
                                 <!--end::Card-->
                             </div>
                             <!--end::Col-->
-                    <?php }
-                    } else {
-                        echo '<h3>No birthday or anniversary was discovered.</h3>';
-                    } ?>
-                </div>
+                        <?php } ?>
+                    </div>
+                <?php } else {
+                    echo '<h3>No birthday or anniversary was discovered.</h3>';
+                } ?>
+
             </div>
             <!--begin::Modal body-->
         </div>
