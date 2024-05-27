@@ -101,4 +101,6 @@ Options -MultiViews
 	RewriteRule ^advisor/reset-password/([^/]+)$ advisor/reset-password.php?key=$1 [NC,L]
 
 	RewriteRule ^admin/opportunities?$ admin/opportunities.php [NC,L]
+
+	RewriteRule ^admin/settings/data-export?$ admin/settings/data_export.php [NC,L]
 </IfModule>

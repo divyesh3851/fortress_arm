@@ -548,6 +548,13 @@
 
                                 </div>
                                 <!--begin:Menu link-->
+                                <a class="menu-link <?php echo ($sub_page_name == 'data_export') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/data-export">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Data Export</span>
+                                </a>
+                                <!--begin:Menu link-->
                                 <a class="menu-link <?php echo ($sub_page_name == 'mail-setting') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/mail-setting">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>

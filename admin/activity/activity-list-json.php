@@ -4,7 +4,7 @@ require '../../config.php';
 // Fetch records 
 $data = array();
 
-$activity_list   = $wpdb->get_results('SELECT * FROM track_log WHERE status = 0 AND logged_id = 1 GROUP BY user_id ORDER BY id DESC');
+$activity_list  = $wpdb->get_results('SELECT * FROM track_log WHERE status = 0 AND logged_id = 1 GROUP BY user_id ORDER BY id DESC');
 
 foreach ($activity_list as $activity_result) {
 

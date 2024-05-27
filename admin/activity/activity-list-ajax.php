@@ -154,6 +154,7 @@ class DataTableApi
 
     public function getJsonDecode(): mixed
     {
+
         return json_decode(file_get_contents(site_url() . '/admin/activity/activity-list-json.php'), true);
     }
 
