@@ -81,3 +81,11 @@ div#kt_app_sidebar {
 .w_20 {
     width: 20% !important;
 }
+
+.bg-theme-color {
+    background-color: #010520 !important;
+}
+
+.border-theme-color {
+    border: 1px solid #010520 !important;
+}

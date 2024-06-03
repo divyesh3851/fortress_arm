@@ -152,7 +152,6 @@ $get_address_type_list = Settings()->get_address_type_list();
 
 $get_selected_advisor_interest = Advisor()->get_selected_advisor_interest($selected_advisor_data->id);
 
-/*
 $selected_life_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->life_insurance) ? explode(",", $get_selected_advisor_interest->life_insurance) : array();
 
 $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_interest->annuities) ? explode(",", $get_selected_advisor_interest->annuities) : array();
@@ -160,7 +159,6 @@ $selected_annuities = ($get_selected_advisor_interest && $get_selected_advisor_i
 $selected_long_term_care_insurance = ($get_selected_advisor_interest && $get_selected_advisor_interest->long_term_care_insurance) ? explode(",", $get_selected_advisor_interest->long_term_care_insurance) : array();
 
 $selected_critical_illness = ($get_selected_advisor_interest && $get_selected_advisor_interest->critical_illness) ? explode(",", $get_selected_advisor_interest->critical_illness) : array();
-*/
 
 $personal_interest = ($selected_advisor_data->personal_interest) ? implode(",", (unserialize($selected_advisor_data->personal_interest))) : '';
 
@@ -755,6 +753,84 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																<?php } ?>
 																<!--end::Card body-->
 															</div>
+															<div class="card mb-5 mb-xl-10" id="">
+																<!--begin::Card header-->
+																<div class="card-header p-5 pt-0 pb-0">
+																	<!--begin::Card title-->
+																	<div class="card-title">
+																		<i class="ki-duotone ki-abstract-23 fs-2x">
+																			<span class="path1"></span>
+																			<span class="path2"></span>
+																			<span class="path3"></span>
+																		</i>
+																		<h3 class="fw-bold p-2 pt-0 pb-0">
+																			Intereset
+																		</h3>
+																	</div>
+																	<!--end::Card title-->
+																</div>
+																<!--begin::Card body-->
+																<div class="card-body p-5">
+																	<div class="row">
+																		<?php
+																		if ($selected_life_insurance) {  ?>
+																			<div class="col-md-12">
+																				<div class="fw-bold fs-6"> Life Insurance </div>
+																				<div class="text-gray-600 mt-1">
+																					<?php
+																					foreach ($selected_life_insurance as $intereset_result) { ?>
+																						<?php echo Settings()->get_selected_interest_life_insurance_data($intereset_result) . ','; ?>
+																					<?php
+																					} ?>
+																				</div>
+																			</div>
+																		<?php
+
+																		}
+
+																		if ($selected_annuities) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Annuities </div>
+																				<div class="text-gray-600 mt-1">
+																					<?php
+																					foreach ($selected_annuities as $intereset_result) { ?>
+																						<?php echo Settings()->get_selected_interest_annuities_data($intereset_result) . ','; ?>
+																					<?php
+																					} ?>
+																				</div>
+																			</div>
+																		<?php }
+
+																		if ($selected_long_term_care_insurance) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Long-Term Care Insurance
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php
+																					foreach ($selected_long_term_care_insurance as $intereset_result) { ?>
+																						<?php echo Settings()->get_selected_interest_long_term_care_data($intereset_result) . ','; ?>
+																					<?php
+																					} ?>
+																				</div>
+																			</div>
+																		<?php }
+
+																		if ($selected_critical_illness) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Critical Illness
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php
+																					foreach ($selected_critical_illness as $intereset_result) { ?>
+																						<?php echo Settings()->get_selected_interest_critical_illness_data($intereset_result) . ','; ?>
+																					<?php
+																					} ?>
+																				</div>
+																			</div>
+																		<?php } ?>
+																	</div>
+																</div>
+															</div>
 														</div>
 														<div class="col-xl-6 col-md-6 col-sm-12">
 															<div class="card mb-5 mb-xl-10" id="">
@@ -907,6 +983,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																	</div>
 																</div>
 															</div>
+
 														</div>
 													</div>
 												</div>

@@ -103,4 +103,5 @@ Options -MultiViews
 	RewriteRule ^admin/opportunities?$ admin/opportunities.php [NC,L]
 
 	RewriteRule ^admin/settings/data-export?$ admin/settings/data_export.php [NC,L]
+	RewriteRule ^admin/reputation?$ admin/reputation.php [NC,L]
 </IfModule>

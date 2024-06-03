@@ -239,6 +239,18 @@ class Settings
         );
     }
 
+    public function get_selected_interest_critical_illness_data($id)
+    {
+        $interest_array = array(
+            "1" => "Critical Illness",
+            "2" => "Heart Attack",
+            "3" => "Stroke",
+            "4" => "Cancer",
+        );
+
+        return $interest_array[$id];
+    }
+
     public function get_interest_critical_illness()
     {
         return array(
@@ -247,6 +259,18 @@ class Settings
             "3" => "Stroke",
             "4" => "Cancer",
         );
+    }
+
+    public function get_selected_interest_long_term_care_data($id)
+    {
+        $interest_array = array(
+            "1" => "Traditional LTC",
+            "2" => "Benefit-Linked LTC",
+            "3" => "LTC Annuity",
+            "4" => "Life with LTC Rider",
+        );
+
+        return $interest_array[$id];
     }
 
     public function get_interest_long_term_care_insurance()
@@ -259,6 +283,17 @@ class Settings
         );
     }
 
+    public function get_selected_interest_annuities_data($id)
+    {
+        $interest_array = array(
+            "1" => "Fixed Index Annuities",
+            "2" => "Multi-Year Guaranteed Annuities",
+            "3" => "Long-Term Care Annuities",
+        );
+
+        return $interest_array[$id];
+    }
+
     public function get_interest_annuities()
     {
         return array(
@@ -266,6 +301,18 @@ class Settings
             "3" => "Multi-Year Guaranteed Annuities",
             "6" => "Long-Term Care Annuities",
         );
+    }
+
+    public function get_selected_interest_life_insurance_data($id)
+    {
+        $interest_array = array(
+            "1" => "Indexed Universal Life",
+            "2" => "Term",
+            "3" => "Whole Life",
+            "4" => "Advanced Planning",
+        );
+
+        return $interest_array[$id];
     }
 
     public function get_interest_life_insurance()
@@ -277,28 +324,6 @@ class Settings
             "4" => "Advanced Planning",
         );
     }
-
-    public function get_interest_list()
-    {
-        global $wpdb;
-
-        return $wpdb->get_results("SELECT * FROM interest WHERE status = 0 ORDER BY id DESC");
-    }
-
-
-    public function get_selected_interest_info($id = '')
-    {
-        global $wpdb;
-
-        $id = (sipost('id')) ? sipost('id') : $id;
-
-        if (!$id) {
-            return false;
-        }
-
-        return $wpdb->get_row("SELECT * FROM interest WHERE id = " . $id);
-    }
-
 
     public function get_selected_multiple_market_name($ids)
     {

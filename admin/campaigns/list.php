@@ -8,7 +8,7 @@ if (Admin()->check_for_page_access("campaigns", true)) {
     die();
 }
 
-$get_interest_list = Settings()->get_interest_list();
+$get_campaign_list = Campaign()->get_campaign_list();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,16 +92,16 @@ $get_interest_list = Settings()->get_interest_list();
                                 <!--begin::Row-->
                                 <div class="row g-6 g-xl-9">
                                     <!--begin::Col-->
-                                    <?php foreach ($get_interest_list as $interest_result) {
+                                    <?php foreach ($get_campaign_list as $campaign_result) {
 
-                                        $count_total_user = Advisor()->get_interest_user_total_count($interest_result->id);
+                                        $count_total_user = Campaign()->get_campaign_user_total_count($campaign_result->id);
 
-                                        $get_interest_recent_users = Advisor()->get_interest_recent_users($interest_result->id);
+                                        $get_campaign_recent_users = Campaign()->get_campaign_recent_users($campaign_result->id);
 
                                     ?>
                                         <div class="col-md-6 col-xl-3">
                                             <!--begin::Card-->
-                                            <a href="<?php echo site_url(); ?>/admin/campaigns/single/<?php echo $interest_result->id; ?>" class="card border-hover-primary">
+                                            <a href="<?php echo site_url(); ?>/admin/campaigns/single/<?php echo $campaign_result->id; ?>" class="card border-hover-primary">
                                                 <!--begin::Card header-->
                                                 <div class="card-header border-0 pt-9">
                                                     <!--begin::Card Title-->
@@ -122,7 +122,7 @@ $get_interest_list = Settings()->get_interest_list();
                                                 <!--begin:: Card body-->
                                                 <div class="card-body p-9 pt-5">
                                                     <!--begin::Name-->
-                                                    <div class="fs-3 fw-bold text-gray-900"><?php echo $interest_result->name; ?></div>
+                                                    <div class="fs-3 fw-bold text-gray-900"><?php echo $campaign_result->name; ?></div>
                                                     <!--end::Name-->
                                                     <!--begin::Description-->
                                                     <p class="text-gray-500 fw-semibold fs-5 mt-1 mb-7"></p>
@@ -131,7 +131,7 @@ $get_interest_list = Settings()->get_interest_list();
                                                     <div class="d-flex flex-wrap mb-5">
                                                         <!--begin::Due-->
                                                         <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-7 mb-3">
-                                                            <div class="fs-6 text-gray-800 fw-bold"><?php echo date("m/d/Y", strtotime($interest_result->created_at)); ?></div>
+                                                            <div class="fs-6 text-gray-800 fw-bold"><?php echo date("m/d/Y", strtotime($campaign_result->created_at)); ?></div>
                                                             <div class="fw-semibold text-gray-500">Created Date</div>
                                                         </div>
                                                         <!--end::Due-->
@@ -152,9 +152,9 @@ $get_interest_list = Settings()->get_interest_list();
                                                     <div class="symbol-group symbol-hover">
                                                         <!--begin::User-->
                                                         <?php
-                                                        if ($get_interest_recent_users) {
+                                                        if ($get_campaign_recent_users) {
 
-                                                            foreach ($get_interest_recent_users as $recent_user_result) {
+                                                            foreach ($get_campaign_recent_users as $recent_user_result) {
 
                                                                 $advisor_info = Advisor()->get_selected_advisor_general_details($recent_user_result->user_id);
 

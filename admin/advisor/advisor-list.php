@@ -27,14 +27,14 @@ if (sipost('first_name') || sipost('last_name') || sipost('email')) {
     exit;
 }
 
-if (isset($_POST['save_interest_settings'])) {
+if (isset($_POST['save_campaign_settings'])) {
 
-    $response = Advisor()->update_user_interest();
+    $response = Campaign()->update_user_campaign();
 
     if ($response == 1) {
-        $_SESSION['interest_process_success'] = true;
+        $_SESSION['campaign_process_success'] = true;
     } else {
-        $_SESSION['interest_process_fail'] = true;
+        $_SESSION['campaign_process_fail'] = true;
     }
 
     wp_redirect(site_url() . '/admin/advisor/advisor-list');
@@ -275,7 +275,7 @@ $get_state_list = Settings()->get_state_list();
 
 $get_lead_source_list = Settings()->get_lead_source_list();
 
-$get_interest_list = Settings()->get_interest_list();
+$get_campaign_list = Campaign()->get_campaign_list();
 
 ?>
 <!DOCTYPE html>
@@ -377,8 +377,8 @@ $get_interest_list = Settings()->get_interest_list();
                                     </div>
                                 <?php }
 
-                                if (isset($_SESSION['interest_process_success'])) {
-                                    unset($_SESSION['interest_process_success']); ?>
+                                if (isset($_SESSION['campaign_process_success'])) {
+                                    unset($_SESSION['campaign_process_success']); ?>
                                     <div class="alert alert-success d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
@@ -387,8 +387,8 @@ $get_interest_list = Settings()->get_interest_list();
                                     </div>
                                 <?php }
 
-                                if (isset($_SESSION['interest_process_fail'])) {
-                                    unset($_SESSION['interest_process_fail']); ?>
+                                if (isset($_SESSION['campaign_process_fail'])) {
+                                    unset($_SESSION['campaign_process_fail']); ?>
                                     <div class="alert alert-danger d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
@@ -625,9 +625,9 @@ $get_interest_list = Settings()->get_interest_list();
                             <div class="row mb-7">
                                 <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
-                                    <label class="required fw-semibold fs-6 mb-2">Title</label>
+                                    <label class="fw-semibold fs-6 mb-2">Title</label>
                                     <!--end::Label-->
-                                    <select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_advisor" required>
+                                    <select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_advisor">
                                         <option value="">Select Title</option>
                                         <?php foreach (Settings()->get_name_prefix_list() as $prefix_result) { ?>
                                             <option value="<?php echo $prefix_result; ?>"><?php echo $prefix_result; ?></option>
@@ -694,10 +694,10 @@ $get_interest_list = Settings()->get_interest_list();
                             <div class="row mb-7">
                                 <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
-                                    <label class="required fw-semibold fs-6 mb-2">Phone Number</label>
+                                    <label class="fw-semibold fs-6 mb-2">Phone Number</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="mobile_no" id="mobile_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Phone Number" required />
+                                    <input type="text" name="mobile_no" id="mobile_no" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="Phone Number" />
                                     <!--end::Input-->
                                 </div>
                                 <div class="col-md-4 fv-row">
@@ -710,10 +710,10 @@ $get_interest_list = Settings()->get_interest_list();
                                 </div>
                                 <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
-                                    <label class="required fw-semibold fs-6 mb-2">City</label>
+                                    <label class="fw-semibold fs-6 mb-2">City</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="city" id="city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
+                                    <input type="text" name="city" id="city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" />
                                     <!--end::Input-->
                                 </div>
                             </div>
@@ -778,23 +778,24 @@ $get_interest_list = Settings()->get_interest_list();
                 <div class="modal-body  m-5">
                     <!--begin::Form-->
                     <form id="" class="form" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="interest_advisor_id" id="interest_advisor_id" class="is_empty">
+                        <input type="hidden" name="campaign_advisor_id" id="campaign_advisor_id" class="is_empty">
                         <!--begin::Scroll-->
                         <div class="d-flex flex-column  px-5 px-lg-10">
                             <!--begin::Input group-->
                             <div class="row mb-7">
                                 <div class="col-md-12 fv-row">
-                                    <?php foreach ($get_interest_list as $interest_result) { ?>
+                                    <?php
+                                    foreach ($get_campaign_list as $campaign_result) { ?>
                                         <div class="form-check form-check-custom form-check-solid mb-3">
-                                            <input class="form-check-input" type="radio" name="interest" value="<?php echo $interest_result->id; ?>" id="interest_<?php echo $interest_result->id; ?>" />
-                                            <label class="form-check-label text-black fs-4 fw-bold" for="interest_<?php echo $interest_result->id; ?>">
-                                                <?php echo $interest_result->name; ?>
+                                            <input class="form-check-input" type="radio" name="campaign" value="<?php echo $campaign_result->id; ?>" id="campaign_<?php echo $campaign_result->id; ?>" />
+                                            <label class="form-check-label text-black fs-4 fw-bold" for="campaign_<?php echo $campaign_result->id; ?>">
+                                                <?php echo $campaign_result->name; ?>
                                             </label>
                                         </div>
-                                    <?php } ?>
+                                    <?php }  ?>
                                     <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input" type="radio" name="interest" value="close_all" id="interest_close_all" />
-                                        <label class="form-check-label text-black fs-4 fw-bold" for="interest_close_all">
+                                        <input class="form-check-input" type="radio" name="campaign" value="close_all" id="campaign_close_all" />
+                                        <label class="form-check-label text-black fs-4 fw-bold" for="campaign_close_all">
                                             Stop Campaigns
                                         </label>
                                     </div>
@@ -806,7 +807,7 @@ $get_interest_list = Settings()->get_interest_list();
 
                         <!--begin::Actions-->
                         <div class="text-center pt-5">
-                            <button type="submit" name="save_interest_settings" id="save_interest_settings" class="btn btn-primary" data-kt-users-modal-action="submit">
+                            <button type="submit" name="save_campaign_settings" id="save_campaign_settings" class="btn btn-primary" data-kt-users-modal-action="submit">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -974,15 +975,14 @@ $get_interest_list = Settings()->get_interest_list();
         $(document).on("click", ".user_settings_modal", function() {
 
             jQuery('.is_empty').val('');
-            jQuery('input[name="interest"]').removeAttr('checked');
+            jQuery('input[name="campaign"]').removeAttr('checked');
 
-            var interest_advisor_id = $(this).attr("id");
-            var current_interest = $(this).attr("current_interest");
-            var current_interest_sub_id = $(this).attr("current_interest_sub_id");
-            var current_interest_status = $(this).attr("current_interest_status");
+            var campaign_advisor_id = $(this).attr("id");
+            var current_campaign = $(this).attr("current_campaign");
+            var current_campaign_status = $(this).attr("current_campaign_status");
 
-            jQuery('#interest_advisor_id').val(interest_advisor_id);
-            jQuery('input[name="interest"][value="' + current_interest + '"]').attr('checked', true);
+            jQuery('#campaign_advisor_id').val(campaign_advisor_id);
+            jQuery('input[name="campaign"][value="' + current_campaign + '"]').attr('checked', true);
 
         });
 
@@ -1135,7 +1135,7 @@ $get_interest_list = Settings()->get_interest_list();
                                                         <i class="las la-bullhorn fs-2 text-danger"></i> 
                                                     </div>
                                                 </div>
-                                            </a>` : `<a href="#" id="${data.record_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_interest="${data.interest_id}" current_interest_sub_id="${data.interest_sub_id}" current_interest_status="${data.is_close}">
+                                            </a>` : `<a href="#" id="${data.record_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_campaign="${data.campaign_id}" current_campaign_status="${data.is_close}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700"> 
                                                         <i class="las la-bullhorn fs-2 text-primary"></i> 

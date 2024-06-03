@@ -1,6 +1,6 @@
 <?php
 $modal_width = '1300px';
-if (count($get_upcoming_birthday_anniversary_list) == 0) {
+if (isset($get_upcoming_birthday_anniversary_list) && count($get_upcoming_birthday_anniversary_list) == 0) {
     $modal_width = '500px';
 } ?>
 <!--begin::Modal - View Users-->

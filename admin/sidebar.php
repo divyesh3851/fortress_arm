@@ -34,7 +34,8 @@
                 <!--end:Menu item-->
 
                 <!--begin:Menu item-->
-                <?php if (Admin()->check_for_page_access('activities')) { ?>
+                <?php
+                /* if (Admin()->check_for_page_access('activities')) { ?>
                     <div class="menu-item">
                         <!--begin:Menu link-->
                         <a class="menu-link <?php echo ($page_name == 'activity') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/activity/activity-list">
@@ -45,7 +46,7 @@
                         </a>
                         <!--end:Menu link-->
                     </div>
-                <?php } ?>
+                <?php } */ ?>
                 <!--end:Menu item-->
 
                 <!--begin:Menu item-->
@@ -146,7 +147,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'reputation') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'reputation') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/reputation">
                         <span class="menu-icon">
                             <i class="las la-star fs-2x"></i>
                         </span>
@@ -357,78 +358,131 @@
                         <div class="menu-sub menu-sub-accordion">
                             <!--begin:Menu item-->
                             <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'designation-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/designation-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
+                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion <?php echo ($sub_page_name == 'designation-list' || $sub_page_name == 'licenses-type-list' || $sub_page_name == 'lead-source-list' || $sub_page_name == 'affiliations-list' || $sub_page_name == 'carrier-appointed-list' || $sub_page_name == 'carrier-list' || $sub_page_name == 'premium-volume-list' || $sub_page_name == 'production-percentage-list' || $page_name == 'market-list') ? 'hover show' : ''; ?> ">
+                                    <!--begin:Menu link-->
+                                    <span class="menu-link">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title"> Advisor </span>
+                                        <span class="menu-arrow"></span>
                                     </span>
-                                    <span class="menu-title">Designation</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'licenses-type-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/licenses-type-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Licenses Types</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'lead-source-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/lead-source-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Lead Source</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'affiliations-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/affiliations-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Affiliations</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'carrier-appointed-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/carrier-appointed-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Carrier Appointed</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'carrier-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/carrier-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Carriers</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'premium-volume-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/premium-volume-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Premium Volume</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'production-percentage-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/production-percentage-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Production Percentage</span>
-                                </a>
-                                <!--end:Menu link-->
-                                <!--begin:Menu link-->
-                                <a class="menu-link <?php echo ($sub_page_name == 'market-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/market-list">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Markets</span>
-                                </a>
-                                <!--end:Menu link-->
+                                    <!--end:Menu link-->
+                                    <!--begin:Menu sub-->
+                                    <div class="menu-sub menu-sub-accordion">
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'designation-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/designation-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Designation</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'licenses-type-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/licenses-type-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Licenses Types</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'lead-source-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/lead-source-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Lead Source</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'affiliations-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/affiliations-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Affiliations</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'carrier-appointed-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/carrier-appointed-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Carrier Appointed</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'carrier-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/carrier-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Carriers</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'premium-volume-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/premium-volume-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Premium Volume</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'production-percentage-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/production-percentage-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Production Percentage</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'market-list') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/market-list">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Markets</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                    </div>
+                                    <!--end:Menu sub-->
+
+                                </div>
+
 
                                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion <?php echo ($sub_page_name == 'indexed-universal-life' || $sub_page_name == 'term' || $sub_page_name == 'whole_life' || $sub_page_name == 'advanced_planing' || $sub_page_name == 'fixed_indexed_annuities' || $sub_page_name == 'long_term_care' || $sub_page_name == 'life_settlements') ? 'hover show' : ''; ?> ">
                                     <!--begin:Menu link-->
@@ -436,75 +490,58 @@
                                         <span class="menu-bullet">
                                             <span class="bullet bullet-dot"></span>
                                         </span>
-                                        <span class="menu-title">Interest Communication</span>
+                                        <span class="menu-title">Email Automation</span>
                                         <span class="menu-arrow"></span>
                                     </span>
                                     <!--end:Menu link-->
                                     <!--begin:Menu sub-->
                                     <div class="menu-sub menu-sub-accordion">
                                         <!--begin:Menu item-->
-                                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                        <div class="menu-item">
                                             <!--begin:Menu link-->
-                                            <span class="menu-link">
+                                            <a class="menu-link <?php echo ($sub_page_name == 'indexed-universal-life') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/indexed-universal-life">
                                                 <span class="menu-bullet">
                                                     <span class="bullet bullet-dot"></span>
                                                 </span>
-                                                <span class="menu-title">Life Insurance</span>
-                                                <span class="menu-arrow"></span>
-                                            </span>
+                                                <span class="menu-title">Indexed Universal Life </span>
+                                            </a>
                                             <!--end:Menu link-->
-                                            <!--begin:Menu sub-->
-                                            <div class="menu-sub menu-sub-accordion menu-active-bg <?php echo ($sub_page_name == 'indexed-universal-life' || $sub_page_name == 'term' || $sub_page_name == 'whole_life' || $sub_page_name == 'advanced_planing') ? 'show' : ''; ?> ">
-                                                <!--begin:Menu item-->
-                                                <div class="menu-item">
-                                                    <!--begin:Menu link-->
-                                                    <a class="menu-link <?php echo ($sub_page_name == 'indexed-universal-life') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/indexed-universal-life">
-                                                        <span class="menu-bullet">
-                                                            <span class="bullet bullet-dot"></span>
-                                                        </span>
-                                                        <span class="menu-title">Indexed Universal Life</span>
-                                                    </a>
-                                                    <!--end:Menu link-->
-                                                </div>
-                                                <!--end:Menu item-->
-                                                <!--begin:Menu item-->
-                                                <div class="menu-item">
-                                                    <!--begin:Menu link-->
-                                                    <a class="menu-link <?php echo ($sub_page_name == 'term') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/term">
-                                                        <span class="menu-bullet">
-                                                            <span class="bullet bullet-dot"></span>
-                                                        </span>
-                                                        <span class="menu-title">Term</span>
-                                                    </a>
-                                                    <!--end:Menu link-->
-                                                </div>
-                                                <!--end:Menu item-->
-                                                <!--begin:Menu item-->
-                                                <div class="menu-item">
-                                                    <!--begin:Menu link-->
-                                                    <a class="menu-link <?php echo ($sub_page_name == 'whole_life') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/whole-life">
-                                                        <span class="menu-bullet">
-                                                            <span class="bullet bullet-dot"></span>
-                                                        </span>
-                                                        <span class="menu-title">Whole Life</span>
-                                                    </a>
-                                                    <!--end:Menu link-->
-                                                </div>
-                                                <!--end:Menu item-->
-                                                <!--begin:Menu item-->
-                                                <div class="menu-item">
-                                                    <!--begin:Menu link-->
-                                                    <a class="menu-link <?php echo ($sub_page_name == 'advanced_planing') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/advanced-planning">
-                                                        <span class="menu-bullet">
-                                                            <span class="bullet bullet-dot"></span>
-                                                        </span>
-                                                        <span class="menu-title">Advanced Planning</span>
-                                                    </a>
-                                                    <!--end:Menu link-->
-                                                </div>
-                                                <!--end:Menu item-->
-                                            </div>
-                                            <!--end:Menu sub-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'term') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/term">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Term</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'whole_life') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/whole-life">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Whole Life</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link <?php echo ($sub_page_name == 'advanced_planing') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/settings/advanced-planning">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Advanced Planning</span>
+                                            </a>
+                                            <!--end:Menu link-->
                                         </div>
                                         <!--end:Menu item-->
                                         <!--begin:Menu item-->

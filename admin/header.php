@@ -157,7 +157,4 @@ $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniv
         <!--end::Navbar-->
     </div>
     <!--end::Header main-->
-    <!--begin::Separator-->
-    <div class="app-header-separator"></div>
-    <!--end::Separator-->
 </div>

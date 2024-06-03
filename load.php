@@ -13,6 +13,8 @@ require_once SITE_DIR . '/classes/class-admin.php';
 
 require_once SITE_DIR . '/classes/class-advisor.php';
 
+require_once SITE_DIR . '/classes/class-campaign.php';
+
 require_once SITE_DIR . '/classes/class-social.php';
 
 //require_once SITE_DIR . '/classes/class-business.php';

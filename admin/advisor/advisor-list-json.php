@@ -59,7 +59,7 @@ foreach ($advisor_list as $advisor_result) {
 
     $rating = Settings()->show_ration_star($advisor_result->rating);
 
-    $get_current_interest = $wpdb->get_row("SELECT id,interest_id,sub_id,is_close FROM user_interest WHERE user_id = " . $advisor_result->id);
+    $get_current_campaign = $wpdb->get_row("SELECT id,campaign_id,is_close FROM campaign_user WHERE user_id = " . $advisor_result->id);
 
     $data[] = array(
         'record_id'     => $advisor_result->id,
@@ -72,10 +72,9 @@ foreach ($advisor_list as $advisor_result) {
         'state'         => $advisor_result->state,
         'lead_source'   => $lead_source,
         'created_at'    => $advisor_result->created_at,
-        'user_interest_tbl_id'  => ($get_current_interest) ? $get_current_interest->id : '',
-        'interest_id'       => ($get_current_interest) ? $get_current_interest->interest_id : '',
-        'interest_sub_id'   => ($get_current_interest) ? $get_current_interest->sub_id : '',
-        'is_close'          => ($get_current_interest) ? intval($get_current_interest->is_close) : 0,
+        'campaign_user_tbl_id'  => ($get_current_campaign) ? $get_current_campaign->id : '',
+        'campaign_id'       => ($get_current_campaign) ? $get_current_campaign->campaign_id : '',
+        'is_close'          => ($get_current_campaign) ? intval($get_current_campaign->is_close) : 0,
     );
 }
 

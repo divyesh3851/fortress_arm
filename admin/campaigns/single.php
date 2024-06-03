@@ -15,50 +15,50 @@ if (!siget('id')) {
 
 if (isset($_POST['save_assign_advisor'])) {
 
-    $response = Advisor()->assign_advisor_to_interest(siget('id'));
+    $response = Campaign()->assign_advisor_to_campaign(siget('id'));
 
     if ($response == 1) {
-        $_SESSION['interest_process_success'] = true;
+        $_SESSION['campaign_process_success'] = true;
     } else {
-        $_SESSION['interest_process_fail'] = true;
+        $_SESSION['campaign_process_fail'] = true;
     }
 
     wp_redirect(site_url() . '/admin/campaigns/single/' . siget('id'));
     exit;
 }
 
-if (isset($_POST['save_interest_settings'])) {
+if (isset($_POST['save_campaign_settings'])) {
 
-    $response = Advisor()->update_user_interest();
+    $response = Campaign()->update_user_campaign();
 
     if ($response == 1) {
-        $_SESSION['interest_process_success'] = true;
+        $_SESSION['campaign_process_success'] = true;
     } else {
-        $_SESSION['interest_process_fail'] = true;
+        $_SESSION['campaign_process_fail'] = true;
     }
 
     wp_redirect(site_url() . '/admin/campaigns/single/' . siget('id'));
     exit;
 }
 
-$get_selected_interest_info = Settings()->get_selected_interest_info(siget('id'));
+$get_selected_campaign_info = Campaign()->get_selected_campaign_info(siget('id'));
 
-if (!$get_selected_interest_info) {
+if (!$get_selected_campaign_info) {
     wp_redirect(site_url() . '/admin/campaigns/list');
     return;
 }
 
-$campaign_name = $get_selected_interest_info->name;
+$campaign_name = $get_selected_campaign_info->name;
 
-$get_interest_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type, user_interest.id as user_interest_tbl_id,user_interest.sub_id FROM advisor as ad INNER JOIN user_interest ON ad.id = user_interest.user_id WHERE user_interest.interest_id = " . siget('id') . " AND ad.status = 0 ");
+$get_campaign_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type, campaign_user.id as campaign_user FROM advisor as ad INNER JOIN campaign_user ON ad.id = campaign_user.user_id WHERE campaign_user.campaign_id = " . siget('id') . " AND ad.status = 0 ");
 
-$count_total_user = Advisor()->get_interest_user_total_count($get_selected_interest_info->id);
+$count_total_user = Campaign()->get_campaign_user_total_count($get_selected_campaign_info->id);
 
-$get_interest_recent_users = Advisor()->get_interest_recent_users($get_selected_interest_info->id);
+$get_campaign_recent_users = Campaign()->get_campaign_recent_users($get_selected_campaign_info->id);
 
-$get_interest_list = Settings()->get_interest_list();
+$get_campaign_list = Campaign()->get_campaign_list();
 
-$get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no, user_interest.id as user_interest_tbl_id,user_interest.sub_id FROM advisor as ad LEFT JOIN user_interest ON ad.id = user_interest.user_id WHERE ad.advisor_status = 2 AND ad.status = 0 AND user_interest.`user_id` IS NULL");
+$get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.mobile_no, campaign_user.id as campaign_user_tbl_id FROM advisor as ad LEFT JOIN campaign_user ON ad.id = campaign_user.user_id WHERE ad.advisor_status = 2 AND ad.status = 0 AND campaign_user.`user_id` IS NULL");
 
 ?>
 <!DOCTYPE html>
@@ -148,8 +148,8 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                             <!--begin::Content container-->
                             <div id="kt_app_content_container" class="app-container container-fluid">
                                 <?php
-                                if (isset($_SESSION['interest_process_success'])) {
-                                    unset($_SESSION['interest_process_success']); ?>
+                                if (isset($_SESSION['campaign_process_success'])) {
+                                    unset($_SESSION['campaign_process_success']); ?>
                                     <div class="alert alert-success d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
@@ -158,8 +158,8 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                                     </div>
                                 <?php }
 
-                                if (isset($_SESSION['interest_process_fail'])) {
-                                    unset($_SESSION['interest_process_fail']); ?>
+                                if (isset($_SESSION['campaign_process_fail'])) {
+                                    unset($_SESSION['campaign_process_fail']); ?>
                                     <div class="alert alert-danger d-flex align-items-center p-5">
                                         <i class="ki-duotone ki-shield-tick fs-2hx text-danger  me-4"><span class="path1"></span><span class="path2"></span></i>
                                         <div class="d-flex flex-column">
@@ -204,7 +204,7 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                                                         <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
                                                             <!--begin::Number-->
                                                             <div class="d-flex align-items-center">
-                                                                <div class="fs-4 fw-bold"><?php echo date("m/d/Y", strtotime($get_selected_interest_info->created_at)); ?></div>
+                                                                <div class="fs-4 fw-bold"><?php echo date("m/d/Y", strtotime($get_selected_campaign_info->created_at)); ?></div>
                                                             </div>
                                                             <!--end::Number-->
                                                             <!--begin::Label-->
@@ -231,9 +231,9 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                                                     <div class="symbol-group symbol-hover mb-3">
                                                         <!--begin::User-->
                                                         <?php
-                                                        if ($get_interest_recent_users) {
+                                                        if ($get_campaign_recent_users) {
 
-                                                            foreach ($get_interest_recent_users as $recent_user_result) {
+                                                            foreach ($get_campaign_recent_users as $recent_user_result) {
 
                                                                 $advisor_info = Advisor()->get_selected_advisor_general_details($recent_user_result->user_id);
 
@@ -462,23 +462,23 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                 <div class="modal-body  m-5">
                     <!--begin::Form-->
                     <form id="" class="form" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="interest_advisor_id" id="interest_advisor_id" class="is_empty">
+                        <input type="hidden" name="campaign_advisor_id" id="campaign_advisor_id" class="is_empty">
                         <!--begin::Scroll-->
                         <div class="d-flex flex-column  px-5 px-lg-10">
                             <!--begin::Input group-->
                             <div class="row mb-7">
                                 <div class="col-md-12 fv-row">
-                                    <?php foreach ($get_interest_list as $interest_result) { ?>
+                                    <?php foreach ($get_campaign_list as $campaign_result) { ?>
                                         <div class="form-check form-check-custom form-check-solid mb-3">
-                                            <input class="form-check-input" type="radio" name="interest" value="<?php echo $interest_result->id; ?>" id="interest_<?php echo $interest_result->id; ?>" />
-                                            <label class="form-check-label text-black fs-4 fw-bold" for="interest_<?php echo $interest_result->id; ?>">
-                                                <?php echo $interest_result->name; ?>
+                                            <input class="form-check-input" type="radio" name="campaign" value="<?php echo $campaign_result->id; ?>" id="campaign_<?php echo $campaign_result->id; ?>" />
+                                            <label class="form-check-label text-black fs-4 fw-bold" for="campaign_<?php echo $campaign_result->id; ?>">
+                                                <?php echo $campaign_result->name; ?>
                                             </label>
                                         </div>
                                     <?php } ?>
                                     <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input" type="radio" name="interest" value="close_all" id="interest_close_all" />
-                                        <label class="form-check-label text-black fs-4 fw-bold" for="interest_close_all">
+                                        <input class="form-check-input" type="radio" name="campaign" value="close_all" id="campaign_close_all" />
+                                        <label class="form-check-label text-black fs-4 fw-bold" for="campaign_close_all">
                                             Stop Campaigns
                                         </label>
                                     </div>
@@ -490,7 +490,7 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
 
                         <!--begin::Actions-->
                         <div class="text-center pt-5">
-                            <button type="submit" name="save_interest_settings" id="save_interest_settings" class="btn btn-primary" data-kt-users-modal-action="submit">
+                            <button type="submit" name="save_campaign_settings" id="save_campaign_settings" class="btn btn-primary" data-kt-users-modal-action="submit">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -521,19 +521,18 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
         $(document).on("click", ".user_settings_modal", function() {
 
             jQuery('.is_empty').val('');
-            jQuery('input[name="interest"]').removeAttr('checked');
+            jQuery('input[name="campaign"]').removeAttr('checked');
 
-            var interest_advisor_id = $(this).attr("id");
-            var current_interest = $(this).attr("current_interest");
-            var current_interest_sub_id = $(this).attr("current_interest_sub_id");
-            var current_interest_status = $(this).attr("current_interest_status");
+            var campaign_advisor_id = $(this).attr("id");
+            var current_campaign = $(this).attr("current_campaign");
+            var current_campaign_status = $(this).attr("current_campaign_status");
 
-            if (current_interest_status == 1) {
-                current_interest = 'close_all';
+            if (current_campaign_status == 1) {
+                current_campaign = 'close_all';
             }
 
-            jQuery('#interest_advisor_id').val(interest_advisor_id);
-            jQuery('input[name="interest"][value="' + current_interest + '"]').attr('checked', true);
+            jQuery('#campaign_advisor_id').val(campaign_advisor_id);
+            jQuery('input[name="campaign"][value="' + current_campaign + '"]').attr('checked', true);
 
         });
 
@@ -562,9 +561,9 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                         className: 'row-selected'
                     },
                     ajax: {
-                        url: "<?php echo site_url(); ?>/admin/campaigns/interest-user-list-ajax.php",
+                        url: "<?php echo site_url(); ?>/admin/campaigns/campaign-user-list-ajax.php",
                         data: {
-                            interest_id: '<?php echo siget('id'); ?>'
+                            campaign_id: '<?php echo siget('id'); ?>'
                         }
                     },
                     columns: [{
@@ -616,50 +615,22 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                             className: 'text-start',
                             render: function(data, type, row) {
 
-                                return `<div class="d-flex">  
-                                            <a href="tel:${data.mobile_no}" data-bs-toggle="tooltip" title="Call Contact">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-3 fw-bold text-gray-700"> 
-                                                        <i class="las la-phone-volume fs-2 text-success"></i>
-                                                    </div>
-                                                </div>
-                                            </a> 
-                                            <a href="mailto:${data.email}"  data-bs-toggle="tooltip" title="Email Contact">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-envelope-open-text fs-2  text-success"></i>
-                                                    </div>
-                                                </div> 
-                                            </a> 
-                                            ${data.is_close == 1 ? `<a href="#" id="${data.advisor_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_interest="${data.interest_id}" current_interest_sub_id="${data.interest_sub_id}" current_interest_status="${data.is_close}">
+                                return `<div class="d-flex">   
+                                            ${data.is_close == 1 ? `<a href="#" id="${data.advisor_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_campaign="${data.campaign_id}" current_campaign_status="${data.is_close}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700"> 
                                                         <i class="las la-bullhorn fs-2 text-danger"></i> 
                                                     </div>
                                                 </div>
-                                            </a>` : `<a href="#" id="${data.advisor_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_interest="${data.interest_id}" current_interest_sub_id="${data.interest_sub_id}" current_interest_status="${data.is_close}">
+                                            </a>` : `<a href="#" id="${data.advisor_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_campaign="${data.campaign_id}"  current_campaign_status="${data.is_close}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700"> 
                                                         <i class="las la-bullhorn fs-2 text-primary"></i> 
                                                     </div>
                                                 </div>
                                             </a>` }
-                                            
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.advisor_id}" data-bs-toggle="tooltip" title="View Quick Info">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-3 fw-bold text-gray-700">
-                                                        <i class="las la-eye fs-2 text-primary"></i>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.advisor_id}" data-bs-toggle="tooltip" title="Edit Contact">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-user-edit fs-2 text-primary"></i>
-                                                    </div>
-                                                </div> 
-                                            </a>
-                                            <a href="#" data-kt-docs-table-filter="delete_row" id="${data.record_id}" data-bs-toggle="tooltip" title="Delete contact from this campaign">
+                                              
+                                            <a href="#" data-kt-docs-table-filter="delete_row" id="${data.record_id}" data-bs-toggle="tooltip" title="Remove Advisor">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-2 fw-bold text-gray-700">
                                                         <i class="las la-trash-alt fs-2 text-primary"></i>
@@ -750,11 +721,11 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
 
                         // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
                         Swal.fire({
-                            text: "Are you sure you want to delete " + customerName + "?",
+                            text: "Are you sure you want to remove " + customerName + "?",
                             icon: "warning",
                             showCancelButton: true,
                             buttonsStyling: false,
-                            confirmButtonText: "Yes, delete!",
+                            confirmButtonText: "Yes, remove!",
                             cancelButtonText: "No, cancel",
                             customClass: {
                                 confirmButton: "btn fw-bold btn-danger",
@@ -764,20 +735,20 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                             if (result.value) {
                                 // Simulate delete request -- for demo purpose only
                                 Swal.fire({
-                                    text: "Deleting " + customerName,
+                                    text: "Remove " + customerName,
                                     icon: "info",
                                     buttonsStyling: false,
                                     showConfirmButton: false,
                                     timer: 2000
                                 }).then(function() {
                                     $.post(ajax_url, {
-                                        action: 'delete_interest_user',
+                                        action: 'delete_campaign_user',
                                         id: record_id
                                     }, function(result) {
 
                                     });
                                     Swal.fire({
-                                        text: "You have deleted " + customerName + "!.",
+                                        text: "You have remove " + customerName + "!.",
                                         icon: "success",
                                         buttonsStyling: false,
                                         confirmButtonText: "Ok, got it!",
@@ -792,7 +763,7 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                                 });
                             } else if (result.dismiss === 'cancel') {
                                 Swal.fire({
-                                    text: customerName + " was not deleted.",
+                                    text: customerName + " was not remove.",
                                     icon: "error",
                                     buttonsStyling: false,
                                     confirmButtonText: "Ok, got it!",
@@ -852,7 +823,7 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                     deleteSelected.addEventListener('click', function() {
                         // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
                         Swal.fire({
-                            text: "Are you sure you want to delete selected customers?",
+                            text: "Are you sure you want to remove selected advisor?",
                             icon: "warning",
                             showCancelButton: true,
                             buttonsStyling: false,
@@ -868,14 +839,14 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                             if (result.value) {
                                 // Simulate delete request -- for demo purpose only
                                 Swal.fire({
-                                    text: "Deleting selected customers",
+                                    text: "Remove selected advisor",
                                     icon: "info",
                                     buttonsStyling: false,
                                     showConfirmButton: false,
                                     timer: 2000
                                 }).then(function() {
                                     Swal.fire({
-                                        text: "You have deleted all selected customers!.",
+                                        text: "You have deleted all selected advisor!.",
                                         icon: "success",
                                         buttonsStyling: false,
                                         confirmButtonText: "Ok, got it!",
@@ -899,7 +870,7 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
                                 });
                             } else if (result.dismiss === 'cancel') {
                                 Swal.fire({
-                                    text: "Selected customers was not deleted.",
+                                    text: "Selected advisor was not remove.",
                                     icon: "error",
                                     buttonsStyling: false,
                                     confirmButtonText: "Ok, got it!",

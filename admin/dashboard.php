@@ -160,10 +160,17 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                 <div class="row g-5 g-xl-10">
                                     <!--begin::Col-->
                                     <div class="col-xl-3">
-                                        <div class="card mb-5">
+                                        <div class="card mb-5 border-theme-color">
+                                            <div class="card-header bg-theme-color">
+                                                <!--begin::Title-->
+                                                <h3 class="card-title align-items-start flex-column">
+                                                    <span class="card-label fw-bold text-white">My Profile</span>
+                                                </h3>
+                                                <!--end::Title-->
+                                            </div>
                                             <!--begin::Card body-->
                                             <div class="card-body">
-                                                <h4>My Profile</h4>
+
                                                 <!--begin::User Info-->
                                                 <div class="d-flex flex-left flex-column py-5">
                                                     <!--begin::Name-->
@@ -192,13 +199,12 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                             <!--end::Card body-->
                                         </div>
                                         <!--begin::List widget 12-->
-                                        <div class="card mb-5 ">
+                                        <div class="card mb-5 border-theme-color">
                                             <!--begin::Header-->
-                                            <div class="card-header pt-7">
+                                            <div class="card-header bg-theme-color">
                                                 <!--begin::Title-->
                                                 <h3 class="card-title align-items-start flex-column">
-                                                    <span class="card-label fw-bold text-gray-800">Lead by Source</span>
-                                                    <span class="text-gray-500 mt-1 fw-semibold fs-6">29.4k visitors</span>
+                                                    <span class="card-label fw-bold text-white">Lead by Source</span>
                                                 </h3>
                                                 <!--end::Title-->
                                                 <!--begin::Toolbar-->
@@ -671,13 +677,13 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                         </div>
                                         <!--end::List widget 12-->
                                         <!--begin::List widget 9-->
+                                        <?php /*
                                         <div class="card ">
                                             <!--begin::Header-->
                                             <div class="card-header py-7">
                                                 <!--begin::Title-->
                                                 <h3 class="card-title align-items-start flex-column">
-                                                    <span class="card-label fw-bold text-gray-800">Social Network Visits</span>
-                                                    <span class="text-gray-500 mt-1 fw-semibold fs-6">20 social visitors</span>
+                                                    <span class="card-label fw-bold">Social Network Visits</span>
                                                 </h3>
                                                 <!--end::Title-->
                                             </div>
@@ -1053,18 +1059,19 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                             <!--end::Body-->
                                         </div>
                                         <!--end::List widget 9-->
+                                        */ ?>
                                     </div>
                                     <!--end::Col-->
 
                                     <!--begin::Col-->
                                     <div class="col-xl-9">
                                         <!--begin::List widget 9-->
-                                        <div class="card">
+                                        <div class="card border-theme-color">
                                             <!--begin::Header-->
-                                            <div class="card-header">
+                                            <div class="card-header bg-theme-color">
                                                 <!--begin::Title-->
                                                 <h3 class="card-title align-items-start flex-column">
-                                                    <span class="card-label fw-bold text-gray-800">ARM Contacts</span>
+                                                    <span class="card-label fw-bold text-white">ARM Contacts</span>
                                                 </h3>
                                                 <!--end::Title-->
                                             </div>
@@ -1236,12 +1243,12 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                         <div class="row g-5 mt-5">
                                             <div class="col-xl-9">
                                                 <!--begin::List widget 9-->
-                                                <div class="card">
+                                                <div class="card border-theme-color">
                                                     <!--begin::Header-->
-                                                    <div class="card-header">
+                                                    <div class="card-header bg-theme-color">
                                                         <!--begin::Title-->
                                                         <h3 class="card-title align-items-start flex-column">
-                                                            <span class="card-label fw-bold text-gray-800">Today’s Appointments</span>
+                                                            <span class="card-label fw-bold text-white">Today’s Appointments</span>
                                                         </h3>
                                                         <!--end::Title-->
                                                     </div>
@@ -1299,12 +1306,12 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                             </div>
                                             <div class="col-xl-3">
                                                 <!--begin::List widget 9-->
-                                                <div class="card">
+                                                <div class="card border-theme-color">
                                                     <!--begin::Header-->
-                                                    <div class="card-header p-5">
+                                                    <div class="card-header p-5 bg-theme-color">
                                                         <!--begin::Title-->
                                                         <h3 class="card-title align-items-start flex-column">
-                                                            <span class="card-label fw-bold text-gray-800">Upcoming Appointments</span>
+                                                            <span class="card-label fw-bold text-white">Upcoming Appointments</span>
                                                         </h3>
                                                         <!--end::Title-->
                                                     </div>
@@ -1337,43 +1344,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--begin::Row-->
-                                        <div class="row g-5 mt-5">
-                                            <!--begin::List widget 9-->
-                                            <div class="card">
-                                                <!--begin::Header-->
-                                                <div class="card-header">
-                                                    <!--begin::Title-->
-                                                    <h3 class="card-title align-items-start flex-column">
-                                                        <span class="card-label fw-bold text-gray-800">My Activities</span>
-                                                    </h3>
-                                                    <!--end::Title-->
-                                                </div>
-                                                <!--end::Header-->
-                                                <!--begin::Body-->
-                                                <div class="card-body">
-                                                    <?php foreach ($get_advisor_note_list as $note_result) { ?>
-                                                        <div class="d-flex flex-stack">
-                                                            <div class="">
-                                                                <div class="fs-5">
-                                                                    <b><?php echo $note_result->label; ?></b> - <?php echo date("m/d/Y", strtotime($note_result->created_at)); ?>
-                                                                </div>
-                                                                <div class="meta mt-2">
-                                                                    <span class="badge py-3 px-4 fs-7 badge-light-primary mb-1"></span>
-                                                                </div>
-                                                            </div>
 
-                                                            <div class="action_btn">
-                                                                <span class="badge py-3 px-4 badge-light-success"><i class="las la-check text-black fw-bold fs-2"></i> </span>
-                                                                <span class="badge py-3 px-4 badge-light-danger"><i class="las la-times text-black fw-bold fs-2"></i> </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="separator separator-dashed mb-3 mt-3"></div>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--end::Row-->
                                     </div>
                                     <!--end::Col-->
                                 </div>
