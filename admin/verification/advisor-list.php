@@ -492,9 +492,9 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                             <div class="row mb-7">
                                 <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
-                                    <label class="required fw-semibold fs-6 mb-2">Title</label>
+                                    <label class="fw-semibold fs-6 mb-2">Title</label>
                                     <!--end::Label-->
-                                    <select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_advisor" required>
+                                    <select name="prefix" id="prefix" data-control="select2" data-placeholder="Select a Title..." class="form-select form-select-solid" data-dropdown-parent="#kt_modal_advisor">
                                         <option value="">Select Title</option>
                                         <?php foreach (Settings()->get_name_prefix_list() as $prefix_result) { ?>
                                             <option value="<?php echo $prefix_result; ?>"><?php echo $prefix_result; ?></option>
@@ -577,10 +577,10 @@ $get_lead_source_list = Settings()->get_lead_source_list(); ?>
                                 </div>
                                 <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
-                                    <label class="required fw-semibold fs-6 mb-2">City</label>
+                                    <label class=" fw-semibold fs-6 mb-2">City</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" name="city" id="city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" required />
+                                    <input type="text" name="city" id="city" class="form-control form-control-solid mb-3 mb-lg-0 is_empty" placeholder="City" />
                                     <!--end::Input-->
                                 </div>
                             </div>

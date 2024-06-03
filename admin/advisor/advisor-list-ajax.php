@@ -164,7 +164,7 @@ class DataTableApi
             $admin = 'admin';
         }
 
-        return json_decode(file_get_contents(site_url() . '/admin/advisor/advisor-list-json.php?fbs_arm_admin_id=' . $_SESSION['fbs_arm_admin_id'] . '&user_type=' . $admin . '&advisor_status=' . siget('advisor_status')), true);
+        return json_decode(file_get_contents(site_url() . '/admin/advisor/advisor-list-json.php?fbs_arm_admin_id=' . $_SESSION['fbs_arm_admin_id'] . '&user_type=' . $admin . '&advisor_status=' . siget('advisor_status') . '&state=' . siget('state') . '&gender=' . siget('gender') . '&marital_status=' . siget('marital_status') . '&lead_source=' . siget('lead_source') . '&lead_owner=' . siget('lead_owner') . '&rating=' . siget('rating')), true);
     }
 
     /**

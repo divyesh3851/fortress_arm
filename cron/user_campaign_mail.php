@@ -3,12 +3,19 @@ require '../config.php';
 
 $reminder_time = date('Y-m-d H:i', strtotime(current_time('mysql')));
 
-$get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.created_by_type,campaign_user.id as campaign_user_tbl_id, campaign_user.campaign_id,campaign_user.mail_reminder, campaign_user.is_close FROM advisor as ad INNER JOIN campaign_user ON ad.id = campaign_user.user_id WHERE campaign_user.is_close = 0 AND ad.advisor_status = 2 AND ad.status = 0 AND campaign_user.mail_reminder LIKE '" . $reminder_time . "%' AND ( campaign_user.mail_reminder != NULL OR campaign_user.mail_reminder != '0000-00-00 00:00:00')");
+$reminder_time = '2024-06-03 11:49';
+
+$get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.hash_key,ad.created_by_type,campaign_user.id as campaign_user_tbl_id, campaign_user.campaign_id,campaign_user.mail_reminder, campaign_user.is_close FROM advisor as ad INNER JOIN campaign_user ON ad.id = campaign_user.user_id WHERE campaign_user.is_close = 0 AND ad.advisor_status = 2 AND ad.status = 0 AND campaign_user.mail_reminder LIKE '" . $reminder_time . "%' AND ( campaign_user.mail_reminder != NULL OR campaign_user.mail_reminder != '0000-00-00 00:00:00')");
 
 $_SESSION['use_smtp'] = true;
 foreach ($get_advisor_list as $advisor_result) {
 
     $birth_date = ($advisor_result->birth_date) ? date("m/d/Y", strtotime($advisor_result->birth_date)) : '';
+
+    if (!$advisor_result->hash_key) {
+        $advisor_result->hash_key = generate_hash();
+        $wpdb->update("advisor", array("hash_key" => $advisor_result->hash_key), array("id" => $advisor_result->id));
+    }
 
     $merge_fields = array(
         '{{agent_first_name}}'  => $advisor_result->first_name,
@@ -18,7 +25,7 @@ foreach ($get_advisor_list as $advisor_result) {
         '{{client_dob}}'        => $birth_date,
         '{{client_gender}}'     => $advisor_result->gender,
         '{{client_state_resident}}' => $advisor_result->state,
-        '{{calendly_link}}'     => '',
+        '{{calendly_link}}'     => '<a href="' . site_url() . '/fortress_marketing/get-started/' . $advisor_result->hash_key . '" target="_blank">Get Started</a>',
         '{{fbs_logo}}'          => '<img src="' . FBS_LOGO . '">',
         '{{phone_no}}'          => '<a href="tel:' . FBS_PHONE_NO . '">' . FBS_PHONE_NO . '</a>',
         '{{email}}'             => FBS_EMAIL

@@ -1,4 +1,7 @@
 <?php
+
+use Google\Service\Calendar\Setting;
+
 require '../../config.php';
 $page_name = 'advisor';
 $sub_page_name = 'advisor-list';
@@ -41,146 +44,6 @@ if (isset($_POST['save_campaign_settings'])) {
     exit;
 }
 
-if (isset($_POST['advisor_export_submit'])) {
-
-    $format = (sipost('format')) ? sipost('format') : '';
-
-    if (!$format) {
-        return false;
-    }
-
-    $start_date = '';
-    $end_date   = '';
-
-    if (sipost('date_range')) {
-
-        $date_range = (sipost('date_range')) ? sipost('date_range') : '';
-
-        list($start_date, $end_date) = explode(" - ", $date_range);
-
-        $start_date = date("Y-m-d", strtotime($start_date));
-
-        $end_date   = date("Y-m-d", strtotime($end_date));
-    }
-
-    $get_advisor_list = Advisor()->get_advisor_records_between_two_dates($start_date, $end_date, sipost('advisor_status'));
-
-
-    if ($format == 'excel') {
-        $spreadsheet    = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-
-        $sheet    = $spreadsheet->getActiveSheet();
-
-        $styleArray = [
-            'font' => [
-                'bold' => true,
-            ],
-        ];
-
-        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->applyFromArray($styleArray);
-
-        // Set the value of header cell 
-        $column         = 1;
-
-        //$highestRow = $sheet->getHighestRow();
-
-        $highestRow     = 1;
-
-        $headings       =  array("No", "Name", "Email", "Mobile No", "City", "State", "Date");
-
-        foreach ($headings as $key  => $heading) {
-
-            $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
-            $sheet->setCellValue($highestColumn . $highestRow, $heading);
-            $column++;
-        }
-
-        $i = 1;
-
-        foreach ($get_advisor_list as $advisor_result) {
-
-            $created_at = date("m/d/Y", strtotime($advisor_result->created_at));
-
-            $fields     = array($i, $advisor_result->first_name . ' ' . $advisor_result->last_name, $advisor_result->email, $advisor_result->mobile_no, $advisor_result->city, $advisor_result->state, $created_at);
-
-            $column         = 1;
-            $highestRow     = $sheet->getHighestRow();
-            $highestRow     = $highestRow + 1;
-
-            foreach ($fields as $column_value) {
-
-                $highestColumn    = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column);
-                $sheet->setCellValue($highestColumn . $highestRow, $column_value);
-                $column++;
-            }
-
-            $i++;
-        }
-
-        $filename    = "Advisor List - " . date('m-d-Y') . ".csv";
-
-        // Output an .xlsx file  
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        header('Content-Encoding: UTF-8');
-        header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8');
-        header('Content-Disposition: attachment; filename=' . $filename);
-        $writer->save('php://output');
-        die();
-        exit;
-    } else if ($format == 'pdf') {
-        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4', 'margin_left' => '5', 'margin_right' => '5', 'margin_top' => '10', 'margin_bottom' => '10', 'margin_header' => '5', 'margin_footer' => '5', 'defaultheaderline' => 0, 'defaulfooterline' => 0]);
-        $html = '<html> 
-                    <body>
-                        <div class="col-md-12">
-                            <p class="category" style="text-align:center; font-size: 18px;">
-                                <b>Advisor List</b>
-                            </p>	
-                            <table class="table" width="100%" border="1" cellpadding="4" style="border-collapse: collapse; text-align:left; font-size:13px;">
-                                <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Name</th>
-                                        <th>Email</th> 
-                                        <th>Mobile No</th>
-                                        <th>City</th> 
-                                        <th>State</th>    
-                                        <th>Date</th>   
-                                    </tr>
-                                </thead>
-                                <tbody>';
-        $j = 1;
-        foreach ($get_advisor_list as $advisor_result) {
-
-            $created_at = date("m/d/Y", strtotime($advisor_result->created_at));
-
-            $html .= "<tr>
-                        <td>" . $j . "</td>
-                        <td>" . $advisor_result->first_name . " " . $advisor_result->last_name . "</td>
-                        <td>" . $advisor_result->email . "</td>
-                        <td>" . $advisor_result->mobile_no . "</td>
-                        <td>" . $advisor_result->city . "</td>
-                        <td>" . $advisor_result->state . "</td>
-                        <td>" . $created_at . "</td> 
-                    </tr>";
-            $j++;
-        }
-
-        $html .= '</tbody>
-                            </table>
-                        </div>
-                    </body>
-                 </html>';
-
-        $stylesheet = file_get_contents(site_url() . '/assets/css/pdf.css'); // external css
-
-        $mpdf->WriteHTML($stylesheet, 1);
-        $mpdf->WriteHTML($html);
-
-        $path = "Advisor List - " . date('Y_m_d') . ".pdf";
-
-        $mpdf->Output($path, 'D');
-    }
-}
 
 if (isset($_POST['advisor_import_submit'])) {
 
@@ -270,6 +133,25 @@ if (isset($_POST['advisor_import_submit'])) {
     wp_redirect(site_url() . '/admin/advisor/advisor-list');
     die();
 }
+/*
+$filter_query_string = '';
+if (isset($_POST['filter_record'])) {
+
+    $admin = '';
+    if (!IS_ADMIN) {
+        $admin = 'admin';
+    }
+
+    $filter = array(
+        'fbs_arm_admin_id' => $_SESSION['fbs_arm_admin_id'],
+        'user_type'         => $admin,
+        'advisor_status' => sipost('status'),
+        'state' => sipost('state'),
+    );
+
+    $filter_query_string = '?' . http_build_query($filter);
+}
+*/
 
 $get_state_list = Settings()->get_state_list();
 
@@ -446,70 +328,10 @@ $get_campaign_list = Campaign()->get_campaign_list();
                                         <div class="card-toolbar">
                                             <!--begin::Toolbar-->
                                             <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
-                                                <!--begin::Filter-->
-                                                <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                    <i class="ki-outline ki-filter fs-2"></i>Filter</button>
-                                                <!--begin::Menu 1-->
-                                                <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="kt-toolbar-filter">
-                                                    <!--begin::Header-->
-                                                    <div class="px-7 py-5">
-                                                        <div class="fs-4 text-gray-900 fw-bold">Filter Options</div>
-                                                    </div>
-                                                    <!--end::Header-->
-                                                    <!--begin::Separator-->
-                                                    <div class="separator border-gray-200"></div>
-                                                    <!--end::Separator-->
-                                                    <!--begin::Content-->
-                                                    <div class="px-7 py-5">
-                                                        <!--begin::Input group-->
-                                                        <div class="mb-10">
-                                                            <!--begin::Label-->
-                                                            <label class="form-label fs-5 fw-semibold mb-3">Advisor Status :</label>
-                                                            <!--end::Label-->
 
-                                                            <!--begin::Options-->
-                                                            <div class="d-flex flex-column flex-wrap fw-semibold" data-kt-docs-table-filter="advisor_status">
-                                                                <!--begin::Option-->
-                                                                <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
-                                                                    <input class="form-check-input" type="radio" name="advisor_status" value="all" checked="checked">
-                                                                    <span class="form-check-label text-gray-600">
-                                                                        All
-                                                                    </span>
-                                                                </label>
-                                                                <!--end::Option-->
-
-                                                                <!--begin::Option-->
-                                                                <?php foreach (Settings()->get_advisor_status_list() as $key => $status_result) { ?>
-                                                                    <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
-                                                                        <input class="form-check-input" type="radio" name="advisor_status" value="<?php echo $status_result; ?>">
-                                                                        <span class="form-check-label text-gray-600">
-                                                                            <?php echo $status_result; ?>
-                                                                        </span>
-                                                                    </label>
-                                                                <?php } ?>
-                                                                <!--end::Option-->
-
-
-                                                            </div>
-                                                            <!--end::Options-->
-                                                        </div>
-                                                        <!--end::Input group-->
-
-                                                        <!--begin::Actions-->
-                                                        <div class="d-flex justify-content-end">
-                                                            <button type="reset" class="btn btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true" data-kt-docs-table-filter="reset">Reset</button>
-
-                                                            <button type="submit" class="btn btn-primary" data-kt-menu-dismiss="true" data-kt-docs-table-filter="filter">Apply</button>
-                                                        </div>
-                                                        <!--end::Actions-->
-                                                    </div>
-                                                    <!--end::Content-->
-                                                </div>
-                                                <!--end::Menu 1-->
-                                                <!--end::Filter-->
                                                 <!--begin::Export-->
-                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_advisor_export_modal">
-                                                    <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
+                                                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_filter_record_modal">
+                                                    <i class="ki-outline ki-filter  fs-2"></i>Filter</button>
                                                 <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_advisor_import_modal">
                                                     <i class="ki-outline ki-exit-down fs-2"></i>Import</button>
                                                 <!--end::Export-->
@@ -824,73 +646,130 @@ $get_campaign_list = Campaign()->get_campaign_list();
     <!--end::Modal - Settings-->
 
     <!--begin::Modal-->
-    <div class="modal fade" id="kt_advisor_export_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="kt_filter_record_modal" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
-        <div class="modal-dialog modal-dialog-centered mw-650px">
+        <div class="modal-dialog modal-dialog-centered mw-800px">
             <!--begin::Modal content-->
             <div class="modal-content">
                 <!--begin::Modal header-->
                 <div class="modal-header">
                     <!--begin::Modal title-->
-                    <h2 class="fw-bold">Export Advisor</h2>
+                    <h2 class="fw-bold">Filter Record</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div id="kt_advisor_export_close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                    <div id="kt_filter_record_close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                         <i class="ki-outline ki-cross fs-1"></i>
                     </div>
                     <!--end::Close-->
                 </div>
                 <!--end::Modal header-->
                 <!--begin::Modal body-->
-                <div class="modal-body scroll-y mx-5 mx-xl-10 my-7">
+                <div class="modal-body scroll-y mx-5  my-7">
                     <!--begin::Form-->
                     <form id="" class="form" method="post">
-                        <!--begin::Input group-->
-                        <div class="fv-row mb-10">
-                            <!--begin::Label-->
-                            <label class="fs-5 fw-semibold form-label mb-5">Select Export Format:</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select data-control="select2" data-placeholder="Select a format" data-hide-search="true" name="format" class="form-select form-select-solid">
-                                <option value="excel">Excel</option>
-                                <option value="pdf">PDF</option>
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row mb-10">
-                            <!--begin::Label-->
-                            <label class="fs-5 fw-semibold form-label mb-5">Select Date Range:</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input class="form-control form-control-solid" name="date_range" placeholder="Pick date range" id="kt_daterangepicker_4" />
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
                         <!--begin::Row-->
-                        <div class="row fv-row mb-15">
-                            <!--begin::Label-->
-                            <label class="fs-5 fw-semibold form-label mb-5">Advisor Status:</label>
-                            <!--end::Label-->
-                            <!--begin::Radio group-->
-                            <div class="d-flex flex-column">
-                                <?php foreach (Settings()->get_advisor_status_list() as $key => $status_result) { ?>
-                                    <!--begin::Radio button-->
-                                    <label class="form-check form-check-custom form-check-sm form-check-solid mb-3">
-                                        <input class="form-check-input" type="checkbox" value="<?php echo $key ?>" name="advisor_status[]" />
-                                        <span class="form-check-label text-gray-600 fw-semibold"><?php echo $status_result ?></span>
-                                    </label>
-                                    <!--end::Radio button-->
-                                <?php } ?>
+                        <div class="row mb-7">
+                            <div class="col-md-4 fv-row">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-semibold form-label">Status</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select data-control="select2" data-placeholder="Select a status" data-hide-search="true" name="status" class="form-select form-select-solid" data-allow-clear="true">
+                                    <option></option>
+                                    <?php foreach (Settings()->get_advisor_status_list() as $key => $status_result) { ?>
+                                        <option <?php echo (sipost('status') == $key) ? 'selected' : ''; ?> value="<?php echo $key ?>"><?php echo $status_result; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <!--end::Input-->
                             </div>
-                            <!--end::Input group-->
+                            <div class="col-md-4 fv-row">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-semibold form-label">State</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select data-control="select2" data-placeholder="Select a state" data-hide-search="false" name="state" class="form-select form-select-solid" data-allow-clear="true" data-dropdown-parent="#kt_filter_record_modal">
+                                    <option></option>
+                                    <?php foreach ($get_state_list as $key => $state_result) { ?>
+                                        <option <?php echo (sipost('state') == $state_result) ? 'selected' : ''; ?> value="<?php echo $state_result; ?>"><?php echo $state_result; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <!--end::Input-->
+                            </div>
+                            <div class="col-md-4 fv-row">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-semibold form-label">Gender</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select data-control="select2" data-placeholder="Select a gender" data-hide-search="false" name="gender" class="form-select form-select-solid" data-allow-clear="true" data-dropdown-parent="#kt_filter_record_modal">
+                                    <option></option>
+                                    <?php foreach (Settings()->get_gender_type_list() as $gender_result) { ?>
+                                        <option <?php echo (sipost('gender') == $gender_result) ? 'selected' : ''; ?> value="<?php echo $gender_result; ?>"><?php echo $gender_result; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <!--end::Input-->
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <div class="col-md-4 fv-row">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-semibold form-label">Marital Status</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select data-control="select2" data-placeholder="Select a marital" data-hide-search="false" name="marital_status" class="form-select form-select-solid" data-allow-clear="true" data-dropdown-parent="#kt_filter_record_modal">
+                                    <option></option>
+                                    <option <?php echo (sipost('marital_status') == 'Married') ? 'selected' : ''; ?> value="Married">Married</option>
+                                    <option <?php echo (sipost('marital_status') == 'Unmarried') ? 'selected' : ''; ?> value="Unmarried">Unmarried</option>
+                                </select>
+                                <!--end::Input-->
+                            </div>
+                            <div class="col-md-4 fv-row">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-semibold form-label">Lead Source</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select data-control="select2" data-placeholder="Select a Source..." data-hide-search="false" name="lead_source" class="form-select form-select-solid" data-allow-clear="true" data-dropdown-parent="#kt_filter_record_modal">
+                                    <option></option>
+                                    <?php foreach ($get_lead_source_list as $lead_source_result) { ?>
+                                        <option <?php echo (sipost('lead_source') == $lead_source_result->id) ? 'selected' : ''; ?> value="<?php echo $lead_source_result->id; ?>"><?php echo $lead_source_result->type; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <!--end::Input-->
+                            </div>
+                            <div class="col-md-4 fv-row">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-semibold form-label">Lead Owner</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select data-control="select2" data-placeholder="Select a Lead Owner..." data-hide-search="false" name="lead_owner" class="form-select form-select-solid" data-allow-clear="true" data-dropdown-parent="#kt_filter_record_modal">
+                                    <option></option>
+                                    <?php foreach (Settings()->get_lead_owner_list() as $lead_owner_result) { ?>
+                                        <option <?php echo (sipost('lead_owner') == $lead_owner_result->id) ? 'selected' : ''; ?> value="<?php echo $lead_owner_result->id; ?>"><?php echo $lead_owner_result->name; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <!--end::Input-->
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <div class="col-md-4 fv-row">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-semibold form-label">Rating</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <select data-control="select2" data-placeholder="Select a rating..." data-hide-search="false" name="rating" class="form-select form-select-solid" data-allow-clear="true" data-dropdown-parent="#kt_filter_record_modal">
+                                    <option></option>
+                                    <option <?php echo (sipost('rating') == 1) ? 'selected' : ''; ?> value="1">1</option>
+                                    <option <?php echo (sipost('rating') == 2) ? 'selected' : ''; ?> value="2">2</option>
+                                    <option <?php echo (sipost('rating') == 3) ? 'selected' : ''; ?> value="3">3</option>
+                                    <option <?php echo (sipost('rating') == 4) ? 'selected' : ''; ?> value="4">4</option>
+                                    <option <?php echo (sipost('rating') == 5) ? 'selected' : ''; ?> value="5">5</option>
+                                </select>
+                                <!--end::Input-->
+                            </div>
                         </div>
                         <!--end::Row-->
                         <!--begin::Actions-->
                         <div class="text-center">
-                            <button type="reset" id="advisor_export_cancel" class="btn btn-light me-3">Discard</button>
-                            <button type="submit" id="advisor_export_submit" name="advisor_export_submit" class="btn btn-primary">
+                            <button type="submit" id="filter_record" name="filter_record" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -917,7 +796,7 @@ $get_campaign_list = Campaign()->get_campaign_list();
                     <h2 class="fw-bold">Import Advisor</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div id="kt_advisor_export_close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                    <div id="kt_advisor_import_close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                         <i class="ki-outline ki-cross fs-1"></i>
                     </div>
                     <!--end::Close-->
@@ -1035,7 +914,13 @@ $get_campaign_list = Campaign()->get_campaign_list();
                     ajax: {
                         url: "<?php echo site_url(); ?>/admin/advisor/advisor-list-ajax.php",
                         data: {
-                            advisor_status: '<?php echo siget('advisor_status'); ?>'
+                            advisor_status: '<?php echo sipost('status'); ?>',
+                            state: '<?php echo urlencode(sipost('state')); ?>',
+                            gender: '<?php echo urlencode(sipost('gender')); ?>',
+                            marital_status: '<?php echo urlencode(sipost('marital_status')); ?>',
+                            lead_source: '<?php echo urlencode(sipost('lead_source')); ?>',
+                            lead_owner: '<?php echo urlencode(sipost('lead_owner')); ?>',
+                            rating: '<?php echo urlencode(sipost('rating')); ?>',
                         }
                     },
                     columns: [{

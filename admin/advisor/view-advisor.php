@@ -1,4 +1,8 @@
-<?php require '../../config.php';
+<?php
+
+use Google\Service\ServiceManagement\Advice;
+
+require '../../config.php';
 $page_name = 'advisor';
 $sub_page_name = 'advisor-list';
 Admin()->check_login();
@@ -983,7 +987,101 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																	</div>
 																</div>
 															</div>
+															<div class="card mb-5 mb-xl-10" id="">
+																<!--begin::Card header-->
+																<div class="card-header p-5 pt-0 pb-0">
+																	<!--begin::Card title-->
+																	<div class="card-title">
+																		<i class="ki-duotone ki-pencil fs-2x">
+																			<span class="path1"></span>
+																			<span class="path2"></span>
+																			<span class="path3"></span>
+																		</i>
+																		<h3 class="fw-bold p-2 pt-0 pb-0">
+																			Other Details
+																		</h3>
+																	</div>
+																	<!--end::Card title-->
+																</div>
+																<div class="card-body p-5">
+																	<div class="row">
+																		<?php
+																		$licensed_ins_agent = Advisor()->get_advisor_meta($selected_advisor_data->id, "licensed_ins_agent");
 
+																		if ($licensed_ins_agent) {
+																		?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Are you a licensed insurance agent?
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php echo $licensed_ins_agent; ?>
+																				</div>
+																			</div>
+																		<?php }
+
+																		$licensed_sell_self_ins = Advisor()->get_advisor_meta($selected_advisor_data->id, "licensed_sell_self_ins");
+
+																		if ($licensed_sell_self_ins) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Are you licensed to sell Life insurance?
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php echo $licensed_sell_self_ins; ?>
+																				</div>
+																			</div>
+																		<?php }
+
+																		$licensed_sell_self_health_ins = Advisor()->get_advisor_meta($selected_advisor_data->id, "licensed_sell_self_health_ins");
+
+																		if ($licensed_sell_self_health_ins) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Are you licensed to sell Health insurance?
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php echo $licensed_sell_self_health_ins; ?>
+																				</div>
+																			</div>
+																		<?php }
+
+																		$top_three_carriers = Advisor()->get_advisor_meta($selected_advisor_data->id, "top_three_carriers");
+
+																		if ($licensed_sell_self_health_ins) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Top three Carriers
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php echo $top_three_carriers; ?>
+																				</div>
+																			</div>
+																		<?php }
+
+																		$exp_selling_life_license = Advisor()->get_advisor_meta($selected_advisor_data->id, "exp_selling_life_license");
+
+																		if ($exp_selling_life_license) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Years of selling a life license experience
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php echo $exp_selling_life_license; ?>
+																				</div>
+																			</div>
+																		<?php }
+
+																		$selling_with_fbs = Advisor()->get_advisor_meta($selected_advisor_data->id, "selling_with_fbs");
+
+																		if ($selling_with_fbs) {  ?>
+																			<div class="col-md-12 mt-4">
+																				<div class="fw-bold fs-6"> Interested in selling with FBS
+																				</div>
+																				<div class="text-gray-600 mt-1">
+																					<?php echo $selling_with_fbs; ?>
+																				</div>
+																			</div>
+																		<?php } ?>
+
+																	</div>
+																</div>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -1083,7 +1181,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 														<div class="card-header p-5 pt-0 pb-0">
 															<!--begin::Card title-->
 															<div class="card-title">
-																<i class="ki-duotone ki-pencil">
+																<i class="ki-duotone ki-pencil  fs-2x">
 																	<span class="path1"></span>
 																	<span class="path2"></span>
 																</i>

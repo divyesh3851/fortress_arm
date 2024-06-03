@@ -13,6 +13,30 @@ if (siget('advisor_status')) {
     $AND .= ' AND advisor_status = ' . siget('advisor_status');
 }
 
+if (siget('state')) {
+    $AND .= ' AND state = "' . urldecode(siget('state')) . '" ';
+}
+
+if (siget('gender')) {
+    $AND .= ' AND gender = "' . urldecode(siget('gender')) . '" ';
+}
+
+if (siget('marital_status')) {
+    $AND .= ' AND marital_status = "' . urldecode(siget('marital_status')) . '" ';
+}
+
+if (siget('lead_source')) {
+    $AND .= ' AND lead_source = "' . urldecode(siget('lead_source')) . '" ';
+}
+
+if (siget('lead_owner')) {
+    $AND .= ' AND lead_owner = "' . urldecode(siget('lead_owner')) . '" ';
+}
+
+if (siget('rating')) {
+    $AND .= ' AND rating = "' . urldecode(siget('rating')) . '" ';
+}
+
 $advisor_list   = $wpdb->get_results('SELECT * FROM advisor WHERE status = 0 ' . $AND . ' ORDER BY id DESC');
 
 foreach ($advisor_list as $advisor_result) {
