@@ -3,9 +3,7 @@ require '../config.php';
 
 $reminder_time = date('Y-m-d H:i', strtotime(current_time('mysql')));
 
-$reminder_time = '2024-06-03 11:49';
-
-$get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.hash_key,ad.created_by_type,campaign_user.id as campaign_user_tbl_id, campaign_user.campaign_id,campaign_user.mail_reminder, campaign_user.is_close FROM advisor as ad INNER JOIN campaign_user ON ad.id = campaign_user.user_id WHERE campaign_user.is_close = 0 AND ad.advisor_status = 2 AND ad.status = 0 AND campaign_user.mail_reminder LIKE '" . $reminder_time . "%' AND ( campaign_user.mail_reminder != NULL OR campaign_user.mail_reminder != '0000-00-00 00:00:00')");
+$get_advisor_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.email,ad.gender,ad.birth_date,ad.state,ad.created_by,ad.hash_key,ad.created_by_type,campaign_user.id as campaign_user_tbl_id, campaign_user.campaign_id,campaign_user.mail_reminder, campaign_user.is_close FROM advisor as ad INNER JOIN campaign_user ON ad.id = campaign_user.user_id WHERE campaign_user.is_close = 0 AND ad.advisor_status = 2 AND ad.stop_email = 0 AND ad.status = 0 AND campaign_user.mail_reminder LIKE '" . $reminder_time . "%' AND ( campaign_user.mail_reminder != NULL OR campaign_user.mail_reminder != '0000-00-00 00:00:00')");
 
 $_SESSION['use_smtp'] = true;
 foreach ($get_advisor_list as $advisor_result) {
@@ -73,6 +71,8 @@ foreach ($get_advisor_list as $advisor_result) {
 
         $mail_body  = replace_merge_fields($mail_body, $merge_fields);
 
+        $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
         send_mail($advisor_result->email, $subject, $mail_body, $attachment);
         $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
         if ($status) {
@@ -117,6 +117,8 @@ foreach ($get_advisor_list as $advisor_result) {
         $mail_body  = get_option('term_step_' . $current_step . '_mail_body');
         $mail_body  = replace_merge_fields($mail_body, $merge_fields);
 
+        $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
         send_mail($advisor_result->email, $subject, $mail_body, $attachment);
         $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
         if ($status) {
@@ -145,6 +147,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $new_time   = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
 
@@ -162,6 +166,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $new_time   = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
 
@@ -176,6 +182,8 @@ foreach ($get_advisor_list as $advisor_result) {
         } else if ($current_step == 4) {
 
             $attachment = array();
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
@@ -194,6 +202,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $mail_body  = get_option('wl_step_5_mail_body');
 
             $mail_body  = replace_merge_fields($mail_body, $merge_fields);
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             $attachment = array();
 
@@ -214,6 +224,8 @@ foreach ($get_advisor_list as $advisor_result) {
 
             $new_time       = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
@@ -241,6 +253,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $new_time   = strtotime("+1 day", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
 
@@ -256,6 +270,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $attachment = array(SITE_DIR . '/uploads/email_attachment/Adv. Planning Mid-Level and Rank & File Employee Incentives.pdf');
             $new_time   = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
@@ -275,6 +291,8 @@ foreach ($get_advisor_list as $advisor_result) {
                 SITE_DIR . '/uploads/email_attachment/Group WL Voluntary Benefit Census form.xlsx'
             );
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
 
@@ -290,6 +308,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $mail_body  = get_option('ap_step_5_mail_body');
 
             $mail_body  = replace_merge_fields($mail_body, $merge_fields);
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             $attachment = array(
                 SITE_DIR . '/uploads/email_attachment/Adv. Planning Buy-Sell v. Key Man.pdf',
@@ -308,6 +328,8 @@ foreach ($get_advisor_list as $advisor_result) {
 
             $mail_body  = replace_merge_fields($mail_body, $merge_fields);
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             $attachment = array();
 
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
@@ -325,6 +347,8 @@ foreach ($get_advisor_list as $advisor_result) {
 
             $new_time       = strtotime("+24 hours", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
@@ -369,6 +393,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
         }
 
+        $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
         send_mail($advisor_result->email, $subject, $mail_body, $attachment);
         $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
         if ($status) {
@@ -396,6 +422,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $new_time   = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
             if ($status) {
@@ -411,6 +439,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $new_time   = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
             if ($status) {
@@ -424,6 +454,8 @@ foreach ($get_advisor_list as $advisor_result) {
         } else if ($current_step == 4) {
 
             $attachment = array();
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
@@ -440,6 +472,8 @@ foreach ($get_advisor_list as $advisor_result) {
 
             $attachment = array(SITE_DIR . '/uploads/email_attachment/LTC - Partnership-Qualified Program.pdf');
 
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
+
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
 
@@ -452,6 +486,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $subject    = get_option('ltc_step_6_subject');
             $mail_body  = get_option('ltc_step_6_mail_body');
             $mail_body  = replace_merge_fields($mail_body, $merge_fields);
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             $attachment = array();
 
@@ -471,6 +507,8 @@ foreach ($get_advisor_list as $advisor_result) {
 
             $new_time       = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
+
+            $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
             send_mail($advisor_result->email, $subject, $mail_body, $attachment);
             $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);
@@ -515,6 +553,8 @@ foreach ($get_advisor_list as $advisor_result) {
             $new_time       = strtotime("+1 week", $current_time);
             $next_mail_reminder_date = date("Y-m-d H:i:s", $new_time);
         }
+
+        $mail_body .= '<br> Click <a href="' . site_url() . '/unsubscribe/' . $advisor_result->hash_key . '/' . $advisor_result->campaign_id . '"> here </a> to unsubscribe from this campaign';
 
         send_mail($advisor_result->email, $subject, $mail_body, $attachment);
         $status = send_mail('demo.starline2020@gmail.com', $subject, $mail_body, $attachment);

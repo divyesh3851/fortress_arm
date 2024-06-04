@@ -46,6 +46,52 @@ class Advisor
         add_action('wp_ajax_update_advisor_rating', array($this, 'update_advisor_rating'));
     }
 
+    public function count_advisor_by_lead_source()
+    {
+        global $wpdb;
+
+        $lead_source_list = Settings()->get_lead_source_list();
+
+        $advisor_count_by_lead = array();
+        foreach ($lead_source_list as $lead_source_result) {
+
+            $advisor_count = $wpdb->get_var("SELECT COUNT(id) FROM advisor WHERE lead_source = " . $lead_source_result->id);
+
+            $advisor_count_by_lead[$lead_source_result->id] = $advisor_count;
+        }
+
+        return $advisor_count_by_lead;
+    }
+
+    public function unsubscribe($hash_key = '', $campaign_id = '')
+    {
+        global $wpdb;
+
+        if (!$hash_key) {
+            return;
+        }
+
+        if (!sipost('unsubscribe_preference')) {
+            return false;
+        }
+
+        $advisor_info = $wpdb->get_row("SELECT id FROM advisor WHERE hash_key = '" . $hash_key . "'");
+
+        if ($campaign_id) {
+
+            if (in_array('campaign', $_POST['unsubscribe_preference'])) {
+
+                $wpdb->update("campaign_user", array('is_close' => 1), array('user_id' => $advisor_info->id, 'campaign_id' => $campaign_id));
+            }
+        }
+
+        if (in_array('all_emails', $_POST['unsubscribe_preference'])) {
+
+            $wpdb->update("advisor", array('stop_email' => 1), array('id' => $advisor_info->id));
+        }
+
+        return true;
+    }
 
     public function update_advisor_rating($advisor_id = '')
     {

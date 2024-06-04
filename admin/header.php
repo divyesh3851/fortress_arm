@@ -64,19 +64,111 @@ $get_upcoming_birthday_anniversary_list = Advisor()->get_upcoming_birthday_anniv
                 </div>
                 <!--end::Search-->
             </div>
-            <!--begin::Chat-->
+            <!--begin::Notifications-->
             <div class="app-navbar-item ms-2 ms-lg-6">
-                <!--begin::Menu wrapper-->
-                <div class="btn btn-icon btn-custom btn-color-white-600 btn-active-color-primary w-35px h-35px w-md-40px h-md-40px position-relative" data-bs-toggle="modal" data-bs-target="#kt_modal_upcoming_birthday_anniversary" title="Upcoming Birthday / Anniversary Advisor">
+                <!--begin::Menu- wrapper-->
+                <div class="btn btn-icon btn-custom btn-color-white-600 btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                     <i class="ki-outline ki-calendar fs-1"></i>
                     <?php if (count($get_upcoming_birthday_anniversary_list) > 0) { ?>
-                        <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger w-15px h-15px ms-n4 mt-3"><?php echo count($get_upcoming_birthday_anniversary_list); ?></span>
+                        <span class="position-relative  start-25 translate-middle badge badge-circle badge-danger w-15px h-15px ms-n4 mt-3" style="top:-5px"><?php echo count($get_upcoming_birthday_anniversary_list); ?></span>
                     <?php } ?>
-
                 </div>
+                <!--begin::Menu-->
+                <div class="menu menu-sub menu-sub-dropdown menu-column w-450px w-lg-450px" data-kt-menu="true" id="kt_menu_notifications">
+                    <!--begin::Heading-->
+                    <div class="d-flex flex-column bgi-size-cover rounded-top" style="background-image:url('<?php echo site_url() ?>/assets/media/misc/menu-header-bg.jpg')">
+                        <!--begin::Title-->
+                        <h3 class="text-white fw-semibold px-9 mt-10 mb-6">Notifications
+                            <?php if (count($get_upcoming_birthday_anniversary_list) > 0) { ?>
+                                <span class="fs-8 opacity-75 ps-3">(<?php echo count($get_upcoming_birthday_anniversary_list); ?>)</span>
+                            <?php } ?>
+                        </h3>
+                        <!--end::Title-->
+                        <!--begin::Tabs-->
+                        <ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-semibold px-9">
+                            <li class="nav-item">
+                                <a class="nav-link text-white opacity-75 opacity-state-100 pb-4 active" data-bs-toggle="tab" href="#kt_topbar_notifications_1">Birthdays & Anniversaries </a>
+                            </li>
+                        </ul>
+                        <!--end::Tabs-->
+                    </div>
+                    <!--end::Heading-->
+                    <!--begin::Tab content-->
+                    <div class="tab-content">
+                        <!--begin::Tab panel-->
+                        <div class="tab-pane fade  show active" id="kt_topbar_notifications_1" role="tabpanel">
+                            <!--begin::Items-->
+                            <div class="scroll-y mh-325px my-5 px-8">
+                                <?php if (!empty($get_upcoming_birthday_anniversary_list)) {
+                                    foreach ($get_upcoming_birthday_anniversary_list as $greeting_result) { ?>
+                                        <div class="d-flex flex-stack pt-4">
+                                            <!--begin::Section-->
+                                            <div class="d-flex">
+                                                <!--begin::Symbol-->
+                                                <div class="symbol symbol-40px symbol-circle mb-5 me-4">
+                                                    <?php
+                                                    $profile_img = Advisor()->get_advisor_meta($greeting_result['id'], 'profile_img');
+                                                    if ($profile_img) { ?>
+                                                        <img src="<?php echo site_url(); ?>/uploads/advisor/<?php echo $profile_img; ?>" alt="image" />
+                                                    <?php } else { ?>
+                                                        <img src="<?php echo site_url(); ?>/uploads/advisor/blank.png" alt="image" />
+                                                    <?php } ?>
+                                                </div>
+                                                <!--end::Symbol-->
+                                                <!--begin::Title-->
+                                                <div class="mb-0 me-2">
+                                                    <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/<?php echo $greeting_result['id']; ?>" class="fs-6 text-gray-800 text-hover-primary fw-bold"><?php echo $greeting_result['prefix'] . " " . $greeting_result['first_name'] . " " . $greeting_result['last_name']; ?></a>
+                                                    <div class="text-gray-500 fs-7">
+                                                        <?php if ($greeting_result['greeting'] == 'anniversary') { ?>
+                                                            Anniversary Date : <?php echo ($greeting_result['greeting_date']) ? date("m/d/Y", strtotime($greeting_result['greeting_date'])) : ''; ?>
+                                                        <?php } ?>
+                                                        <?php if ($greeting_result['greeting'] == 'birthday') { ?>
+                                                            Birthday Date : <?php echo ($greeting_result['greeting_date']) ? date("m/d/Y", strtotime($greeting_result['greeting_date'])) : ''; ?>
+                                                        <?php } ?>
+                                                    </div>
+                                                </div>
+                                                <!--end::Title-->
+                                            </div>
+                                            <!--end::Section-->
+                                            <!--begin::Label-->
+                                            <div class="d-flex">
+                                                <a href="tel:<?php echo $greeting_result['mobile_no']; ?>">
+                                                    <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                        <div class="fs-3 fw-bold text-gray-700">
+                                                            <i class="las la-phone-volume fs-2 text-success"></i>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="mailto:<?php echo $greeting_result['email']; ?>">
+                                                    <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                        <div class="fs-2 fw-bold text-gray-700">
+                                                            <i class="las la-envelope-open-text fs-2  text-success"></i>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <!--end::Label-->
+                                        </div>
+                                        <!--begin::Menu separator-->
+                                        <div class="separator separator-dashed"></div>
+                                        <!--end::Menu separator-->
+                                <?php }
+                                } else {
+                                    echo '<div class="text-gray-500 fs-16">No birthday or anniversary was discovered...</div>';
+                                } ?>
+                                <!--end::Item-->
+                            </div>
+                            <!--end::Items-->
+
+                        </div>
+                        <!--end::Tab panel-->
+                    </div>
+                    <!--end::Tab content-->
+                </div>
+                <!--end::Menu-->
                 <!--end::Menu wrapper-->
             </div>
-            <!--end::Chat-->
+            <!--end::Notifications-->
             <!--begin::User menu-->
             <div class="app-navbar-item ms-2 ms-lg-6" id="kt_header_user_menu_toggle">
                 <!--begin::Menu wrapper-->

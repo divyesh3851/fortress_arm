@@ -99,6 +99,7 @@ foreach ($advisor_list as $advisor_result) {
         'campaign_user_tbl_id'  => ($get_current_campaign) ? $get_current_campaign->id : '',
         'campaign_id'       => ($get_current_campaign) ? $get_current_campaign->campaign_id : '',
         'is_close'          => ($get_current_campaign) ? intval($get_current_campaign->is_close) : 0,
+        'stop_email'        => $advisor_result->stop_email,
     );
 }
 

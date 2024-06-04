@@ -32,6 +32,8 @@ $total_warm_advisor = Advisor()->get_count_total_advisor_by_status(3);
 $total_hot_advisor  = Advisor()->get_count_total_advisor_by_status(4);
 $total_won_advisor  = Advisor()->get_count_total_advisor_by_status(5);
 
+$count_advisor_by_lead_source = Advisor()->count_advisor_by_lead_source();
+
 $get_today_activity = Advisor()->get_today_activity($_SESSION['fbs_arm_admin_id']);
 
 $get_advisor_upcoming_activity_list = Advisor()->get_upcoming_activity($_SESSION['fbs_arm_admin_id']);
@@ -107,6 +109,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                     <!--begin::Actions-->
                                     <div class="">
                                         <?php
+
                                         $bookmark = Advisor()->check_bookmark(site_url() . '/admin/dashboard');
 
                                         if ($bookmark) { ?>
@@ -270,7 +273,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">11</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[11] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -308,7 +311,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">2</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[10] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -346,7 +349,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">7</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[9] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -384,7 +387,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">6</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[8] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -422,7 +425,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">6</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[7] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -460,7 +463,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">6</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[6] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -498,7 +501,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">6</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[5] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -536,7 +539,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">6</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[4] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -574,7 +577,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">6</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[3] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -612,7 +615,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">6</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[2] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->
@@ -650,7 +653,7 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                                                             <!--begin::Wrapper-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Number-->
-                                                                <span class="text-gray-800 fw-bold fs-4 me-3">0</span>
+                                                                <span class="text-gray-800 fw-bold fs-4 me-3"><?php echo ($count_advisor_by_lead_source) ? $count_advisor_by_lead_source[1] : ''; ?></span>
                                                                 <!--end::Number-->
                                                                 <!--begin::Info-->
                                                                 <!--begin::label-->

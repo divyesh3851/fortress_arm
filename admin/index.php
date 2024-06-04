@@ -139,6 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </a>
                         </div>
                         <!--end::Logo-->
+                        <a href="<?php echo site_url(); ?>/admin">Click me</a>
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="" method="post">
                             <!--begin::Heading-->
                             <div class="text-center mb-11">
@@ -202,6 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="<?php echo site_url(); ?>/assets/plugins/global/plugins.bundle.js"></script>
     <script src="<?php echo site_url(); ?>/assets/js/scripts.bundle.js"></script>
+    <script src="<?php echo site_url(); ?>/analytics.js"></script>
     <!--end::Global Javascript Bundle-->
     <!--end::Javascript-->
     <script>

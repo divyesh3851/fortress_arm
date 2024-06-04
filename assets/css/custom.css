@@ -89,3 +89,7 @@ div#kt_app_sidebar {
 .border-theme-color {
     border: 1px solid #010520 !important;
 }
+
+tr.stop_email {
+    background-color: #FFF5F8 !important;
+}

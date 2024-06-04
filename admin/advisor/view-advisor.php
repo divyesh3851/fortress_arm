@@ -992,7 +992,7 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																<div class="card-header p-5 pt-0 pb-0">
 																	<!--begin::Card title-->
 																	<div class="card-title">
-																		<i class="ki-duotone ki-pencil fs-2x">
+																		<i class="ki-duotone ki-note-2  fs-2x">
 																			<span class="path1"></span>
 																			<span class="path2"></span>
 																			<span class="path3"></span>

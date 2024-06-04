@@ -964,7 +964,7 @@ $get_campaign_list = Campaign()->get_campaign_list();
                         {
                             target: 1,
                             orderable: false,
-                            className: 'd-flex align-items-center'
+                            className: 'd-flex align-items-center',
                         },
                         {
                             target: 2,
@@ -1055,7 +1055,10 @@ $get_campaign_list = Campaign()->get_campaign_list();
                     ],
                     // Add data-filter attribute
                     createdRow: function(row, data, dataIndex) {
-                        $(row).find('td:eq(3)').attr('data-filter', data.CreditCardType);
+                        if (data.stop_email == 1) {
+                            $(row).addClass('stop_email');
+                        }
+                        //$(row).find('td:eq(3)').attr('data-filter', data.CreditCardType);
                     }
                 });
 

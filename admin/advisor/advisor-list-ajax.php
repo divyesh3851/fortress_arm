@@ -18,6 +18,7 @@ class DataTableApi
         'campaign_user_tbl_id' => true,
         'campaign_id' => true,
         'is_close'      => true,
+        'stop_email'    => true,
     ];
 
     public function __construct()
