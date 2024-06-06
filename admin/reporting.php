@@ -1,35 +1,9 @@
 <?php require '../config.php';
-$page_name = 'reputation';
+$page_name = 'reporting';
 $sub_page_name = '';
 Admin()->check_login();
 
-// Your Google Places API key
-$apiKey = 'AIzaSyDWcAIndKrbI6UyBVfIFugYE5rqcQZhH9M';
-
-// The Place ID of the location for which you want to fetch reviews
-$placeId = 'ChIJv_-AdTsO9YgRK3WGs23Y5gY';
-
-// The endpoint URL for the Place Details request
-$url = "https://maps.googleapis.com/maps/api/place/details/json?place_id={$placeId}&key={$apiKey}";
-
-// Initialize a cURL session
-$curl = curl_init();
-
-// Set the cURL options
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-// Execute the cURL request and get the response
-$response = curl_exec($curl);
-
-// Close the cURL session
-curl_close($curl);
-
-// Decode the JSON response
-$data = json_decode($response, true);
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->
@@ -79,18 +53,6 @@ $data = json_decode($response, true);
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
                     <!--begin::Content wrapper-->
                     <div class="d-flex flex-column flex-column-fluid">
-
-                        <?php
-                        if (isset($_SESSION['process_activity_success'])) {
-                            unset($_SESSION['process_activity_success']); ?>
-                            <div class="alert alert-success d-flex align-items-center p-5 ms-lg-15">
-                                <i class="ki-duotone ki-shield-tick fs-2hx text-success  me-4"><span class="path1"></span><span class="path2"></span></i>
-                                <div class="d-flex flex-column">
-                                    <h4 class="mb-1 text-success">The activity has been saved successfully.</h4>
-                                </div>
-                            </div>
-                        <?php } ?>
-
                         <!--begin::Main-->
                         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
                             <!--begin::Content wrapper-->
@@ -105,17 +67,17 @@ $data = json_decode($response, true);
                                             <!--begin::Page title-->
                                             <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
                                                 <!--begin::Title-->
-                                                <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Reputation</h1>
+                                                <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Reporting</h1>
                                                 <!--end::Title-->
                                             </div>
                                             <!--end::Page title-->
                                             <?php
-                                            $bookmark = Advisor()->check_bookmark(site_url() . '/admin/reputation');
+                                            $bookmark = Advisor()->check_bookmark(site_url() . '/admin/reporting');
 
                                             if ($bookmark) { ?>
-                                                <i class="bi bi-bookmarks-fill fs-2x cursor-pointer text-primary  bookmark_page" bookmark_url="<?php echo site_url(); ?>/admin/reputation"></i>
+                                                <i class="bi bi-bookmarks-fill fs-2x cursor-pointer text-primary  bookmark_page" bookmark_url="<?php echo site_url(); ?>/admin/reporting"></i>
                                             <?php } else { ?>
-                                                <i class="bi bi-bookmarks fs-2x cursor-pointer text-primary bookmark_page" data-bs-toggle="modal" data-bs-target="#kt_modal_bookmark_link" bookmark_name="Reputation" bookmark_url="<?php echo site_url(); ?>/admin/reputation"></i>
+                                                <i class="bi bi-bookmarks fs-2x cursor-pointer text-primary bookmark_page" data-bs-toggle="modal" data-bs-target="#kt_modal_bookmark_link" bookmark_name="Reporting" bookmark_url="<?php echo site_url(); ?>/admin/reporting"></i>
                                             <?php } ?>
                                         </div>
                                         <!--end::Toolbar wrapper-->
@@ -131,27 +93,13 @@ $data = json_decode($response, true);
                                         <div class="card">
                                             <!--begin::Card body-->
                                             <div class="card-body">
-                                                <!--begin::Calendar-->
-                                                <?php
-                                                // Check if the request was successful
-                                                if (isset($data['result']['reviews'])) {
-                                                    // Get the reviews
-                                                    $reviews = $data['result']['reviews'];
-
-                                                    // Display the reviews
-                                                    foreach ($reviews as $review) {
-                                                        echo "Author: " . $review['author_name'] . "<br>";
-                                                        echo "Rating: " . $review['rating'] . "<br>";
-                                                        echo "Text: " . $review['text'] . "<br>";
-                                                        echo "Time: " . date('Y-m-d H:i:s', $review['time']) . "<br>";
-                                                        echo "<hr>";
-                                                    }
-                                                } else {
-                                                    echo "No reviews found or an error occurred.";
-                                                }
-
-                                                ?>
-                                                <!--end::Calendar-->
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <!--begin::Line Chart -->
+                                                        <div id="kt_docs_google_chart_line"></div>
+                                                        <!--end::Line Chart-->
+                                                    </div>
+                                                </div>
                                             </div>
                                             <!--end::Card body-->
                                         </div>
@@ -194,24 +142,58 @@ $data = json_decode($response, true);
     </script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <?php require SITE_DIR . '/footer_script.php'; ?>
+    <script src="//www.google.com/jsapi"></script>
     <!--end::Global Javascript Bundle-->
-    <!--begin::Custom Javascript(used for this page only)-->
     <script>
-        (function() {
-            // Collect analytics data
-            var analyticsData = {
-                page: window.location.pathname,
-                referrer: document.referrer,
-                page_name: 'reputation'
-            };
+        page_visit_chart_load();
 
-            // Send data to the server
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", site_url + "/track.php", true);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.send(JSON.stringify(analyticsData));
-        })();
+        function page_visit_chart_load() {
+            $.post(ajax_url, {
+                action: 'get_page_visit_chart_data',
+                date_formate: 'day',
+            }, function(result) {
+                // GOOGLE CHARTS INIT
+                google.load('visualization', '1', {
+                    packages: ['corechart', 'bar', 'line'],
+                    callback: draw_chart_for_page_visit
+                });
+
+                result = JSON.parse(result);
+
+                function draw_chart_for_page_visit(params) {
+
+                    params = params instanceof Event ? {} : params;
+                    params = typeof params !== 'undefined' ? params : {};
+
+                    // LINE CHART
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Days');
+                    data.addColumn('number', 'No of visitor');
+                    console.log(result);
+                    data.addRows(result);
+
+                    var options = {
+                        chart: {
+                            title: 'Traffic acquisition',
+                            //subtitle: 'in millions of dollars (USD)'
+                        },
+                        colors: ['#1A73E8'],
+                        height: '350',
+                    };
+
+                    var chart = new google.charts.Line(document.getElementById('kt_docs_google_chart_line'));
+                    chart.draw(data, options);
+                }
+            });
+        }
+
+        /*
+        google.setOnLoadCallback(function() {
+
+        });
+        */
     </script>
+    <!--end::Javascript-->
 </body>
 <!--end::Body-->
 

@@ -1561,6 +1561,21 @@ $get_advisor_note_list = Advisor()->get_note_list($_SESSION['fbs_arm_admin_id'])
                 allowEscapeKey: true
             });
         <?php } ?>
+
+            (function() {
+                // Collect analytics data
+                var analyticsData = {
+                    page: window.location.pathname,
+                    referrer: document.referrer,
+                    page_name: 'dashboard'
+                };
+
+                // Send data to the server
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", site_url + "/track.php", true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.send(JSON.stringify(analyticsData));
+            })();
     </script>
 
     <!--end::Javascript-->

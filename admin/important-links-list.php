@@ -569,6 +569,21 @@ require SITE_DIR . '/vendor/autoload.php';
             });
 
         });
+
+        (function() {
+            // Collect analytics data
+            var analyticsData = {
+                page: window.location.pathname,
+                referrer: document.referrer,
+                page_name: 'important_links'
+            };
+
+            // Send data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", site_url + "/track.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(analyticsData));
+        })();
     </script>
 </body>
 <!--end::Body-->

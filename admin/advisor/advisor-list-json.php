@@ -66,6 +66,7 @@ foreach ($advisor_list as $advisor_result) {
             </div>
             <!--begin::User details-->';
 
+    /*
     $advisor_status = '';
     if ($advisor_result->advisor_status == 1) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-success">New</div>';
@@ -78,6 +79,7 @@ foreach ($advisor_list as $advisor_result) {
     } else if ($advisor_result->advisor_status == 5) {
         $advisor_status = '<div class="badge py-3 px-4 fs-7 badge-light-dark">FBS Agent</div>';
     }
+    */
 
     $lead_source = ($advisor_result->lead_source) ? Settings()->get_selected_lead_source_data($advisor_result->lead_source)->type : '';
 
@@ -91,7 +93,7 @@ foreach ($advisor_list as $advisor_result) {
         'email'         => $advisor_result->email,
         'mobile_no'     => $advisor_result->mobile_no,
         'rating'        => $rating,
-        'status'        => $advisor_status,
+        'status'        => ($advisor_result->advisor_status) ? intval($advisor_result->advisor_status) : 0,
         'city'          => $advisor_result->city,
         'state'         => $advisor_result->state,
         'lead_source'   => $lead_source,

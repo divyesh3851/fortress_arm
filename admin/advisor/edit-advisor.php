@@ -1468,6 +1468,21 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
         stepper.on("kt.stepper.previous", function(stepper) {
             stepper.goPrevious(); // go previous step
         });
+
+        (function() {
+            // Collect analytics data
+            var analyticsData = {
+                page: window.location.pathname,
+                referrer: document.referrer,
+                page_name: 'edit_advisor'
+            };
+
+            // Send data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", site_url + "/track.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(analyticsData));
+        })();
     </script>
 </body>
 <!--end::Body-->

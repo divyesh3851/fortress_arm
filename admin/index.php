@@ -139,7 +139,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </a>
                         </div>
                         <!--end::Logo-->
-                        <a href="<?php echo site_url(); ?>/admin">Click me</a>
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="" method="post">
                             <!--begin::Heading-->
                             <div class="text-center mb-11">

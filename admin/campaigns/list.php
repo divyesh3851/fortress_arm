@@ -244,6 +244,22 @@ $get_campaign_list = Campaign()->get_campaign_list();
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <?php require SITE_DIR . '/footer_script.php'; ?>
     <!--end::Global Javascript Bundle-->
+    <script>
+        (function() {
+            // Collect analytics data
+            var analyticsData = {
+                page: window.location.pathname,
+                referrer: document.referrer,
+                page_name: 'campaign'
+            };
+
+            // Send data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", site_url + "/track.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(analyticsData));
+        })();
+    </script>
 </body>
 <!--end::Body-->
 

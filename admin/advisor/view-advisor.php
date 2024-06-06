@@ -597,23 +597,23 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 																	<div class="row  mt-4">
 																		<div class="col-md-6">
 																			<div class="text-gray-600">Birthdate </div>
-																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->birth_date) ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '-'; ?></div>
+																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->birth_date && $selected_advisor_data->birth_date != '0000-00-00') ? date("m/d/Y", strtotime($selected_advisor_data->birth_date)) : '-'; ?></div>
 																		</div>
 																		<div class="col-md-6">
 																			<div class="text-gray-600">Gender </div>
-																			<div class="fw-bold mt-1"><?php echo $selected_advisor_data->gender; ?></div>
+																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->gender) ? $selected_advisor_data->gender : '-'; ?></div>
 																		</div>
 																	</div>
 
 																	<div class="row mt-4">
 																		<div class="col-md-6">
 																			<div class="text-gray-600">Marital </div>
-																			<div class="fw-bold mt-1"><?php echo $selected_advisor_data->marital_status; ?></div>
+																			<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->marital_status) ? $selected_advisor_data->marital_status : '-'; ?></div>
 																		</div>
 																		<?php if ($selected_advisor_data->marital_status == 'Married') { ?>
 																			<div class="col-md-6">
 																				<div class="text-gray-600">Anniversary </div>
-																				<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->anniversary_date) ? date('m/d/Y', strtotime($selected_advisor_data->anniversary_date)) : ''; ?></div>
+																				<div class="fw-bold mt-1"><?php echo ($selected_advisor_data->anniversary_date && $selected_advisor_data->anniversary_date != '0000-00-00') ? date('m/d/Y', strtotime($selected_advisor_data->anniversary_date)) : '-'; ?></div>
 																			</div>
 																		<?php } ?>
 																	</div>
@@ -2625,6 +2625,21 @@ $get_advisor_note_list = Advisor()->get_note_list($selected_advisor_data->id);
 				});
 			});
 		});
+
+		(function() {
+			// Collect analytics data
+			var analyticsData = {
+				page: window.location.pathname,
+				referrer: document.referrer,
+				page_name: 'view_advisor'
+			};
+
+			// Send data to the server
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", site_url + "/track.php", true);
+			xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			xhr.send(JSON.stringify(analyticsData));
+		})();
 	</script>
 </body>
 <!--end::Body-->

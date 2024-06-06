@@ -969,6 +969,19 @@ $get_campaign_list = Campaign()->get_campaign_list();
                         {
                             target: 2,
                             orderable: false,
+                            render: function(data) {
+                                if (data == 2) {
+                                    return `<div class="badge py-3 px-4 fs-7 badge-light-primary">Cold</div>`;
+                                } else if (data == 3) {
+                                    return `<div class="badge py-3 px-4 fs-7 badge-light-warning">Warm</div>`;
+                                } else if (data == 4) {
+                                    return `<div class="badge py-3 px-4 fs-7 badge-light-info">Hot</div>`;
+                                } else if (data == 5) {
+                                    return `<div class="badge py-3 px-4 fs-7 badge-light-dark">FBS Agent</div>`;
+                                } else {
+                                    return `<div class="badge py-3 px-4 fs-7 badge-light-success">New</div>`;
+                                }
+                            }
                         },
                         {
                             target: 3,
@@ -999,57 +1012,82 @@ $get_campaign_list = Campaign()->get_campaign_list();
                             className: 'text-start',
                             render: function(data, type, row) {
 
-                                return `<div class="d-flex">  
-                                            <a href="tel:${data.mobile_no}" data-bs-toggle="tooltip" title="Call Contact">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-3 fw-bold text-gray-700"> 
-                                                        <i class="las la-phone-volume fs-2 text-success"></i>
+                                let html = '<div class="d-flex">';
+
+                                html +=
+                                    `<a href="tel:${data.mobile_no}" data-bs-toggle="tooltip" title="Call Contact">
+                                        <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                            <div class="fs-3 fw-bold text-gray-700"> 
+                                                <i class="las la-phone-volume fs-2 text-success"></i>
+                                            </div>
+                                        </div>
+                                    </a> 
+                                    <a href="mailto:${data.email}"  data-bs-toggle="tooltip" title="Email Contact">
+                                        <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                            <div class="fs-2 fw-bold text-gray-700">
+                                                <i class="las la-envelope-open-text fs-2  text-success"></i>
+                                            </div>
+                                        </div> 
+                                    </a>`;
+
+                                if (data.is_close == 1) {
+
+                                    html += `
+                                    <a href="#" id="${data.record_id}" class="menu-link" data-bs-toggle="tooltip" title="Campaign Closed">
+                                        <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                            <div class="fs-3 fw-bold text-gray-700"> 
+                                                <i class="las la-bullhorn fs-2 text-danger"></i> 
+                                            </div>
+                                        </div>
+                                    </a>`;
+
+                                } else {
+
+                                    if (data.status != 2) {
+                                        html += `<div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                                    <div class="fs-2 fw-bold text-gray-700"> 
+                                                        <i class="las la-volume-mute fs-2 text-danger"></i>
                                                     </div>
-                                                </div>
-                                            </a> 
-                                            <a href="mailto:${data.email}"  data-bs-toggle="tooltip" title="Email Contact">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-envelope-open-text fs-2  text-success"></i>
-                                                    </div>
-                                                </div> 
-                                            </a> 
-                                            ${data.is_close == 1 ? `<a href="#" id="${data.record_id}" class="menu-link " data-bs-toggle="tooltip" title="Campaign Closed">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-3 fw-bold text-gray-700"> 
-                                                        <i class="las la-bullhorn fs-2 text-danger"></i> 
-                                                    </div>
-                                                </div>
-                                            </a>` : `<a href="#" id="${data.record_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_campaign="${data.campaign_id}" current_campaign_status="${data.is_close}">
+                                                </div>`;
+
+                                    } else {
+
+                                        html += `
+                                            <a href="#" id="${data.record_id}" class="menu-link user_settings_modal" data-bs-toggle="modal" data-bs-target="#user_settings_modal" data-kt-docs-table-filter="edit_row" current_campaign="${data.campaign_id}" current_campaign_status="${data.is_close}">
                                                 <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
                                                     <div class="fs-3 fw-bold text-gray-700"> 
                                                         <i class="las la-bullhorn fs-2 text-primary"></i> 
                                                     </div>
                                                 </div>
-                                            </a>` }
-                                            
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.record_id}" data-bs-toggle="tooltip" title="View Quick Info">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-3 fw-bold text-gray-700">
-                                                        <i class="las la-eye fs-2 text-primary"></i>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" data-bs-toggle="tooltip" title="Edit Contact">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-user-edit fs-2 text-primary"></i>
-                                                    </div>
-                                                </div> 
-                                            </a>
-                                            <a href="#" data-kt-docs-table-filter="delete_row" advisor_id="${data.record_id}" data-bs-toggle="tooltip" title="Delete Contact">
-                                                <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
-                                                    <div class="fs-2 fw-bold text-gray-700">
-                                                        <i class="las la-trash-alt fs-2 text-primary"></i>
-                                                    </div>
-                                                </div> 
-                                            </a>  
-                                    </div>`;
+                                            </a>`;
+                                    }
+                                }
+
+                                html += `
+                                    <a href="<?php echo site_url(); ?>/admin/advisor/view-advisor/${data.record_id}" data-bs-toggle="tooltip" title="View Quick Info">
+                                        <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                            <div class="fs-3 fw-bold text-gray-700">
+                                                <i class="las la-eye fs-2 text-primary"></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="<?php echo site_url(); ?>/admin/advisor/edit-advisor/${data.record_id}" data-bs-toggle="tooltip" title="Edit Contact">
+                                        <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                            <div class="fs-2 fw-bold text-gray-700">
+                                                <i class="las la-user-edit fs-2 text-primary"></i>
+                                            </div>
+                                        </div> 
+                                    </a>
+                                    <a href="#" data-kt-docs-table-filter="delete_row" advisor_id="${data.record_id}" data-bs-toggle="tooltip" title="Delete Contact">
+                                        <div class="border border-gray-300 border-dashed rounded pt-2 pb-1 px-3 mb-3 me-2">
+                                            <div class="fs-2 fw-bold text-gray-700">
+                                                <i class="las la-trash-alt fs-2 text-primary"></i>
+                                            </div>
+                                        </div> 
+                                    </a>
+                                </div>`;
+
+                                return html;
                             },
                         },
                     ],
@@ -1384,6 +1422,21 @@ $get_campaign_list = Campaign()->get_campaign_list();
                 });
             });
         });
+
+        (function() {
+            // Collect analytics data
+            var analyticsData = {
+                page: window.location.pathname,
+                referrer: document.referrer,
+                page_name: 'advisor_list'
+            };
+
+            // Send data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", site_url + "/track.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(analyticsData));
+        })();
     </script>
 </body>
 <!--end::Body-->

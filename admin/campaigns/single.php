@@ -961,6 +961,21 @@ $get_user_list = $wpdb->get_results("SELECT ad.id,ad.first_name,ad.last_name,ad.
             templateSelection: optionFormat,
             templateResult: optionFormat
         });
+
+        (function() {
+            // Collect analytics data
+            var analyticsData = {
+                page: window.location.pathname,
+                referrer: document.referrer,
+                page_name: 'single_campaign'
+            };
+
+            // Send data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", site_url + "/track.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(analyticsData));
+        })();
     </script>
 </body>
 <!--end::Body-->

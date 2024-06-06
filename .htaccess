@@ -106,4 +106,5 @@ Options -MultiViews
 	RewriteRule ^admin/reputation?$ admin/reputation.php [NC,L]
 	RewriteRule ^unsubscribe/([^/]+)$ unsubscribe.php?key=$1 [NC,L]
 	RewriteRule ^unsubscribe/([^/]+)/([^/]+)$ unsubscribe.php?key=$1&campaign_id=$2 [NC,L]
+	RewriteRule ^admin/reporting/?$ admin/reporting.php [NC,L]
 </IfModule>

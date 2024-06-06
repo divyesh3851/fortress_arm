@@ -17,6 +17,7 @@ $wpdb->insert(
     "page_analytics",
     array(
         "page"      => $page,
+        "page_name" => ($data['page_name']) ? $data['page_name'] : '',
         "referrer"  => $referrer,
         "user_ip"   => $user_ip,
         "user_agent" => $user_agent,

@@ -17,6 +17,8 @@ require_once SITE_DIR . '/classes/class-campaign.php';
 
 require_once SITE_DIR . '/classes/class-social.php';
 
+require_once SITE_DIR . '/classes/class-analytics.php';
+
 //require_once SITE_DIR . '/classes/class-business.php';
 
 // Define Admin Vars

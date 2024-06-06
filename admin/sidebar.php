@@ -160,7 +160,7 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link <?php echo ($page_name == 'reporting') ? 'active' : ''; ?>" href="">
+                    <a class="menu-link <?php echo ($page_name == 'reporting') ? 'active' : ''; ?>" href="<?php echo site_url(); ?>/admin/reporting">
                         <span class="menu-icon">
                             <i class="las la-notes-medical fs-2x"></i>
                         </span>
