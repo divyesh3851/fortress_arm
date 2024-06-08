@@ -93,3 +93,7 @@ div#kt_app_sidebar {
 tr.stop_email {
     background-color: #FFF5F8 !important;
 }
+
+.daterangepicker .ranges ul {
+    width: 250px;
+}

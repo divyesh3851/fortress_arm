@@ -515,3 +515,12 @@ if (!function_exists('str_contains')) {
 		return empty($needle) || strpos($haystack, $needle) !== false;
 	}
 }
+
+// Function to calculate the number of days between two dates
+function calculateDaysBetween($start_date, $end_date)
+{
+	$date1 = new DateTime($start_date);
+	$date2 = new DateTime($end_date);
+	$interval = $date1->diff($date2);
+	return $interval->days;
+}

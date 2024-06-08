@@ -44,6 +44,213 @@ class Advisor
         add_action('wp_ajax_delete_activity', array($this, 'delete_activity'));
 
         add_action('wp_ajax_update_advisor_rating', array($this, 'update_advisor_rating'));
+
+        add_action('wp_ajax_get_advisor_chart_data', array($this, 'get_advisor_chart_data'));
+    }
+
+    public function get_advisor_chart_data($date_range)
+    {
+        global $wpdb;
+
+        $date_range = (isset($_POST['date_range'])) ? $_POST['date_range'] : $date_range;
+
+        if (!$date_range) {
+            return;
+        }
+
+        $data_found = false;
+
+        $date_range = explode("-", $date_range);
+
+        $start_date = ($date_range[0]) ? date('Y-m-d', strtotime(trim($date_range[0]))) : '';
+        $end_date = ($date_range[1]) ? date('Y-m-d', strtotime(trim($date_range[1]))) : '';
+
+        $days = calculateDaysBetween($start_date, $end_date);
+
+        $start = new DateTime($start_date);
+        $end = new DateTime($end_date);
+        $end->modify('+1 day'); // Include the end date in the array
+
+        // Create a DateInterval for daily increment
+        $interval = new DateInterval('P1D'); // 1 day interval
+
+        // Create a DatePeriod instance
+        $period = new DatePeriod($start, $interval, $end);
+
+        $status_wise_array = array();
+        foreach (Settings()->get_advisor_status_list() as $key => $status_result) {
+            $status_wise_array[] = $status_result;
+        }
+
+        if ($days <= 8) {
+
+            // Loop through the DatePeriod and add each date to the array
+            foreach ($period as $date) {
+
+                $new_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 1 AND DATE(created_at) = "' . $date->format('Y-m-d') . '"');
+
+                $cold_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 2 AND DATE(created_at) = "' . $date->format('Y-m-d') . '"');
+
+                $warm_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 3 AND DATE(created_at) = "' . $date->format('Y-m-d') . '"');
+
+                $hot_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 4 AND DATE(created_at) = "' . $date->format('Y-m-d') . '"');
+
+                $fbs_agent_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 5 AND DATE(created_at) = "' . $date->format('Y-m-d') . '"');
+
+                $total_visit_data[] = array(
+                    'new_total_advisor' => ($new_total_advisor_count) ? $new_total_advisor_count : 0,
+                    'cold_total_advisor' => ($cold_total_advisor_count) ? $cold_total_advisor_count : 0,
+                    'warm_total_advisor' => ($warm_total_advisor_count) ? $warm_total_advisor_count : 0,
+                    'hot_total_advisor' => ($hot_total_advisor_count) ? $hot_total_advisor_count : 0,
+                    'fbs_agent_total_advisor' => ($fbs_agent_total_advisor_count) ? $fbs_agent_total_advisor_count : 0,
+                    'created_at'    => $date->format('Y-m-d'),
+                );
+            }
+
+            $data[0][0] = 'Days';
+            $data[0][1] = 0;
+            $data[0][2] = 0;
+            $data[0][3] = 0;
+            $data[0][4] = 0;
+            $data[0][5] = 0;
+            $x          = 1;
+
+            foreach ($total_visit_data as $result) {
+
+                $data[$x][0] = date('d M', strtotime($result['created_at']));
+                $data[$x][1] = (int) $result['new_total_advisor'];
+                $data[$x][2] = (int) $result['cold_total_advisor'];
+                $data[$x][3] = (int) $result['warm_total_advisor'];
+                $data[$x][4] = (int) $result['hot_total_advisor'];
+                $data[$x][5] = (int) $result['fbs_agent_total_advisor'];
+                $x++;
+            }
+
+            $data_found = true;
+        } elseif ($days > 8 && $days <= 30) {
+
+            // Loop through the DatePeriod and add each date to the array
+            foreach ($period as $date) {
+
+                // Extract month and year from the current date
+                $month_year = $date->format('M/Y');
+
+                $new_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 1 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $cold_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 2 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $warm_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 3 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $hot_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 4 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $fbs_agent_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 5 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $total_visit_data[$month_year] = array(
+                    'new_total_advisor' => ($new_total_advisor_count) ? $new_total_advisor_count : 0,
+                    'cold_total_advisor' => ($cold_total_advisor_count) ? $cold_total_advisor_count : 0,
+                    'warm_total_advisor' => ($warm_total_advisor_count) ? $warm_total_advisor_count : 0,
+                    'hot_total_advisor' => ($hot_total_advisor_count) ? $hot_total_advisor_count : 0,
+                    'fbs_agent_total_advisor' => ($fbs_agent_total_advisor_count) ? $fbs_agent_total_advisor_count : 0,
+                    'created_at'    => $date->format('Y-m-d'),
+                );
+            }
+
+            $data[0][0] = 'Month';
+            $data[0][1] = 0;
+            $data[0][2] = 0;
+            $data[0][3] = 0;
+            $data[0][4] = 0;
+            $data[0][5] = 0;
+            $x          = 1;
+
+            foreach ($total_visit_data as $result) {
+
+                $data[$x][0] = date('M/Y', strtotime($result['created_at']));
+                $data[$x][1] = (int) $result['new_total_advisor'];
+                $data[$x][2] = (int) $result['cold_total_advisor'];
+                $data[$x][3] = (int) $result['warm_total_advisor'];
+                $data[$x][4] = (int) $result['hot_total_advisor'];
+                $data[$x][5] = (int) $result['fbs_agent_total_advisor'];
+                $x++;
+            }
+
+
+            $data_found = true;
+        } else if ($days > 31) {
+
+            // Initialize an empty array to hold the month-wise data
+            $month_wise_data = [];
+
+            // Loop through the DatePeriod and add each date to the array
+            foreach ($period as $date) {
+
+                // Extract month and year from the current date
+                $month_year = $date->format('M/Y');
+
+                // Extract month and year from the current date
+                $month_year = $date->format('M/Y');
+
+                $new_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 1 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $cold_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 2 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $warm_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 3 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $hot_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 4 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $fbs_agent_total_advisor_count = $wpdb->get_var('SELECT COUNT(id) as total_record FROM advisor WHERE advisor_status = 5 AND YEAR(DATE(created_at)) = YEAR("' . $date->format('Y-m-d') . '")
+                    AND MONTH(DATE(created_at)) = MONTH("' . $date->format('Y-m-d') . '")');
+
+                $total_visit_data[$month_year] = array(
+                    'new_total_advisor' => ($new_total_advisor_count) ? $new_total_advisor_count : 0,
+                    'cold_total_advisor' => ($cold_total_advisor_count) ? $cold_total_advisor_count : 0,
+                    'warm_total_advisor' => ($warm_total_advisor_count) ? $warm_total_advisor_count : 0,
+                    'hot_total_advisor' => ($hot_total_advisor_count) ? $hot_total_advisor_count : 0,
+                    'fbs_agent_total_advisor' => ($fbs_agent_total_advisor_count) ? $fbs_agent_total_advisor_count : 0,
+                    'created_at'    => $date->format('Y-m-d'),
+                );
+            }
+
+            $data[0][0] = 'Month';
+            $data[0][1] = 0;
+            $data[0][2] = 0;
+            $data[0][3] = 0;
+            $data[0][4] = 0;
+            $data[0][5] = 0;
+            $x          = 1;
+
+            foreach ($total_visit_data as $result) {
+
+                $data[$x][0] = date('M/Y', strtotime($result['created_at']));
+                $data[$x][1] = (int) $result['new_total_advisor'];
+                $data[$x][2] = (int) $result['cold_total_advisor'];
+                $data[$x][3] = (int) $result['warm_total_advisor'];
+                $data[$x][4] = (int) $result['hot_total_advisor'];
+                $data[$x][5] = (int) $result['fbs_agent_total_advisor'];
+                $x++;
+            }
+
+            $data_found = true;
+        }
+
+        if ($data_found) {
+
+            echo (json_encode($data));
+        } else {
+
+            //echo (json_encode(array(array('Days', 0), array(date('Y'), 0))));
+        }
+
+        die;
     }
 
     public function count_advisor_by_lead_source()

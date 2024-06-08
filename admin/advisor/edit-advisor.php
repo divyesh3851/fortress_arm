@@ -204,7 +204,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                     </div>
                                 <?php } ?>
                                 <!--begin::Stepper-->
-                                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid gap-10" id="kt_create_account_stepper">
+                                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid gap-10" id="kt_stepper_example_clickable">
                                     <!--begin::Aside-->
                                     <div class="card d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px w-xxl-400px">
                                         <!--begin::Wrapper-->
@@ -212,7 +212,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                             <!--begin::Nav-->
                                             <div class="stepper-nav">
                                                 <!--begin::Step 1-->
-                                                <div class="stepper-item current" data-kt-stepper-element="nav">
+                                                <div class="stepper-item current" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <!--begin::Wrapper-->
                                                     <div class="stepper-wrapper">
                                                         <!--begin::Icon-->
@@ -235,7 +235,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 1-->
                                                 <!--begin::Step 2-->
-                                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <!--begin::Wrapper-->
                                                     <div class="stepper-wrapper">
                                                         <!--begin::Icon-->
@@ -258,7 +258,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 2-->
                                                 <!--begin::Step 3-->
-                                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <!--begin::Wrapper-->
                                                     <div class="stepper-wrapper">
                                                         <!--begin::Icon-->
@@ -281,7 +281,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 3-->
                                                 <!--begin::Step 4-->
-                                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <!--begin::Wrapper-->
                                                     <div class="stepper-wrapper">
                                                         <!--begin::Icon-->
@@ -304,7 +304,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 4-->
                                                 <!--begin::Step 5-->
-                                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <!--begin::Wrapper-->
                                                     <div class="stepper-wrapper">
                                                         <!--begin::Icon-->
@@ -327,7 +327,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 5-->
                                                 <!--begin::Step 6-->
-                                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <!--begin::Wrapper-->
                                                     <div class="stepper-wrapper">
                                                         <!--begin::Icon-->
@@ -350,7 +350,7 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
                                                 </div>
                                                 <!--end::Step 6-->
                                                 <!--begin::Step 7-->
-                                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step">
                                                     <!--begin::Wrapper-->
                                                     <div class="stepper-wrapper">
                                                         <!--begin::Icon-->
@@ -1450,12 +1450,13 @@ $emp_assistant_contact = (isset($get_last_employment) && $get_last_employment->a
         });
 
         // Stepper lement
-        var element = document.querySelector("#kt_create_account_stepper");
+        var element = document.querySelector("#kt_stepper_example_clickable");
 
         // Initialize Stepper
         var stepper = new KTStepper(element);
 
         stepper.on("kt.stepper.click", function(stepper) {
+            console.log("iser");
             stepper.goTo(stepper.getClickedStepIndex()); // go to clicked step
         });
 
