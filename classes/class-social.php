@@ -13,6 +13,68 @@ class Social
     {
     }
 
+    function add_event_in_google_calendar($service, $calendarId, $event_info = array())
+    {
+
+        if (empty($event_info)) {
+            return;
+        }
+
+        $event_date = ($event_info['activity_date']) ? $event_info['activity_date'] : '';
+
+        $start_time = ($event_info['start_time']) ? $event_info['start_time'] : '00:00:00';
+        $end_time   = ($event_info['end_time']) ? $event_info['end_time'] : '00:00:00';
+
+        if (!$event_date) {
+            return;
+        }
+
+        // Step 1: Parse the initial date and time
+        $initialDateTime = new DateTime($event_date . ' ' . $start_time);
+
+        // Step 4: Format the final date and time in the desired format
+        $formattedDateTime = $initialDateTime->format('Y-m-d\TH:i:sP');
+
+        // Step 1: Parse the initial date and time
+        $end_date_time = new DateTime($event_date . ' ' . $end_time);
+
+        // Step 4: Format the final date and time in the desired format
+        $formated_end_date_time = $end_date_time->format('Y-m-d\TH:i:sP');
+
+        $event = new Google_Service_Calendar_Event(array(
+            'summary' => $event_info['title'],
+            'location' => $event_info['location'],
+            'description' => $event_info['note'],
+            'start' => array(
+                'dateTime' => $formattedDateTime,
+                'timeZone' => 'America/Los_Angeles',
+            ),
+            'end' => array(
+                'dateTime' => $formated_end_date_time,
+                'timeZone' => 'America/Los_Angeles',
+            ),
+            /*
+            'recurrence' => array(
+                'RRULE:FREQ=DAILY;COUNT=2'
+            ),
+            'attendees' => array(
+                array('email' => 'attendee1@example.com'),
+                array('email' => 'attendee2@example.com'),
+            ),
+            'reminders' => array(
+                'useDefault' => FALSE,
+                'overrides' => array(
+                    array('method' => 'email', 'minutes' => 24 * 60),
+                    array('method' => 'popup', 'minutes' => 10),
+                ),
+            ),
+            
+            */
+        ));
+
+        $event = $service->events->insert($calendarId, $event);
+    }
+
     function get_youtube_data()
     {
 

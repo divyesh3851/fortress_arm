@@ -107,4 +107,5 @@ Options -MultiViews
 	RewriteRule ^unsubscribe/([^/]+)$ unsubscribe.php?key=$1 [NC,L]
 	RewriteRule ^unsubscribe/([^/]+)/([^/]+)$ unsubscribe.php?key=$1&campaign_id=$2 [NC,L]
 	RewriteRule ^admin/reporting/?$ admin/reporting.php [NC,L]
+	RewriteRule ^admin/settings/calendar-setting/?$ admin/settings/calendar-setting.php [NC,L]
 </IfModule>

@@ -168,6 +168,9 @@ Admin()->check_login();
                                                         <div id="kt_docs_google_chart_line"></div>
                                                         <!--end::Line Chart-->
                                                     </div>
+                                                    <div class="col-md-6">
+                                                        <div id="page_visitor_chart_by_state" style="height: 350px;"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <!--end::Card body-->
@@ -260,15 +263,15 @@ Admin()->check_login();
                 return;
             }
 
+            // page visit line chart
             $.post(ajax_url, {
                 action: 'get_page_visit_chart_data',
                 date_range: date_range,
             }, function(result) {
-                console.log(result);
 
                 // GOOGLE CHARTS INIT
                 google.load('visualization', '1', {
-                    packages: ['corechart', 'bar', 'line'],
+                    packages: ['corechart', 'line'],
                     callback: draw_chart_for_page_visit
                 });
 
@@ -296,6 +299,53 @@ Admin()->check_login();
                     };
 
                     var chart = new google.charts.Line(document.getElementById('kt_docs_google_chart_line'));
+                    chart.draw(data, options);
+                }
+
+            });
+
+            // page visit bar chart 
+            $.post(ajax_url, {
+                action: 'get_page_visit_chart_data_by_state',
+                date_range: date_range,
+            }, function(result) {
+
+                // GOOGLE CHARTS INIT
+                google.load('visualization', '1', {
+                    packages: ['corechart', 'bar'],
+                    callback: draw_chart_for_page_visit_by_state
+                });
+
+                function draw_chart_for_page_visit_by_state() {
+
+                    /*
+                    var data = google.visualization.arrayToDataTable([
+                        ['City', 'Visitor By Region'],
+                        ['New York City, NY', 8175000],
+                        ['Los Angeles, CA', 3792000],
+                        ['Chicago, IL', 2695000],
+                        ['Houston, TX', 2099000],
+                        ['Philadelphia, PA', 1526000]
+                    ]);
+                    */
+                    var data = '';
+                    result = JSON.parse(result);
+
+                    // LINE CHART
+                    data = new google.visualization.DataTable();
+                    data.addColumn('string', 'City');
+                    data.addColumn('number', 'Visitor By Region');
+                    data.addRows(result);
+
+                    var options = {
+                        title: 'Visitor By Region',
+                        chartArea: {
+                            width: '50%'
+                        },
+                    };
+
+                    var chart = new google.visualization.BarChart(document.getElementById('page_visitor_chart_by_state'));
+
                     chart.draw(data, options);
                 }
             });
@@ -332,8 +382,6 @@ Admin()->check_login();
 
         cb(start, end);
 
-
-
         // advisor chart
         function advisor_chart_load(date_range) {
 
@@ -345,7 +393,6 @@ Admin()->check_login();
                 action: 'get_advisor_chart_data',
                 date_range: date_range,
             }, function(result) {
-
                 //KTDatatablesServerSide.init();
                 //KTDatatablesServerSide.reloadTable();
                 // $('#kt_datatable_example_1').DataTable(); 
@@ -387,6 +434,11 @@ Admin()->check_login();
 
                     var chart = new google.charts.Line(document.getElementById('advisor_chart'));
                     chart.draw(data, options);
+
+                    // Destroy  DataTable
+                    if ($.fn.DataTable.isDataTable('#kt_datatable_example_1')) {
+                        $('#kt_datatable_example_1').DataTable().destroy();
+                    }
 
                     // Class definition
                     var KTDatatablesServerSide = function() {
@@ -545,10 +597,6 @@ Admin()->check_login();
 
                             table = dt.$;
 
-                            // Destroy existing DataTable instance if it exists  
-                            if (dt) {
-                                dt.destroy();
-                            }
                             // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
                             dt.on('draw', function() {
                                 initToggleToolbar();
@@ -643,6 +691,7 @@ Admin()->check_login();
                 }
             });
         }
+
 
         // On document ready
         /*

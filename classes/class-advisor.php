@@ -1108,6 +1108,21 @@ class Advisor
 
         if ($wpdb->insert("activity", $activity_info)) {
 
+            $client = new Google_Client();
+            $client->setClientId(get_option('gcal_client_id'));
+            $client->setClientSecret(get_option('gcal_client_secret'));
+            $client->setRedirectUri(get_option('gcal_redirect_uri'));
+            $client->addScope(Google_Service_Calendar::CALENDAR);
+
+            $client->setAccessToken($_SESSION['access_token']);
+
+            $service = new Google_Service_Calendar($client);
+
+            // Example: List the next 10 events on the user's calendar
+            $calendarId = get_option('calender_id');
+
+            Social()->add_event_in_google_calendar($service, $calendarId, $activity_info);
+
             $last_id = $wpdb->insert_id;
 
             Admin()->create_track_log_activity($user_id, $last_id, 'activity add', 'activity_add', $activity_info, '', 'New Activity Added', 'advisor');

@@ -600,6 +600,14 @@
                                 </a>
                                 <!--end:Menu link-->
                                 <!--begin:Menu link-->
+                                <a class="menu-link <?php echo ($sub_page_name == 'calendar-setting') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/calendar-setting">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Calendar Settings</span>
+                                </a>
+                                <!--end:Menu link-->
+                                <!--begin:Menu link-->
                                 <a class="menu-link <?php echo ($sub_page_name == 'cron_setting') ? 'active' : ''; ?>" href="<?php echo site_url() ?>/admin/settings/cron-setting">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>

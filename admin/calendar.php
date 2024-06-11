@@ -1,7 +1,16 @@
-<?php require '../config.php';
+<?php
+require '../config.php';
+require_once SITE_DIR . '/vendor/autoload.php';
 $page_name = 'calendar';
 $sub_page_name = '';
 Admin()->check_login();
+
+$client = new Google_Client();
+$client->setClientId(CLIENT_ID);
+$client->setClientSecret(CLIENT_SECRET);
+$client->setRedirectUri(CALENDAR_REDIRECT_URL);
+$client->addScope(Google_Service_Calendar::CALENDAR);
+$google_auth_url = $client->createAuthUrl();
 
 if (isset($_POST['save_activity'])) {
 
@@ -62,12 +71,14 @@ if (isset($_POST['save_activity'])) {
         <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
             <!--begin::Header-->
-            <?php require SITE_DIR . '/admin/header.php'; ?>
+            <?php require SITE_DIR . '/admin/header.php';
+            ?>
             <!--end::Header-->
             <!--begin::Wrapper-->
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <!--begin::Sidebar-->
-                <?php require SITE_DIR . '/admin/sidebar.php'; ?>
+                <?php require SITE_DIR . '/admin/sidebar.php';
+                ?>
                 <!--end::Sidebar-->
                 <!--begin::Main-->
 
@@ -99,18 +110,23 @@ if (isset($_POST['save_activity'])) {
                                         <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
                                             <!--begin::Page title-->
                                             <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
-                                                <!--begin::Title-->
-                                                <!--end::Title-->
                                             </div>
                                             <!--end::Page title-->
-                                            <?php
-                                            $bookmark = Advisor()->check_bookmark(site_url() . '/admin/calendar');
+                                            <div class="">
+                                                <a href="<?php echo $google_auth_url; ?>" target="_blank" class="btn btn-primary" title="Sync With Google Calendar">
+                                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                                    Sync With Google
+                                                </a>
+                                                <?php
+                                                $bookmark = Advisor()->check_bookmark(site_url() . '/admin/calendar');
 
-                                            if ($bookmark) { ?>
-                                                <i class="bi bi-bookmarks-fill fs-2x cursor-pointer text-primary  bookmark_page" bookmark_url="<?php echo site_url(); ?>/admin/calendar"></i>
-                                            <?php } else { ?>
-                                                <i class="bi bi-bookmarks fs-2x cursor-pointer text-primary bookmark_page" data-bs-toggle="modal" data-bs-target="#kt_modal_bookmark_link" bookmark_name="Calendar" bookmark_url="<?php echo site_url(); ?>/admin/calendar"></i>
-                                            <?php } ?>
+                                                if ($bookmark) { ?>
+                                                    <i class="bi bi-bookmarks-fill fs-2x cursor-pointer text-primary  bookmark_page" bookmark_url="<?php echo site_url(); ?>/admin/calendar"></i>
+                                                <?php } else { ?>
+                                                    <i class="bi bi-bookmarks fs-2x cursor-pointer text-primary bookmark_page" data-bs-toggle="modal" data-bs-target="#kt_modal_bookmark_link" bookmark_name="Calendar" bookmark_url="<?php echo site_url(); ?>/admin/calendar"></i>
+                                                <?php } ?>
+
+                                            </div>
                                         </div>
                                         <!--end::Toolbar wrapper-->
                                     </div>

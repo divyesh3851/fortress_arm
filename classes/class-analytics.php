@@ -12,6 +12,40 @@ class Analytics
     public function __construct()
     {
         add_action('wp_ajax_get_page_visit_chart_data', array($this, 'get_page_visit_chart_data'));
+
+        add_action('wp_ajax_get_page_visit_chart_data_by_state', array($this, 'get_page_visit_chart_data_by_state'));
+    }
+
+    public function get_page_visit_chart_data_by_state($date_range = '')
+    {
+        global $wpdb;
+
+        $date_range = (isset($_POST['date_range'])) ? $_POST['date_range'] : $date_range;
+
+        if (!$date_range) {
+            return;
+        }
+
+        $date_range = explode("-", $date_range);
+
+        $start_date = ($date_range[0]) ? date('Y-m-d', strtotime(trim($date_range[0]))) : '';
+        $end_date = ($date_range[1]) ? date('Y-m-d', strtotime(trim($date_range[1]))) : '';
+
+        $state_wise_data = $wpdb->get_results('SELECT COUNT(id) as total_visitor,region FROM page_analytics WHERE  region != "" AND DATE(visit_time) BETWEEN "' . $start_date . '" AND "' . $end_date . '" GROUP BY region');
+
+        $data[0][0] = '';
+        $data[0][1] = 0;
+        $x          = 1;
+
+        foreach ($state_wise_data as $result) {
+
+            $data[$x][0] = $result->region;
+            $data[$x][1] = (int) $result->total_visitor;
+            $x++;
+        }
+
+        echo (json_encode($data));
+        die;
     }
 
     public function get_page_visit_chart_data($date_range = '')
