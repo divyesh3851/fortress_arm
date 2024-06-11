@@ -1109,13 +1109,16 @@ class Advisor
         if ($wpdb->insert("activity", $activity_info)) {
 
             if (CLIENT_ID && CLIENT_SECRET && CALENDAR_REDIRECT_URL && CALENDAR_ID) {
+
                 $client = new Google_Client();
                 $client->setClientId(CLIENT_ID);
                 $client->setClientSecret(CLIENT_SECRET);
                 $client->setRedirectUri(CALENDAR_REDIRECT_URL);
                 $client->addScope(Google_Service_Calendar::CALENDAR);
 
-                $client->setAccessToken($_SESSION['access_token']);
+                $google_auth_access_token = Admin()->get_admin_meta($_SESSION['fbs_arm_admin_id'], 'google_auth_access_token');
+
+                $client->setAccessToken($google_auth_access_token);
 
                 $service = new Google_Service_Calendar($client);
 
