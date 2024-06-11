@@ -44,7 +44,7 @@ foreach ($get_advisor_upcoming_activity_list as $activity_result) {
 
 $google_auth_access_token = Admin()->get_admin_meta($_SESSION['fbs_arm_admin_id'], 'google_auth_access_token');
 
-if ($google_auth_access_token) {
+if ($google_auth_access_token && CLIENT_ID && CLIENT_SECRET && CALENDAR_REDIRECT_URL && CALENDAR_ID) {
 
     $client = new Google_Client();
     $client->setClientId(CLIENT_ID);

@@ -1108,20 +1108,22 @@ class Advisor
 
         if ($wpdb->insert("activity", $activity_info)) {
 
-            $client = new Google_Client();
-            $client->setClientId(get_option('gcal_client_id'));
-            $client->setClientSecret(get_option('gcal_client_secret'));
-            $client->setRedirectUri(get_option('gcal_redirect_uri'));
-            $client->addScope(Google_Service_Calendar::CALENDAR);
+            if (CLIENT_ID && CLIENT_SECRET && CALENDAR_REDIRECT_URL && CALENDAR_ID) {
+                $client = new Google_Client();
+                $client->setClientId(CLIENT_ID);
+                $client->setClientSecret(CLIENT_SECRET);
+                $client->setRedirectUri(CALENDAR_REDIRECT_URL);
+                $client->addScope(Google_Service_Calendar::CALENDAR);
 
-            $client->setAccessToken($_SESSION['access_token']);
+                $client->setAccessToken($_SESSION['access_token']);
 
-            $service = new Google_Service_Calendar($client);
+                $service = new Google_Service_Calendar($client);
 
-            // Example: List the next 10 events on the user's calendar
-            $calendarId = get_option('calender_id');
+                // Example: List the next 10 events on the user's calendar
+                $calendarId = CALENDAR_ID;
 
-            Social()->add_event_in_google_calendar($service, $calendarId, $activity_info);
+                Social()->add_event_in_google_calendar($service, $calendarId, $activity_info);
+            }
 
             $last_id = $wpdb->insert_id;
 

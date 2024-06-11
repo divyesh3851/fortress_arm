@@ -5,12 +5,14 @@ $page_name = 'calendar';
 $sub_page_name = '';
 Admin()->check_login();
 
-$client = new Google_Client();
-$client->setClientId(CLIENT_ID);
-$client->setClientSecret(CLIENT_SECRET);
-$client->setRedirectUri(CALENDAR_REDIRECT_URL);
-$client->addScope(Google_Service_Calendar::CALENDAR);
-$google_auth_url = $client->createAuthUrl();
+if (CLIENT_ID || CLIENT_SECRET || CALENDAR_REDIRECT_URL) {
+    $client = new Google_Client();
+    $client->setClientId(CLIENT_ID);
+    $client->setClientSecret(CLIENT_SECRET);
+    $client->setRedirectUri(CALENDAR_REDIRECT_URL);
+    $client->addScope(Google_Service_Calendar::CALENDAR);
+    $google_auth_url = $client->createAuthUrl();
+}
 
 if (isset($_POST['save_activity'])) {
 
@@ -113,11 +115,13 @@ if (isset($_POST['save_activity'])) {
                                             </div>
                                             <!--end::Page title-->
                                             <div class="">
-                                                <a href="<?php echo $google_auth_url; ?>" target="_blank" class="btn btn-primary" title="Sync With Google Calendar">
-                                                    <i class="fa-solid fa-arrows-rotate"></i>
-                                                    Sync With Google
-                                                </a>
-                                                <?php
+                                                <?php if (isset($google_auth_url)) { ?>
+                                                    <a href="<?php echo $google_auth_url; ?>" target="_blank" class="btn btn-primary" title="Sync With Google Calendar">
+                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                        Sync With Google
+                                                    </a>
+                                                <?php }
+
                                                 $bookmark = Advisor()->check_bookmark(site_url() . '/admin/calendar');
 
                                                 if ($bookmark) { ?>
